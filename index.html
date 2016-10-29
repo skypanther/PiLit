@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+
+<div id="ledWrapper" class="row">
+	<div id="led0" style="float: left; width: 40px; height: 40px; margin-left: 5px; background-color: #C7C101;">&nbsp;</div>
+	<div id="led1" style="float: left; width: 40px; height: 40px; margin-left: 5px; background-color: #E39E03;">&nbsp;</div>
+	<div id="led2" style="float: left; width: 40px; height: 40px; margin-left: 5px; background-color: #F6780F;">&nbsp;</div>
+	<div id="led3" style="float: left; width: 40px; height: 40px; margin-left: 5px; background-color: #FE5326;">&nbsp;</div>
+	<div id="led4" style="float: left; width: 40px; height: 40px; margin-left: 5px; background-color: #FB3244;">&nbsp;</div>
+	<div id="led5" style="float: left; width: 40px; height: 40px; margin-left: 5px; background-color: #ED1868;">&nbsp;</div>
+	<div id="led6" style="float: left; width: 40px; height: 40px; margin-left: 5px; background-color: #D5078E;">&nbsp;</div>
+	<div id="led7" style="float: left; width: 40px; height: 40px; margin-left: 5px; background-color: #B601B3;">&nbsp;</div>
+	<div id="led8" style="float: left; width: 40px; height: 40px; margin-left: 5px; background-color: #9106D3;">&nbsp;</div>
+	<div id="led9" style="float: left; width: 40px; height: 40px; margin-left: 5px; background-color: #6B16EC;">&nbsp;</div>
+	<div id="led10" style="float: left; width: 40px; height: 40px; margin-left: 5px; background-color: #472FFA;">&nbsp;</div>
+	<div id="led11" style="float: left; width: 40px; height: 40px; margin-left: 5px; background-color: #2850FE;">&nbsp;</div>
+	<div id="led12" style="float: left; width: 40px; height: 40px; margin-left: 5px; background-color: #1175F7;">&nbsp;</div>
+	<div id="led13" style="float: left; width: 40px; height: 40px; margin-left: 5px; background-color: #039BE5;">&nbsp;</div>
+	<div id="led14" style="float: left; width: 40px; height: 40px; margin-left: 5px; background-color: #01BECA;">&nbsp;</div>
+	<div id="led15" style="float: left; width: 40px; height: 40px; margin-left: 5px; background-color: #0ADCA8;">&nbsp;</div>
+</div>
+<br clear="all"/>
+
+<script>
+
+var show = [
+	[0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
+	[1,1,1,1, 0,0,0,0, 0,0,0,0, 0,0,0,0],
+	[0,0,0,0, 1,1,1,1, 0,0,0,0, 0,0,0,0],
+	[0,0,0,0, 0,0,0,0, 1,1,1,1, 0,0,0,0],
+	[0,0,0,0, 0,0,0,0, 0,0,0,0, 1,1,1,1],
+	[0,0,0,0, 0,0,0,0, 1,1,1,1, 0,0,0,0],
+	[0,0,0,0, 1,1,1,1, 0,0,0,0, 0,0,0,0],
+	[1,1,1,1, 0,0,0,0, 0,0,0,0, 0,0,0,0],
+	[0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
+
+	[1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0],
+	[0,1,0,1, 0,1,0,1, 0,1,0,1, 0,1,0,1],
+	[1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0],
+	[0,1,0,1, 0,1,0,1, 0,1,0,1, 0,1,0,1],
+	[1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0],
+	[0,1,0,1, 0,1,0,1, 0,1,0,1, 0,1,0,1],
+	[0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
+
+	[1,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
+	[1,1,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
+	[1,1,1,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
+	[1,1,1,1, 0,0,0,0, 0,0,0,0, 0,0,0,0],
+
+	[1,1,1,1, 1,0,0,0, 0,0,0,0, 0,0,0,0],
+	[1,1,1,1, 1,1,0,0, 0,0,0,0, 0,0,0,0],
+	[1,1,1,1, 1,1,1,0, 0,0,0,0, 0,0,0,0],
+	[1,1,1,1, 1,1,1,1, 0,0,0,0, 0,0,0,0],
+
+	[1,1,1,1, 1,1,1,1, 1,0,0,0, 0,0,0,0],
+	[1,1,1,1, 1,1,1,1, 1,1,0,0, 0,0,0,0],
+	[1,1,1,1, 1,1,1,1, 1,1,1,0, 0,0,0,0],
+	[1,1,1,1, 1,1,1,1, 1,1,1,1, 0,0,0,0],
+
+	[1,1,1,1, 1,1,1,1, 1,1,1,1, 1,0,0,0],
+	[1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,0,0],
+	[1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,0],
+	[1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1],
+
+	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	[1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,1],
+	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	[0,0,0,1,1,0,1,1,1,0,1,1,0,1,1,1],
+	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	[0,0,1,1,1,1,1,1,0,1,0,1,0,0,1,0],
+	[0,1,0,1,1,0,0,0,0,1,1,0,1,0,1,0],
+	[1,1,1,1,0,0,0,1,0,1,1,1,1,0,0,1],
+	[1,0,1,0,0,0,0,1,0,1,0,1,0,0,1,1],
+	[1,1,1,1,0,0,1,1,1,0,0,0,0,0,0,0],
+	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	[1,1,0,0,1,1,0,1,1,1,1,1,1,1,1,1],
+	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	[0,1,1,1,0,1,0,1,0,1,1,1,1,1,1,1],
+	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	[1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1],
+	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	[1,1,0,1,0,1,1,1,1,1,1,1,0,1,0,0],
+	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	[0,1,0,0,0,0,0,1,1,0,1,1,0,1,0,0],
+	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	[1,0,1,0,1,0,1,1,1,1,0,0,1,1,1,1],
+	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	[0,1,0,1,1,1,0,1,1,1,0,0,0,1,0,1],
+	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	[0,0,1,1,0,0,0,0,1,0,0,0,0,1,0,1],
+	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	[1,1,1,1,0,1,0,1,1,0,0,0,1,1,1,1],
+	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	[1,1,1,0,1,1,1,1,1,1,0,1,1,1,0,1],
+	[1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1],
+	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	[1,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1],
+	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+];
+
+var currentRow = 0,
+	masterInterval = 50;
+
+function setLEDrow() {
+	theShow[currentRow].forEach(function(led, index) {
+		setLED(index, led);
+	});
+	currentRow++;
+	if (currentRow === theShow.length) {
+		currentRow = 0;
+	}
+}
+
+function turnOn(num) {
+	document.getElementById("led" + num).style.opacity = 1;
+}
+function turnOff(num) {
+	document.getElementById("led" + num).style.opacity = 0;
+}
+function toggle(num) {
+	document.getElementById("led" + num).style.opacity = 1 - document.getElementById("led" + num).style.opacity;
+}
+
+function setLED(num, onOff) {
+	document.getElementById("led" + num).style.opacity = onOff;
+}
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
+// setInterval(function() {
+// 	var led = getRandomInt(0, 16);
+// 	turnOff(led);
+// 	setTimeout(function() {
+// 		turnOn(led);
+// 	}, 50);
+// }, 100);
+
+/*
+turn all lights off
+turn random num on
+loop N times (
+	select random X lights, toggle
+)
+ 
+ */
+var N = 50,
+	allOnRow = [1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1],
+	allOffRow = [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
+	newRow = [],
+	numLEDsToChange = getRandomInt(0, 16),
+	theShow = [];
+while (N > 0) {
+	var onOff = Math.random() >= 0.5;
+	newRow = onOff === 0 ? allOffRow.slice(0) : allOnRow.slice(0); // make a copy
+	numLEDsToChange = getRandomInt(0, 16);
+	while (numLEDsToChange > 0) {
+		newRow[getRandomInt(0,16)] = (onOff ? 1 : 0);
+		numLEDsToChange--;
+	}
+	theShow.push(newRow);
+	N--;
+}
+
+setTimeout(function() {
+	setInterval(function() {
+		setLEDrow();
+	}, masterInterval);
+}, 1000);
+
+</script>
+
+</body>
+</html>
