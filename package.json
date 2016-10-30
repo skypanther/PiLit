@@ -17,6 +17,7 @@
   "dependencies": {
     "clear": "0.0.1",
     "colors": "^1.1.2",
-    "fields": "^0.1.24"
+    "fields": "^0.1.24",
+    "lodash": "^4.16.4"
   }
 }

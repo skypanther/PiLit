@@ -6,18 +6,13 @@
  * using the various other scripts included with this package
  */
 
-/*
-
-How long a show (seconds, default 600)?
-Should it loop? (Y/n) 
-Time interval (minimum time a light could be on or off)? (number, ms, default of 250ms)
-How many channels? (number, integer, default of 16)
- */
-
 // node modules
 var clear = require('clear'),
 	colors = require('colors'),
-	fields = require('fields');
+	fields = require('fields'),
+	fs = require('fs'),
+	path = require('path');
+
 // local helpers / libraries
 var banner = require('./lib/banner');
 
@@ -27,7 +22,7 @@ banner.show();
 console.log("\nLet's generate a Christmas light show!\n".bold.white);
 console.log("This script generates a starting show file that will turn on all of".white);
 console.log("your lights for the duration of your show. From there, you will use".white);
-console.log("this tool's other scripts to create the actual sequences.\n".white);
+console.log("the xxxxx script to create the actual light sequences of your show.\n".white);
 
 fields.setup({
 	style: {
@@ -89,18 +84,22 @@ fields.set([
 });
 
 function createShow(config) {
-	var showConfig = {
-			title: config.title,
-			interval: config.interval,
-			show: makeShowArray(config)
-		}
-		// write it all to the file by the name of title
+	// will store the last row that has been updated with actual show info
+	config.lastUpdateRow = Array(config.channels).fill(0);
+	// create our starting show file
+	config.show = makeShowArray(config);
+	var filePath = path.join('shows', config.title);
+	fs.writeFile(filePath, JSON.stringify(config), (err) => {
+		if (err) throw err;
+		console.log('Starting show file saved to ' + filePath);
+		console.log('Now, use the xxxxx script to begin generating the sequences for your show.');
+	});
 }
 
 function makeShowArray(config) {
 	var row = Array(config.channels).fill(1);
 	// duration is in seconds, interval in ms
-	var numRows = config.duration * 1000 / config.interval;
+	var numRows = config.duration * 1000 * 60 / config.interval;
 	var theShow = [];
 	while (numRows > 0) {
 		theShow.push(row);
