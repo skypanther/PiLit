@@ -2,8 +2,7 @@
  * Christmas lights controller - Tim Poulsen
  * License MIT
  *
- * Generate a starting show file, which you will then edit
- * using the various other scripts included with this package
+ * Sequencer - start here to generate the specific sequences of your show
  */
 
 /*
@@ -69,6 +68,10 @@ var sequences = [{
 	value: "flash",
 	module: flash,
 	label: flash.config.description
+}, {
+	value: "exit",
+	module: undefined,
+	label: "Exit - stop setting light sequences"
 }, ];
 
 fields.set([
@@ -76,52 +79,37 @@ fields.set([
 		promptLabel: 'Which show are you programming?',
 		options: shows,
 		numbered: true
-	}),
-	fields.select({
-		promptLabel: 'Sequence to program',
-		numbered: true,
-		options: sequences
-	}),
-
-	// fields.text({
-	// 	promptLabel: 'What is the name of your show?',
-	// 	validate: function (value) {
-	// 		return /^\w+/.test(value);
-	// 	}
-	// }),
-	// fields.text({
-	// 	default: 600,
-	// 	promptLabel: 'How long is your show? Enter a time in seconds.',
-	// 	validate: function (value) {
-	// 		return /^\d+$/.test(value);
-	// 	}
-	// }),
-	// fields.select({
-	// 	promptLabel: 'Should the show loop continuously?',
-	// 	default: 'yes',
-	// 	display: 'prompt',
-	// 	options: ['__y__es', '__n__o'],
-	// }),
-	// fields.text({
-	// 	desc: 'What is the minimum time a light could be on or off in milliseconds (thousandths of a second)?',
-	// 	default: 250,
-	// 	promptLabel: 'Interval',
-	// 	validate: function (value) {
-	// 		return /^\d+$/.test(value);
-	// 	}
-	// }),
-	// fields.text({
-	// 	desc: 'How many channels is your relay controller going to control? ',
-	// 	default: 16,
-	// 	promptLabel: 'Channels',
-	// 	validate: function (value) {
-	// 		return /^\d+$/.test(value) && parseInt(value) > 0;
-	// 	}
-	// }),
+	})
 ]).prompt(function (err, value) {
 	if (err) {
 		console.error('There was an error!\n' + err);
 	} else {
-		console.log(value)
+		selectSequence(value);
 	}
 });
+
+function selectSequence(showName) {
+	fields.set([
+		fields.select({
+			promptLabel: 'Sequence to program',
+			numbered: true,
+			options: sequences
+		}),
+	]).prompt(function (err, value) {
+		if (err) {
+			console.error('There was an error!\n' + err);
+		} else {
+			if (value[0] === 'exit') {
+				process.exit(0);
+			}
+			var sequencer = _.find(sequences, {
+				value: value[0]
+			});
+			if (sequencer && sequencer.module) {
+				sequencer.module.generate(showName, selectSequence);
+			} else {
+				console.error('There was an error!\n');
+			}
+		}
+	});
+}

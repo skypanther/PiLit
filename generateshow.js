@@ -91,15 +91,16 @@ function createShow(config) {
 	var filePath = path.join('shows', config.title);
 	fs.writeFile(filePath, JSON.stringify(config), (err) => {
 		if (err) throw err;
-		console.log('Starting show file saved to ' + filePath);
-		console.log('Now, use the xxxxx script to begin generating the sequences for your show.');
+		console.log('SUCCESS!');
+		console.log('');
+		console.log('Now, use the `sequencer.js` script to begin generating the sequences for your show.');
 	});
 }
 
 function makeShowArray(config) {
 	var row = Array(config.channels).fill(1);
 	// duration is in seconds, interval in ms
-	var numRows = config.duration * 1000 * 60 / config.interval;
+	var numRows = config.duration * 1000 / config.interval;
 	var theShow = [];
 	while (numRows > 0) {
 		theShow.push(row);
