@@ -1,24 +1,25 @@
 {
-	"name": "clc",
-	"version": "0.1.0",
-	"description": "Christmas Lights Controller",
-	"main": "index.js",
-	"scripts": {
-		"test": "test.js",
-		"start": "index.js"
-	},
-	"keywords": [
-		"christmas",
-		"raspberry",
-		"pi",
-		"sainsmart"
-	],
-	"author": "Tim Poulsen",
-	"license": "MIT",
-	"dependencies": {
-		"clear": "0.0.1",
-		"colors": "^1.1.2",
-		"fields": "^0.1.24",
-		"lodash": "^4.16.4"
-	}
+  "name": "clc",
+  "version": "0.1.0",
+  "description": "Christmas Lights Controller",
+  "main": "index.js",
+  "scripts": {
+    "test": "test.js",
+    "start": "index.js"
+  },
+  "keywords": [
+    "christmas",
+    "raspberry",
+    "pi",
+    "sainsmart"
+  ],
+  "author": "Tim Poulsen",
+  "license": "MIT",
+  "dependencies": {
+    "axel": "0.0.3",
+    "clear": "0.0.1",
+    "colors": "^1.1.2",
+    "fields": "^0.1.24",
+    "lodash": "^4.16.4"
+  }
 }
