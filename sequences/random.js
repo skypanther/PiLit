@@ -12,7 +12,7 @@ var _ = require("lodash"),
 	path = require("path");
 
 exports.config = {
-	description: "Solid OFF - lights off for the duration you specify"
+	description: "Random - random lights turn off for your minimum interval time"
 };
 
 var nextSequence;
@@ -91,8 +91,8 @@ function _getChannelList(show) {
 function _getDuration(show, channels) {
 	fields.set([
 		fields.text({
-			desc: 'You can turn them off for up to ' + timeRemaining + ' seconds.',
-			promptLabel: 'Keep off for how many seconds?',
+			desc: 'You can twinkle the channels for up to ' + timeRemaining + ' seconds.',
+			promptLabel: 'Seconds',
 			validate: function (value) {
 				return !isNaN(value) && value <= timeRemaining;
 			}
@@ -112,7 +112,7 @@ function _generateAndSave(show, channels, duration) {
 		var startOffset = show.lastUpdateRow[chan - 1] * (1 / show.interval);
 		var stopAt = duration * 1000 * (1 / show.interval);
 		for (startOffset; startOffset < stopAt; startOffset++) {
-			show.show[startOffset][chan - 1] = 0;
+			show.show[startOffset][chan - 1] = (Math.random() > 0.07) ? 1 : 0;
 		}
 		show.lastUpdateRow[chan - 1] = stopAt;
 	});

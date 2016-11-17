@@ -120,7 +120,7 @@ function _getDuration(show, channels, onTime) {
 			desc: 'You can alternate these lights for up to ' + timeRemaining + ' seconds.',
 			promptLabel: 'Duration',
 			validate: function (value) {
-				return value <= timeRemaining;
+				return !isNaN(value) && value <= timeRemaining;
 			}
 		}),
 	]).prompt(function (err, value) {

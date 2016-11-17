@@ -36,7 +36,8 @@ var twinkle = require("./sequences/twinkle"),
 	marchLeft = require("./sequences/marchLeft"),
 	marchRight = require("./sequences/marchRight"),
 	onOff = require("./sequences/onOff"),
-	flash = require("./sequences/flash");
+	flash = require("./sequences/flash"),
+	random = require("./sequences/random");
 
 var shows = fs.readdirSync('shows');
 
@@ -65,9 +66,9 @@ var sequences = [{
 	module: onOff,
 	label: onOff.config.description
 }, {
-	value: "flash",
-	module: flash,
-	label: flash.config.description
+	value: "random",
+	module: random,
+	label: random.config.description
 }, {
 	value: "exit",
 	module: undefined,
@@ -97,7 +98,7 @@ function selectSequence(showName) {
 		}),
 	]).prompt(function (err, value) {
 		if (err) {
-			console.error('There was an error!\n' + err);
+			console.error('There was an error!\n' + err + ", " + JSON.stringify(value));
 		} else {
 			if (value[0] === 'exit') {
 				process.exit(0);

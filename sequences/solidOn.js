@@ -53,24 +53,37 @@ function _calculateTimeRemaining(channels, show) {
 	return (show.show.length - maxChannel) / (1 / show.interval) / 1000;
 }
 
-var timeRemaining;
+var timeRemaining, channelsToControl;
 
 function _getChannelList(show) {
 	fields.set([
 		fields.text({
-			desc: 'Enter the list of channels to turn on, separated by commas.',
+			desc: 'Enter the list of channels, separated by commas or as a range (1-4).',
 			promptLabel: 'Channels',
 			validate: function (value) {
-				channelsToControl = value;
-				timeRemaining = _calculateTimeRemaining(channelsToControl, show);
-				return true;
+				if (!isNaN(value) || value.split(',').length > 1) {
+					channelsToControl = value;
+					timeRemaining = _calculateTimeRemaining(channelsToControl, show);
+					return true;
+				} else if (value.split('-').length === 2) {
+					var range = value.split('-').sort();
+					var chans = [];
+					for (var i = range[0], j = range[1]; i <= j; i++) {
+						chans.push(i);
+					}
+					channelsToControl = chans.join(',');
+					timeRemaining = _calculateTimeRemaining(channelsToControl, show);
+					return true;
+				} else {
+					return false;
+				}
 			}
 		}),
 	]).prompt(function (err, value) {
 		if (err) {
 			console.error('There was an error!\n' + err);
 		} else {
-			_getDuration(show, value[0]);
+			_getDuration(show, channelsToControl);
 		}
 	});
 }
@@ -81,7 +94,7 @@ function _getDuration(show, channels) {
 			desc: 'You can turn them on for up to ' + timeRemaining + ' seconds.',
 			promptLabel: 'Keep on for how many seconds?',
 			validate: function (value) {
-				return value <= timeRemaining;
+				return !isNaN(value) && value <= timeRemaining;
 			}
 		}),
 	]).prompt(function (err, value) {
