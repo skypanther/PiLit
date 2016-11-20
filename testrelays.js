@@ -5,14 +5,7 @@
  *
  */
 
-var _ = require("lodash"),
-	axel = require('axel'),
-	clear = require("clear"),
-	colors = require("colors"),
-	fields = require("fields"),
-	rpio = require('rpio'),
-	fs = require("fs"),
-	path = require("path");
+"use strict"
 
 const OFF = rpio.HIGH;
 const ON = rpi.LOW;
