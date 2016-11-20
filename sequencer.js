@@ -36,7 +36,6 @@ var twinkle = require("./sequences/twinkle"),
 	marchLeft = require("./sequences/marchLeft"),
 	marchRight = require("./sequences/marchRight"),
 	onOff = require("./sequences/onOff"),
-	flash = require("./sequences/flash"),
 	random = require("./sequences/random");
 
 var shows = fs.readdirSync('shows');

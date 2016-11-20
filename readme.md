@@ -29,12 +29,24 @@ So, really, in summary this is quick-n-dirty code and not really architected at 
 ## Requirements
 
 * NodeJS
-* Raspberry Pi set up according to the Hardware Setup section
+* Raspberry Pi, relay board, and outlets set up according to the Hardware Setup section
 
 ## Software Installation
 
+On your Raspberry Pi:
+
 1. Download this repo
 2. Run `npm install`
+3. Add the pi user to the gpio group: `sudo usermod -a -G gpio pi`
+4. Run the following command to configure udev:
+
+```shell
+$ sudo cat >/etc/udev/rules.d/20-gpiomem.rules <<EOF
+SUBSYSTEM=="bcm2835-gpiomem", KERNEL=="gpiomem", GROUP="gpio", MODE="0660"
+EOF
+```
+
+(For more info on the preceding two steps, see https://www.npmjs.com/package/rpio)
 
 ## Usage
 
@@ -42,7 +54,8 @@ The following steps could be done on any computer, not necessarily on your Raspb
 
 * Generate a show: run `node generateshow.js` and follow the prompts.
 * Create the lighting sequences: run `node sequencer.js` and follow the prompts.
-* Test a show: run `node tester.js` and follow the prompt
+* Test a show: run `node testshow.js` and follow the prompt
+* Test each relay in sequence (e.g. to make sure you have things wired correctly): run `node testrelays.js`
 
 However, you must run the show from the Raspberry Pi.
 
@@ -54,8 +67,11 @@ You can automate running this every night by using cron. (instructions to follow
 
 ## Hardware setup
 
-Sainsmart relay board manual (community contributed) http://www.homebrewtalk.com/showthread.php?t=523263
 
-Per that doc, you can expect to switch the relays on/off roughly once per second at a max because of their mechanical nature.
+*References:*
+
+* RPi pinout - http://pinout.xyz/
+* Sainsmart relay board manual (community contributed) http://www.homebrewtalk.com/showthread.php?t=523263 which says about the fastest you can switch the relays on/off is roughly once per second. However, I've seen 10 ms (1/100th of a second) referenced elsewhere. I would stick to slower than 100ms so you don't wear out the relays too quickly. 
+
 
 (notes/instructions to follow)
