@@ -6,13 +6,19 @@
  */
 
 var _ = require("lodash"),
-	axel = require('axel'),
-	clear = require("clear"),
 	colors = require("colors"),
 	fields = require("fields"),
 	rpio = require('rpio'),
 	fs = require("fs"),
 	path = require("path");
+
+const OFF = rpio.HIGH;
+const ON = rpio.LOW;
+
+var pins = [3, 5, 7, 8, 10, 11, 12, 13, 15, 16, 18, 19, 21, 22, 23, 24];
+pins.forEach(function (pin) {
+	rpio.open(pin, rpio.OUTPUT, OFF);
+});
 
 var shows = fs.readdirSync('shows');
 
@@ -60,4 +66,10 @@ function runShow(showName) {
 			}
 		}
 	}, interval);
+}
+
+function drawRow(arr) {
+	pins.forEach(function (pinValue, index) {
+		rpio.write(pins[index], pinValue ? ON : OFF);
+	});
 }

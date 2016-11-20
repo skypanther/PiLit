@@ -59,15 +59,12 @@ function _calculateTimeRemaining(channels, show) {
 	var lastRow = [],
 		channelsArray = channels.split(','),
 		maxChannel;
-	show.lastUpdateRow.forEach(function (ch, index) {
-		if (channelsArray.indexOf(index + 1)) {
-			lastRow.push(ch);
-		}
+	channelsArray.forEach(function (ch) {
+		lastRow.push(show.lastUpdateRow[ch - 1]);
 	});
 	maxChannel = Math.max.apply(null, lastRow);
 	return (show.show.length - maxChannel) / (1 / show.interval) / 1000;
 }
-
 var timeRemaining;
 
 function _getChannelList(show) {

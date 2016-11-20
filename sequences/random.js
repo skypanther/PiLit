@@ -44,10 +44,8 @@ function _calculateTimeRemaining(channels, show) {
 	var lastRow = [],
 		channelsArray = channels.split(','),
 		maxChannel;
-	show.lastUpdateRow.forEach(function (ch, index) {
-		if (channelsArray.indexOf(index + 1)) {
-			lastRow.push(ch);
-		}
+	channelsArray.forEach(function (ch) {
+		lastRow.push(show.lastUpdateRow[ch - 1]);
 	});
 	maxChannel = Math.max.apply(null, lastRow);
 	return (show.show.length - maxChannel) / (1 / show.interval) / 1000;
@@ -91,7 +89,7 @@ function _getChannelList(show) {
 function _getDuration(show, channels) {
 	fields.set([
 		fields.text({
-			desc: 'You can twinkle the channels for up to ' + timeRemaining + ' seconds.',
+			desc: 'You can randomize the channels for up to ' + timeRemaining + ' seconds.',
 			promptLabel: 'Seconds',
 			validate: function (value) {
 				return !isNaN(value) && value <= timeRemaining;
