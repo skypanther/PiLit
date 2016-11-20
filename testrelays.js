@@ -6,10 +6,11 @@
  */
 "use strict"
 
-var rpio = require('rpio');
+var fields = require("fields"),
+	rpio = require('rpio');
 
 const OFF = rpio.HIGH;
-const ON = rpi.LOW;
+const ON = rpio.LOW;
 
 var pins = [3, 5, 7, 8, 10, 11, 12, 13, 15, 16, 18, 19, 21, 22, 23, 24];
 pins.forEach(function (pin) {
@@ -36,7 +37,7 @@ function testSequence(num) {
 	var pin = 0;
 	var looper = setInterval(function () {
 		let p = pin;
-		if (p === num) {
+		if (p === num - 1) {
 			clearInterval(looper);
 			looper = undefined;
 		}
