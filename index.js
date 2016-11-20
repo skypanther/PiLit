@@ -17,7 +17,7 @@ const ON = rpio.LOW;
 
 var pins = [3, 5, 7, 8, 10, 11, 12, 13, 15, 16, 18, 19, 21, 22, 23, 24];
 pins.forEach(function (pin) {
-	rpio.open(pin, rpio.OUTPUT, OFF);
+	rpio.open(pin, rpio.OUTPUT, ON);
 });
 
 var shows = fs.readdirSync('shows');
@@ -69,7 +69,8 @@ function runShow(showName) {
 }
 
 function drawRow(arr) {
-	pins.forEach(function (pinValue, index) {
+	arr.forEach(function (pinValue, index) {
+		console.log("Setting pin " + index + (pinValue ? "on" : "off"));
 		rpio.write(pins[index], pinValue ? ON : OFF);
 	});
 }
