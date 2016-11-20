@@ -4,8 +4,9 @@
  *
  *
  */
-
 "use strict"
+
+var rpio = require('rpio');
 
 const OFF = rpio.HIGH;
 const ON = rpi.LOW;
