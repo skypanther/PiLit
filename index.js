@@ -16,14 +16,19 @@ const OFF = rpio.HIGH;
 const ON = rpio.LOW;
 
 var pins = [3, 5, 7, 8, 10, 11, 12, 13, 15, 16, 18, 19, 21, 22, 23, 24];
-pins.forEach(function (pin) {
-	rpio.open(pin, rpio.OUTPUT, ON);
-});
+turnOffAllRelays();
 
 var shows = fs.readdirSync('shows');
 
 if (process.argv[2]) {
-	runShow(process.argv[2]);
+	var showToRun = process.argv[2];
+	if (showToRun === 'off') {
+		turnOffAllRelays();
+	} else if (showToRun === 'on') {
+		turnOnAllRelays();
+	} else {
+		runShow(process.argv[2]);
+	}
 } else {
 	fields.set([
 		fields.select({
@@ -72,5 +77,17 @@ function drawRow(arr) {
 	arr.forEach(function (pinValue, index) {
 		console.log("Setting pin " + index + (pinValue ? "on" : "off"));
 		rpio.write(pins[index], pinValue ? ON : OFF);
+	});
+}
+
+function turnOffAllRelays() {
+	pins.forEach(function (pin) {
+		rpio.open(pin, rpio.OUTPUT, OFF);
+	});
+}
+
+function turnOnAllRelays() {
+	pins.forEach(function (pin) {
+		rpio.open(pin, rpio.OUTPUT, ON);
 	});
 }
