@@ -66,13 +66,6 @@ function runShow(showName) {
 		interval = show.interval;
 
 	var looper = setInterval(function () {
-		if (turnOffShowAt) {
-			if ((new Date()).getTime() > turnOffShowAt) {
-				clearInterval(looper);
-				looper = undefined;
-				turnOffAllRelays(); // app will exit when that's done
-			}
-		}
 		if (i < show.show.length) {
 			drawRow(show.show[i]);
 			i++;
@@ -83,6 +76,13 @@ function runShow(showName) {
 				looper = undefined;
 			} else {
 				i = 0;
+			}
+		}
+		if (turnOffShowAt) {
+			if ((new Date()).getTime() > turnOffShowAt) {
+				clearInterval(looper);
+				looper = undefined;
+				turnOffAllRelays(); // app will exit when that's done
 			}
 		}
 	}, interval);
