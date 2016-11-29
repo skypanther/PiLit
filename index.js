@@ -82,7 +82,11 @@ function runShow(showName) {
 			if ((new Date()).getTime() > turnOffShowAt) {
 				clearInterval(looper);
 				looper = undefined;
-				turnOffAllRelays(); // app will exit when that's done
+				turnOffAllRelays();
+				// the app sometimes exits before the relays are turned off
+				// so use the rpio module's sleep function to keep it alive
+				rpio.sleep(10);
+				console.log("Good night");
 			}
 		}
 	}, interval);
