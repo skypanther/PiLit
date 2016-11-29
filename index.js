@@ -16,9 +16,10 @@ const OFF = rpio.HIGH;
 const ON = rpio.LOW;
 
 var pins = [3, 5, 7, 8, 10, 11, 12, 13, 15, 16, 18, 19, 21, 22, 23, 24];
-turnOffAllRelays();
-
 var shows = fs.readdirSync('shows');
+var turnOffShowAt;
+
+turnOffAllRelays();
 
 if (process.argv[2]) {
 	var showToRun = process.argv[2];
@@ -46,6 +47,13 @@ if (process.argv[2]) {
 
 }
 
+if (process.argv[3] && !isNaN(process.argv[3])) {
+	// turn off the show after x hours
+	var now = new Date();
+	var futureMS = Math.round(parseFloat(process.argv[3]) * 60 * 60 * 1000);
+	turnOffShowAt = now.getTime() + futureMS;
+}
+
 function runShow(showName) {
 	var filePath = path.join('shows', showName);
 	if (!fs.existsSync(filePath)) {
@@ -58,6 +66,13 @@ function runShow(showName) {
 		interval = show.interval;
 
 	var looper = setInterval(function () {
+		if (turnOffShowAt) {
+			if ((new Date()).getTime() > turnOffShowAt) {
+				clearInterval(looper);
+				looper = undefined;
+				turnOffAllRelays(); // app will exit when that's done
+			}
+		}
 		if (i < show.show.length) {
 			drawRow(show.show[i]);
 			i++;
@@ -75,7 +90,6 @@ function runShow(showName) {
 
 function drawRow(arr) {
 	arr.forEach(function (pinValue, index) {
-		console.log("Setting pin " + index + (pinValue ? "on" : "off"));
 		rpio.write(pins[index], pinValue ? ON : OFF);
 	});
 }
