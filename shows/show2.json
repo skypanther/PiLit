@@ -2,7 +2,7 @@
 	"title": "show1",
 	"duration": 300,
 	"loop": true,
-	"interval": 300,
+	"interval": 350,
 	"channels": 16,
 	"lastUpdateRow": [300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 0, 0],
 	"show": [

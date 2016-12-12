@@ -5,10 +5,7 @@
  *
  */
 
-var _ = require("lodash"),
-	colors = require("colors"),
-	fields = require("fields"),
-	rpio = require('rpio'),
+var rpio = require('rpio'),
 	fs = require("fs"),
 	path = require("path");
 
@@ -16,7 +13,6 @@ const OFF = rpio.HIGH;
 const ON = rpio.LOW;
 
 var pins = [3, 5, 7, 8, 10, 11, 12, 13, 15, 16, 18, 19, 21, 22, 23, 24];
-var shows = fs.readdirSync('shows');
 var turnOffShowAt;
 
 turnOffAllRelays();
@@ -31,6 +27,8 @@ if (process.argv[2]) {
 		runShow(process.argv[2]);
 	}
 } else {
+	var fields = require("fields");
+	var shows = fs.readdirSync('shows');
 	fields.set([
 		fields.select({
 			promptLabel: 'Which show would you like to run?',
@@ -61,9 +59,8 @@ function runShow(showName) {
 		process.exit(1);
 	}
 	var showFile = fs.readFileSync(filePath, 'utf8'),
-		show = JSON.parse(showFile);
-	var i = 0,
-		interval = show.interval;
+		show = JSON.parse(showFile),
+		i = 0;
 
 	var looper = setInterval(function () {
 		if (i < show.show.length) {
@@ -89,7 +86,7 @@ function runShow(showName) {
 				console.log("Good night");
 			}
 		}
-	}, interval);
+	}, show.interval);
 }
 
 function drawRow(arr) {
