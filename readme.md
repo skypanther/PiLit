@@ -53,9 +53,9 @@ On your Raspberry Pi:
 	SUBSYSTEM=="bcm2835-gpiomem", KERNEL=="gpiomem", GROUP="gpio", MODE="0660"
 	EOF
 	```
-5. Once you have wired up your relay, uppdate the `var pins=[...` line in the index.js file. Make sure the pin numbers there correspond to the GPIO pins you used, in the order you used them.
+5. Once you have wired up your relay, update the `var pins=[...` line in the index.js file. Make sure the pin numbers there correspond to the GPIO pins you used, in the order you used them.
 
-(For more info on those last two steps, see https://www.npmjs.com/package/rpio)
+(For more info on usermod and udev steps, see https://www.npmjs.com/package/rpio)
 
 ## Usage
 
@@ -101,7 +101,7 @@ When you examine your relay board, you'll notice that the ones on the right are 
 
 I mounted four double-gang boxes, to hold 8 outlets, into a small sheet of plywood. I broke the tabs between the top & bottom outlet in each so that I could wire up the 16 receptacles separately. You'll see I have them numbered 1-16 in the above. I have one additional outlet into which I can plug the Raspberry Pi and Sainsmart board (yeah, I know I could feed them both power off the same wallpack). 
 
-I put the board into a plastic storage tub. I cut a flap in the side. All the outlets are wired up to show power cords that I plug into extension cords run across the yard to my garage. Those three cords, plus the 16 for the Christmas lights are fed through the flap in the side. This makes the setup pretty reasonably water/snow proof. Despite some howling winds and heavy snows, I had no water or snow get inside the box.
+I put the board into a plastic storage tub. I cut a flap in the side. All the outlets are wired up to short power cords that I plug into extension cords run across the yard to my garage. Those three cords, plus the 16 for the Christmas lights are fed through the flap in the side. This makes the setup pretty reasonably water/snow proof. Despite some howling winds and heavy snows, I had no water or snow get inside the box.
 
 I found it helpful to put small tape flags on each of the jumper wires that ran from the Pi to the relay board. These I numbered with the outlet number. 
 
@@ -114,4 +114,4 @@ I found it helpful to put small tape flags on each of the jumper wires that ran 
 
 ## 2016 Christmas Notes
 
-2016 was my first year using the `clc` system. Overall, I'm very happy with the results. Well, except the Raspberry Pi would crash after a couple of hours. I've rewritten the `index.js` file since then on the theory that I had a slow memory leak that eventually caused the Pi to crash. Also, my show generation scripts proved to be rather unusable. I ended up generating a 15-min show file thenb hand-editing it. 
+2016 was my first year using the `clc` system. Overall, I'm very happy with the results. Well, except the Raspberry Pi would crash after a couple of hours. I've rewritten the `index.js` file since then on the theory that I had a slow memory leak that eventually caused the Pi to crash. Also, my show generation scripts proved to be rather unusable. I ended up generating a 15-min show file then hand-editing it. 
