@@ -103,7 +103,7 @@ function endShow() {
 
 function drawRow(arr) {
 	for (var i = 0, j = arr.length; i < j; i++) {
-		rpi.write(pins[i], (arr[i] ? ON : OFF));
+		rpio.write(pins[i], (arr[i] ? ON : OFF));
 	}
 }
 
