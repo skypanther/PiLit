@@ -35,8 +35,10 @@ So, really, in summary this is quick-n-dirty code and not really architected at 
 
 On your Raspberry Pi:
 
-1. Download this repo
-2. Run `npm install`
+1. Download this repo --
+	2. Preferred method: `git clone git@github.com:skypanther/clc.git`
+	3. Or, download the zip, extract to a clc folder in your home directory
+2. Change to the clc directory and run `npm install`
 3. Add the pi user to the gpio group: `sudo usermod -a -G gpio pi`
 4. Run the following command to configure udev:
 
@@ -62,8 +64,17 @@ However, you must run the show from the Raspberry Pi.
 * On the Rasbperry Pi, make sure you've downloaded and installed this software package as described above
 * If you created your sequence on a different computer, transfer the show file from the shows folder to your RPi's show folder
 * Then, in the project directory run `node index.js` or `npm start`
+* To start a specific show, add its name to the command, such as `node index.js myshow`
+* If starting a specific show, you can stop it after the specified hours, e.g. `node index.js myshow 3.5` to stop after three-and-a-half hours
 
-You can automate running this every night by using cron. (instructions to follow)
+You can automate running this every night by using cron. On your Pi, run `crontab -e` and choose your favorite editor (nano recommended). Add this to the bottom of the file:
+
+```
+# start the Christmas light show at 5:30 pm every day
+30 17 * * * cd /home/pi/clc && /usr/local/bin/node index.js show1 5.5
+```
+
+Where the first two numbers represent 30 minutes past the hour of 17 (aka 5pm). At that point, the index.js file is run, starting a show called `show1` which will run for 5.5 hours. 
 
 ## Hardware setup
 
