@@ -90,19 +90,19 @@ function runShow(showName) {
 }
 
 function drawRow(arr) {
-	for (var i=0, j=arr.length; i<j; i++) {
-		rpio.write(pins[i], (arr[i] ? ON : OFF));
-	}
+	arr.forEach(function (pinValue, index) {
+		rpio.write(pins[index], pinValue ? ON : OFF);
+	});
 }
 
 function turnOffAllRelays() {
-	for (var i=0, j=pins.length; i<j; i++) {
-		rpio.write(pins[i], OFF);
-	}
+	pins.forEach(function (pin) {
+		rpio.open(pin, rpio.OUTPUT, OFF);
+	});
 }
 
 function turnOnAllRelays() {
-	for (var i=0, j=pins.length; i<j; i++) {
-		rpio.write(pins[i], ON);
-	}
+	pins.forEach(function (pin) {
+		rpio.open(pin, rpio.OUTPUT, ON);
+	});
 }
