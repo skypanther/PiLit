@@ -76,17 +76,23 @@ function runShow(showName) {
  * itself to process the next (or back to first) row of the show file
  */
 function doShowLoop() {
-	if (showPositionCounter < show.show.length) {
-		drawRow(show.show[showPositionCounter]);
-		showPositionCounter++;
-	}
-	// we're at the end of the show file, do we repeat?
-	if (show.loop && (!turnOffShowAt || (turnOffShowAt && (new Date()).getTime() < turnOffShowAt))) {
+	drawRow(show.show[showPositionCounter]);
+	showPositionCounter++;
+	if (showPositionCounter === show.show.length) {
 		showPositionCounter = 0;
+	}
+	if (!isTimeToShutOffShow()) {
 		setTimeout(doShowLoop, show.interval);
 	} else {
 		endShow();
 	}
+}
+
+function isTimeToShutOffShow() {
+	if (turnOffShowAt && (new Date()).getTime() < turnOffShowAt) {
+		return false;
+	}
+	return true;
 }
 
 function endShow() {
