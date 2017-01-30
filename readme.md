@@ -32,6 +32,10 @@ So, really, in summary this is quick-n-dirty code and not really architected at 
 * Raspberry Pi with a wireless adapter; you'll want one with as many GPIO pins as 
 * A relay board like listed above
 * A bunch of outlets, electrical boxes, wire, connectors, etc.
+* A pack of female-to-female jumpers (you'll find a bunch of [multipacks like this on Amazon](https://www.amazon.com/gp/product/B00JUKL4XI/ref=oh_aui_detailpage_o09_s00?ie=UTF8&psc=1))
+* As many [1000 ohm resistors](https://www.amazon.com/gp/product/B0185FJ6L0/ref=oh_aui_detailpage_o09_s00?ie=UTF8&psc=1) as you have relays
+* A large storage tub
+* A sheet of plywood that fits in the tub -- mine fits in width but is tall enough to go in and sit at an angle, leaving room behind it for all the wires and connections (see photo below)
 
 ## Software Installation
 
@@ -82,12 +86,12 @@ Where the first two numbers represent 30 minutes past the hour of 17 (aka 5pm). 
 
 ## Hardware setup
 
+There was a bunch of work that went into creating my hardware setup. I'm not going to cover how to wire up outlets, mount electrical boxes, etc. In general, you'll:
 
-*References:*
-
-* RPi pinout - http://pinout.xyz/ (*don't connect a relay to the TXD pin, e.g. pin 8 on the Pi2, as it will be flashed on/off very rapidly when the Pi boots, which could burn out your relay*)
-* I found it helpful to go through https://docs.google.com/document/d/1x97JIu5xVInZMutTNeaHlnQuyoLHjf3h-ugIo64pGfI/edit to set up and test my RPi. You could use it for off-season testing of your show, etc. 
-* Sainsmart relay board manual (community contributed) http://www.homebrewtalk.com/showthread.php?t=523263 which says about the fastest you can switch the relays on/off is roughly once per second. However, I've seen 10 ms (1/100th of a second) referenced elsewhere. I would stick to slower than 100ms so you don't wear out the relays too quickly. 
+* Connect the ground wire of each outlet to a common ground for the entire setup
+* Connect the hot side of each outlet to one lug of the relay
+* Connect the hot side of the "mains" power (power in) to the other lug of each relay.
+* You'll be connecting one jumper from each GPIO pin to the pins on the Saismart relay board. You'll want to wire in a 1k ohm resister in line with each too. You'll connect a ground jumper, without resister, too.
 
 <img src="https://github.com/skypanther/clc/blob/master/images/relay_board.jpg"/>
 
@@ -95,9 +99,18 @@ When you examine your relay board, you'll notice that the ones on the right are 
 
 <img src="https://github.com/skypanther/clc/blob/master/images/whole_setup.jpg"/>
 
-I mounted four double-gang boxes, to hold 8 outlets, into a small sheet of plywood. I broke the tabs between the top & bottom outlet in each so that I could wire up 16 outlets separately. You'll see I have them numbered 1-16 in the above. I have one additional outlet into which I can plug the Raspberry Pi and Sainsmart board (yeah, I know I could feed them both power off the same wallpack). 
+I mounted four double-gang boxes, to hold 8 outlets, into a small sheet of plywood. I broke the tabs between the top & bottom outlet in each so that I could wire up the 16 receptacles separately. You'll see I have them numbered 1-16 in the above. I have one additional outlet into which I can plug the Raspberry Pi and Sainsmart board (yeah, I know I could feed them both power off the same wallpack). 
 
 I put the board into a plastic storage tub. I cut a flap in the side. All the outlets are wired up to show power cords that I plug into extension cords run across the yard to my garage. Those three cords, plus the 16 for the Christmas lights are fed through the flap in the side. This makes the setup pretty reasonably water/snow proof. Despite some howling winds and heavy snows, I had no water or snow get inside the box.
+
+I found it helpful to put small tape flags on each of the jumper wires that ran from the Pi to the relay board. These I numbered with the outlet number. 
+
+*References:*
+
+* RPi pinout - http://pinout.xyz/ (*don't connect a relay to the TXD pin, e.g. pin 8 on the Pi2, as it will be flashed on/off very rapidly when the Pi boots, which could burn out your relay*)
+* I found it helpful to go through https://docs.google.com/document/d/1x97JIu5xVInZMutTNeaHlnQuyoLHjf3h-ugIo64pGfI/edit to set up and test my RPi. You could use it for off-season testing of your show, etc. 
+* Sainsmart relay board manual (community contributed) http://www.homebrewtalk.com/showthread.php?t=523263 which says about the fastest you can switch the relays on/off is roughly once per second. However, I've seen 10 ms (1/100th of a second) referenced elsewhere. I would stick to slower than 100ms so you don't wear out the relays too quickly. 
+
 
 ## 2016 Christmas Notes
 
