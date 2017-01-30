@@ -91,18 +91,18 @@ function runShow(showName) {
 
 function drawRow(arr) {
 	for (var i=0, j=arr.length; i<j; i++) {
-		rpio.write(pins[i], arr[i] ? ON : OFF);
+		rpio.write(pins[i], (arr[i] ? ON : OFF));
 	}
 }
 
 function turnOffAllRelays() {
 	for (var i=0, j=pins.length; i<j; i++) {
-		rpio.write(pins[i], rpio.OUTPUT, OFF);
+		rpio.write(pins[i], OFF);
 	}
 }
 
 function turnOnAllRelays() {
 	for (var i=0, j=pins.length; i<j; i++) {
-		rpio.write(pins[i], rpio.OUTPUT, ON);
+		rpio.write(pins[i], ON);
 	}
 }
