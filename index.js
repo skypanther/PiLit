@@ -14,9 +14,13 @@ const ON = rpio.LOW;
 
 var pins = [3, 5, 7, 8, 10, 11, 12, 13, 15, 16, 18, 19, 21, 22, 23, 24];
 var turnOffShowAt;
+var initialized;
+var show;
+var showPositionCounter = 0;
 
 turnOffAllRelays();
 
+// process the command line arguments to turn relays on/off or start the show
 if (process.argv[2]) {
 	var showToRun = process.argv[2];
 	if (showToRun === 'off') {
@@ -42,51 +46,54 @@ if (process.argv[2]) {
 			runShow(value[0]);
 		}
 	});
-
 }
 
+// if present, process the turn-off-show argument
+// turn off the show after x hours
 if (process.argv[3] && !isNaN(process.argv[3])) {
-	// turn off the show after x hours
 	var now = new Date();
 	var futureMS = Math.round(parseFloat(process.argv[3]) * 60 * 60 * 1000);
 	turnOffShowAt = now.getTime() + futureMS;
 }
 
+/*
+ * Main function to kick off the show, which marshalls off to a looping function
+ */
 function runShow(showName) {
 	var filePath = path.join('shows', showName);
 	if (!fs.existsSync(filePath)) {
 		console.error('No show file by the name ' + showName);
 		process.exit(1);
 	}
-	var showFile = fs.readFileSync(filePath, 'utf8'),
-		show = JSON.parse(showFile),
-		i = 0;
+	var showFile = fs.readFileSync(filePath, 'utf8');
+	show = JSON.parse(showFile);
+	showPositionCounter = 0;
+	doShowLoop();
+}
 
-	var looper = setInterval(function () {
-		if (i < show.show.length) {
-			drawRow(show.show[i]);
-			i++;
+/*
+ * doShowLoop processes one row of the show file, and if appropriate calls
+ * itself to process the next (or back to first) row of the show file
+ */
+function doShowLoop() {
+	if (showPositionCounter < show.show.length) {
+		drawRow(show.show[showPositionCounter]);
+		showPositionCounter++;
+	} else {
+		// we're at the end of the show file, do we repeat?
+		if (show.loop && (!turnOffShowAt || (turnOffShowAt && (new Date()).getTime() < turnOffShowAt))) {
+			showPositionCounter = 0;
+			setTimeout(doShowLoop, show.interval);
 		} else {
-			if (!show.loop) {
-				// show isn't set up to run continously
-				clearInterval(looper);
-				looper = undefined;
-			} else {
-				i = 0;
-			}
+			endShow();
 		}
-		if (turnOffShowAt) {
-			if ((new Date()).getTime() > turnOffShowAt) {
-				clearInterval(looper);
-				looper = undefined;
-				turnOffAllRelays();
-				// the app sometimes exits before the relays are turned off
-				// so use the rpio module's sleep function to keep it alive
-				rpio.sleep(10);
-				console.log("Good night");
-			}
-		}
-	}, show.interval);
+	}
+}
+
+function endShow() {
+	turnOffAllRelays();
+	rpio.sleep(10);
+	console.log('Good night');
 }
 
 function drawRow(arr) {
@@ -96,25 +103,27 @@ function drawRow(arr) {
 }
 
 function turnOffAllRelays() {
-	for (var i = 0, j = pins.length; i < j; i++) {
-		rpio.open(pins[index], rpio.OUTPUT, OFF);
+	if (!initialized) {
+		for (var i = 0, j = pins.length; i < j; i++) {
+			rpio.open(pins[i], rpio.OUTPUT, OFF);
+		}
+		initialized = true;
+	} else {
+		pins.forEach(function (pin) {
+			rpio.write(pin, OFF);
+		});
 	}
 }
 
 function turnOnAllRelays() {
-	for (var i = 0, j = pins.length; i < j; i++) {
-		rpio.open(pins[index], rpio.OUTPUT, ON);
+	if (!initialized) {
+		for (var i = 0, j = pins.length; i < j; i++) {
+			rpio.open(pins[i], rpio.OUTPUT, ON);
+		}
+		initialized = true;
+	} else {
+		pins.forEach(function (pin) {
+			rpio.write(pin, ON);
+		});
 	}
 }
-
-// function turnOffAllRelays() {
-// 	pins.forEach(function (pin) {
-// 		rpio.open(pin, rpio.OUTPUT, OFF);
-// 	});
-// }
-
-// function turnOnAllRelays() {
-// 	pins.forEach(function (pin) {
-// 		rpio.open(pin, rpio.OUTPUT, ON);
-// 	});
-// }
