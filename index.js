@@ -77,11 +77,11 @@ function runShow(showName) {
  */
 function doShowLoop() {
 	drawRow(show.show[rowOfShowToDisplay]);
-	rowOfShowToDisplay++;
-	if (rowOfShowToDisplay === show.show.length) {
-		rowOfShowToDisplay = 0;
-	}
 	if (doAnotherLoopOfTheShow()) {
+		rowOfShowToDisplay++;
+		if (rowOfShowToDisplay === show.show.length) {
+			rowOfShowToDisplay = 0;
+		}
 		setTimeout(doShowLoop, show.interval);
 	} else {
 		endShow();
@@ -102,9 +102,9 @@ function endShow() {
 }
 
 function drawRow(arr) {
-	arr.forEach(function (pinValue, index) {
-		rpio.write(pins[index], pinValue ? ON : OFF);
-	});
+	for (var i = 0, j = arr.length; i < j; i++) {
+		rpi.write(pins[i], (arr[i] ? ON : OFF));
+	}
 }
 
 function turnOffAllRelays() {
