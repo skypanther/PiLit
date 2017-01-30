@@ -93,7 +93,11 @@ Where the first two numbers represent 30 minutes past the hour of 17 (aka 5pm). 
 
 When you examine your relay board, you'll notice that the ones on the right are mounted 180&deg; from the ones on the left. As you'll see, I attached the white/black wires to the top two lugs on each relay on the left, and the bottom two lugs on the right relays. You could do that opposite (bottom two on left, top two on right) but you do need to wire them in opposites like this.
 
+<img src="https://github.com/skypanther/clc/blob/master/images/whole_setup.jpg"/>
 
+I mounted four double-gang boxes, to hold 8 outlets, into a small sheet of plywood. I broke the tabs between the top & bottom outlet in each so that I could wire up 16 outlets separately. You'll see I have them numbered 1-16 in the above. I have one additional outlet into which I can plug the Raspberry Pi and Sainsmart board (yeah, I know I could feed them both power off the same wallpack). 
+
+I put the board into a plastic storage tub. I cut a flap in the side. All the outlets are wired up to show power cords that I plug into extension cords run across the yard to my garage. Those three cords, plus the 16 for the Christmas lights are fed through the flap in the side. This makes the setup pretty reasonably water/snow proof. Despite some howling winds and heavy snows, I had no water or snow get inside the box.
 
 ## 2016 Christmas Notes
 
