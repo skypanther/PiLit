@@ -96,13 +96,13 @@ function drawRow(arr) {
 }
 
 function turnOffAllRelays() {
-	pins.forEach(function (pin) {
-		rpio.open(pin, rpio.OUTPUT, OFF);
-	});
+	for (var i = 0, j = pins.length; i < j; i++) {
+		rpio.write(pins[i], OFF);
+	}
 }
 
 function turnOnAllRelays() {
-	pins.forEach(function (pin) {
-		rpio.open(pin, rpio.OUTPUT, ON);
-	});
+	for (var i = 0, j = pins.length; i < j; i++) {
+		rpio.write(pins[i], ON);
+	}
 }
