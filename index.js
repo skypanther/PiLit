@@ -96,13 +96,25 @@ function drawRow(arr) {
 }
 
 function turnOffAllRelays() {
-	for (var i = 0, j = pins.length; i < j; i++) {
-		rpio.write(pins[i], OFF);
+	for (var i=0, j=pins.length; i<j; i++) {
+		rpio.open(pin, rpio.OUTPUT, OFF);
 	}
 }
 
 function turnOnAllRelays() {
-	for (var i = 0, j = pins.length; i < j; i++) {
-		rpio.write(pins[i], ON);
+	for (var i=0, j=pins.length; i<j; i++) {
+		rpio.open(pin, rpio.OUTPUT, ON);
 	}
 }
+
+// function turnOffAllRelays() {
+// 	pins.forEach(function (pin) {
+// 		rpio.open(pin, rpio.OUTPUT, OFF);
+// 	});
+// }
+
+// function turnOnAllRelays() {
+// 	pins.forEach(function (pin) {
+// 		rpio.open(pin, rpio.OUTPUT, ON);
+// 	});
+// }
