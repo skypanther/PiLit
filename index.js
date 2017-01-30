@@ -16,7 +16,7 @@ var pins = [3, 5, 7, 8, 10, 11, 12, 13, 15, 16, 18, 19, 21, 22, 23, 24];
 var turnOffShowAt;
 var initialized;
 var show;
-var showPositionCounter = 0;
+var rowOfShowToDisplay = 0;
 
 turnOffAllRelays();
 
@@ -67,7 +67,7 @@ function runShow(showName) {
 	}
 	var showFile = fs.readFileSync(filePath, 'utf8');
 	show = JSON.parse(showFile);
-	showPositionCounter = 0;
+	rowOfShowToDisplay = 0;
 	doShowLoop();
 }
 
@@ -76,23 +76,23 @@ function runShow(showName) {
  * itself to process the next (or back to first) row of the show file
  */
 function doShowLoop() {
-	drawRow(show.show[showPositionCounter]);
-	showPositionCounter++;
-	if (showPositionCounter === show.show.length) {
-		showPositionCounter = 0;
+	drawRow(show.show[rowOfShowToDisplay]);
+	rowOfShowToDisplay++;
+	if (rowOfShowToDisplay === show.show.length) {
+		rowOfShowToDisplay = 0;
 	}
-	if (!isTimeToShutOffShow()) {
+	if (doAnotherLoopOfTheShow()) {
 		setTimeout(doShowLoop, show.interval);
 	} else {
 		endShow();
 	}
 }
 
-function isTimeToShutOffShow() {
-	if (turnOffShowAt && (new Date()).getTime() < turnOffShowAt) {
-		return false;
+function doAnotherLoopOfTheShow() {
+	if (!turnOffShowAt || (new Date()).getTime() < turnOffShowAt) {
+		return true;
 	}
-	return true;
+	return false;
 }
 
 function endShow() {
