@@ -79,14 +79,13 @@ function doShowLoop() {
 	if (showPositionCounter < show.show.length) {
 		drawRow(show.show[showPositionCounter]);
 		showPositionCounter++;
+	}
+	// we're at the end of the show file, do we repeat?
+	if (show.loop && (!turnOffShowAt || (turnOffShowAt && (new Date()).getTime() < turnOffShowAt))) {
+		showPositionCounter = 0;
+		setTimeout(doShowLoop, show.interval);
 	} else {
-		// we're at the end of the show file, do we repeat?
-		if (show.loop && (!turnOffShowAt || (turnOffShowAt && (new Date()).getTime() < turnOffShowAt))) {
-			showPositionCounter = 0;
-			setTimeout(doShowLoop, show.interval);
-		} else {
-			endShow();
-		}
+		endShow();
 	}
 }
 
