@@ -12,7 +12,8 @@ var rpio = require('rpio'),
 const OFF = rpio.HIGH;
 const ON = rpio.LOW;
 
-var pins = [3, 5, 7, 8, 10, 11, 12, 13, 15, 16, 18, 19, 21, 22, 23, 24];
+// don't use pin 8 on a Pi B+ as it's the "hard drive light" pin 
+var pins = [3, 5, 7, 26, 10, 11, 12, 13, 15, 16, 18, 19, 21, 22, 23, 24];
 var turnOffShowAt;
 var initialized;
 var show;

@@ -107,7 +107,7 @@ I found it helpful to put small tape flags on each of the jumper wires that ran 
 
 *References:*
 
-* RPi pinout - http://pinout.xyz/ (*don't connect a relay to the TXD pin, e.g. pin 8 on the Pi2, as it will be flashed on/off very rapidly when the Pi boots, which could burn out your relay*)
+* RPi pinout - http://pinout.xyz/ (*don't connect a relay to the TXD pin, e.g. pin 8 on the Pi B+, as it will be flashed on/off very rapidly when the Pi boots, which could burn out your relay*)
 * I found it helpful to go through https://docs.google.com/document/d/1x97JIu5xVInZMutTNeaHlnQuyoLHjf3h-ugIo64pGfI/edit to set up and test my RPi. You could use it for off-season testing of your show, etc. 
 * Sainsmart relay board manual (community contributed) http://www.homebrewtalk.com/showthread.php?t=523263 which says about the fastest you can switch the relays on/off is roughly once per second. However, I've seen 10 ms (1/100th of a second) referenced elsewhere. I would stick to slower than 100ms so you don't wear out the relays too quickly. 
 
