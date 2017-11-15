@@ -43,7 +43,7 @@ If you want to use this project for yourself, you will need the following:
 
 On your Raspberry Pi:
 
-1. Set up your Raspberry Pi and make sure it is up-to-date (with `sudo apt-get update && sudo apt-get dist-upgrade`)
+1. Set up your Raspberry Pi and make sure it is up-to-date with `sudo apt-get update && sudo apt-get dist-upgrade`
 2. Make sure you're running the latest version of Python with `sudo apt-get upgrade python3`
 3. Install the required Python modules:
 	* `sudo apt-get install python3-gpiozero python-gpiozero` 
