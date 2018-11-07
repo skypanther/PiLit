@@ -38,7 +38,6 @@ from datetime import datetime
 from time import sleep
 import json
 import os.path
-from gpiozero import LED
 
 # CONFIGURE THESE VARIABLES TO SUIT YOUR ACTUAL SETUP
 # don't use pin 8 on a Pi B+ as it's the "hard drive light" pin
@@ -49,6 +48,10 @@ midnight = datetime.today().replace(
     hour=23, minute=59, second=59, microsecond=999999)
 args = sys.argv[1:]
 pins = []
+
+on = u'\u2593 '
+off = u'\u2591 '
+states = [off, on]
 
 
 def main():
@@ -99,7 +102,7 @@ def run_show(show_name, end_time):
     now = datetime.now()
     while now < end_time:
         for row in show:
-            control_row(row)
+            print_line(row)
             sleep(delay)
         now = datetime.now()
 
@@ -113,45 +116,19 @@ def format_end_time(the_time):
 
 
 def all_on():
-    # Turns on all relays
-    for pin in pins:
-        pin.on()
+    print_line('1' * len(board_pins))
 
 
 def all_off():
-    # Turns off all relays
-    for pin in pins:
-        pin.off()
+    print_line('0' * len(board_pins))
 
 
-def control_row(row):
-    """
-    Turns on or off the relays for a specific row in the show file
-    """
-    if len(row) != len(pins):
-        msg = '''
-Error:
-You must make sure the number of items in the board_pins
-list in runshow.py is the same as each row in the show
-list defined in your show.json file
-'''
-        sys.exit(msg)
-    for index, relay_state in enumerate(row):
-        if relay_state == 1:
-            pins[index].on()
-        else:
-            pins[index].off()
-
-
-def setup_pins():
-    """
-    Creates the LED instances for each of the pins to which
-    you have relays connected and stores them in the pins list
-    """
-    for pin_number in board_pins:
-        pins.append(LED(pin_number))
+def print_line(line):
+    print('\r', end="")
+    for led in line:
+        print(states[led], end="")
+    sys.stdout.flush()
 
 
 if __name__ == '__main__':
-    setup_pins()
     main()
