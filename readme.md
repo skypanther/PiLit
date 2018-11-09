@@ -48,8 +48,8 @@ On your Raspberry Pi:
 3. Install the required Python modules:
 	* `sudo apt-get install python3-gpiozero python-gpiozero` 
 4. Download this repo onto your Raspberry Pi
-	* Preferred method: `git clone git@github.com:skypanther/clc.git`
-	* Or, download the zip, extract to a clc folder in your home directory
+	* Preferred method: `git clone git@github.com:skypanther/PiLit.git`
+	* Or, download the zip, extract to a folder in your home directory
 5. If you're using Python 2 or the older Node version of this project:
 	1. Add the pi user to the gpio group: `sudo usermod -a -G gpio pi`
 	2. Run the following command to configure udev: 
@@ -71,11 +71,11 @@ There was a bunch of work that went into creating my hardware setup. I'm not goi
 * Connect the hot side of the "mains" power (power in) to the other lug of each relay.
 * You'll be connecting one jumper from each GPIO pin to the pins on the Saismart relay board. You'll want to wire in a 1k ohm resister in line with each too. You'll connect a ground jumper, without resister, too.
 
-<img src="https://github.com/skypanther/clc/blob/master/images/relay_board.jpg"/>
+<img src="https://github.com/skypanther/PiLit/blob/master/images/relay_board.jpg"/>
 
 When you examine your relay board, you'll notice that the ones on the right are mounted 180&deg; from the ones on the left. As you'll see, I attached the white/black wires to the top two lugs on each relay on the left, and the bottom two lugs on the right relays. You could do that opposite (bottom two on left, top two on right) but you do need to wire them in opposites like this.
 
-<img src="https://github.com/skypanther/clc/blob/master/images/whole_setup.jpg"/>
+<img src="https://github.com/skypanther/PiLit/blob/master/images/whole_setup.jpg"/>
 
 I mounted four double-gang boxes, to hold 8 outlets, into a small sheet of plywood. I broke the tabs between the top & bottom outlet in each so that I could wire up the 16 receptacles separately. You'll see I have them numbered 1-16 in the above. I have one additional outlet into which I can plug the Raspberry Pi and Sainsmart board (yeah, I know I could feed them both power off the same wallpack). 
 
@@ -91,33 +91,65 @@ I found it helpful to put small tape flags on each of the jumper wires that ran 
 
 ## Usage
 
+### Show creation
+
 The following steps could be done on any computer, not necessarily on your Raspberry Pi light show controller. If you do this on your desktop, you will need to have done steps 1 & 2 of the Software Setup above.
+
+(I have not yet updated these steps to use Python, so you'll need a working Node setup. Or, see the note that follows.)
 
 * Generate a show: run `node generateshow.js` and follow the prompts.
 * Create the lighting sequences: run `node sequencer.js` and follow the prompts.
 * Test a show: run `node testshow.js` and follow the prompt
 * Test each relay in sequence (e.g. to make sure you have things wired correctly): run `node testrelays.js`
 
+*To be honest, the generation scripts never worked out as I hoped. In practice, I've just manually edited the JSON files in a text editor (e.g. Sublime Text or Visual Studio Code). My plan is to write new generation scripts but I might not finish by Christmas this year.*
+
+### Testing a show
+
+There are a couple of scripts for testing your shows. The Node one makes pretty colored boxes while the Python version just outputs some grey ASCII box characters. But, either will work:
+
+* `node testshow.js` then choose the show to test
+* `python3 testshow.py myshow.json`
+
+The `node testrelays.js` script just loops through turning each of the relays on/off in sequence. It's useful for making sure you have the jumper pins connected correctly.
+
+### Running a show
+
 However, you must run the show from the Raspberry Pi.
 
 * On the Rasbperry Pi, make sure you've downloaded and installed this software package as described above
-* If you created your sequence on a different computer, transfer the show file from the shows folder to your RPi's `~/clc/show` folder
+* If you created your sequence on a different computer, transfer the show file from the shows folder to your RPi's `~/PiLit/show` folder
 * Then, in the project directory:
-	* Run `node index.js` or `npm start` and you'll be prompted to choose the show to run. It will run until you stop it.
-	* To start a specific show, add its name to the command, such as `node index.js myshow`
-	* If starting a specific show, you can stop it after the specified hours, e.g. `node index.js myshow 3.5` to stop after three-and-a-half hours
+    * The Python show runner is `runshow.py`. Use it like this:<br/>`python3 runshow.py show.json HH:MM` where HH:MM is a 24-hr time, such as 22:30 (10:30 pm).
+    * The older Node show runnier is `index.js`, run it with <br/>`node index.js myshow.json 3.5` which will run myshow.json and stop it after three-and-a-half hours
 
-You can automate running this every night by using cron. On your Pi, run `crontab -e` and choose your favorite editor (nano recommended). Add this to the bottom of the file:
+Both the Python and Node runners also accept a couple of special "show names":
+
+* `python3 runshow.py on` and `python3 runshow.py off` to turn on, or off, all the relays
+* `node index.js on` and `node index.js off` to do the same
+
+You can automate running this every night by using cron. On your Pi, run `crontab -e` and choose your favorite editor (if necessary). Let's say you want to start your show every night at 5:30 pm. You would add this to the bottom of the file:
 
 ```
-# start the Christmas light show at 5:30 pm every day
-30 17 * * * cd /home/pi/clc && /usr/local/bin/node index.js show1 5.5
+# start the light show at 5:30 pm every day
+30 17 * * * cd /home/pi/PiLit && python3 runshow.py myshow.json 23:30
+31 22 * * * cd /home/pi/PiLit && python3 runshow.py off
 ```
 
-Where the first two numbers represent 30 minutes past the hour of 17 (aka 5pm). At that point, the index.js file is run, starting a show called `show1` which will run for 5.5 hours. 
+(*The 30 and 17 represent 30 minutes past the hour of 17, aka 5pm. The asterisks mean every day of every week of every month. Then come the command(s) to run.*)
 
+Or for Node:
 
+```
+# start the light show at 5:30 pm every day
+30 17 * * * cd /home/pi/PiLit && /usr/local/bin/node index.js myshow.json 5.5
+31 22 * * * cd /home/pi/PiLit && /usr/local/bin/node index.js off
+```
+
+## 2017 Christmas Notes
+
+The system worked fine again for me in 2017. I didn't make any meaningful changes to the hardware or software in 2017. I hand-edited the show JSON file from the previous year to create the new show.
 
 ## 2016 Christmas Notes
 
-2016 was my first year using the `clc` system. Overall, I'm very happy with the results. Well, except the Raspberry Pi would crash after a couple of hours. I've rewritten the `index.js` file since then on the theory that I had a slow memory leak that eventually caused the Pi to crash. Also, my show generation scripts proved to be rather unusable. I ended up generating a 15-min show file then hand-editing it. 
+2016 was my first year using the `clc` system (as I called it then). Overall, I'm very happy with the results. Well, except the Raspberry Pi would crash after a couple of hours. I've rewritten the `index.js` file since then on the theory that I had a slow memory leak that eventually caused the Pi to crash. Also, my show generation scripts proved to be rather unusable. I ended up generating a 15-min show file then hand-editing it. 

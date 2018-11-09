@@ -1,5 +1,5 @@
 """
-Show Runner script for CLC, the Christmas lights controller
+Show Runner script for the PiLit holiday lighting controller
 Author: Tim Poulsen, @skypanther
 License: MIT
 
@@ -19,7 +19,7 @@ delete any extra numbers from the sample line below
 
 3. Run it (manually or from cron) with a command in the form:
 
-> py runshow.py show.json HH:MM
+> python3 runshow.py show.json HH:MM
 
   where show.json is the name of your show file (in same
   directory as this file) and HH:MM is the hours and minutes
@@ -27,9 +27,9 @@ delete any extra numbers from the sample line below
 
 For example:
 
-> py runshow.py show.json 22:30
+> python3 runshow.py show.json 22:30
 
-Runs the show.json show till 11:30 PM tonight.
+Runs the show.json show till 10:30 PM tonight.
 
 """
 
