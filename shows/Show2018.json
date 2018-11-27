@@ -2,7 +2,7 @@
   "title": "Show2018",
   "channels": 16,
   "duration": 600,
-  "interval": 100,
+  "interval": 200,
   "lastUpdateRow": [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
   "loop": true,
   "show": [
