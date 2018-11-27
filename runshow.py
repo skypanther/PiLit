@@ -144,9 +144,9 @@ list defined in your show.json file
         sys.exit(msg)
     for index, relay_state in enumerate(row):
         if relay_state == 1:
-            pins[index].on()
-        else:
             pins[index].off()
+        else:
+            pins[index].on()
 
 
 def setup_pins():
