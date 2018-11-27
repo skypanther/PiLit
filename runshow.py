@@ -46,8 +46,8 @@ from gpiozero import LED
 # CONFIGURE THESE VARIABLES TO SUIT YOUR ACTUAL SETUP
 # USE BCM (BROADCOM) NOT PHYSICAL PIN NUMBERS
 # don't use GPIO 14 / pin 8 on a Pi B+ as it's the "hard drive light" pin
-gpio_pins = [5, 29, 26, 37, 19, 23, 32, 33, 10, 36, 12, 35, 40, 15, 16, 18]
-# board_pins 3,  5,  7, 26, 10, 11, 12, 13, 15, 16, 18, 19, 21, 22, 23, 24
+gpio_pins = [2, 3, 4, 7, 15, 17, 18, 27, 22, 23, 24, 10, 9, 25, 11, 8]
+# board_pins 3, 5, 7, 26, 10, 11, 12, 13, 15, 16, 18, 19, 21, 22, 23, 24
 
 
 # DON'T CHANGE THESE VARIABLES
