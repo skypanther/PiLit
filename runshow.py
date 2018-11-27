@@ -13,9 +13,12 @@ Setup:
 > sudo apt-get update
 > sudo apt-get install python3-gpiozero python-gpiozero
 
-2. Update the board_pins list below with the pin numbers you're
+2. Update the gpio_pins list below with the pin numbers you're
 using on your Pi. If you're using less than 16 pins, simply
-delete any extra numbers from the sample line below
+delete any extra numbers from the sample line below.
+
+   NOTE: You must use the BCM (Broadcom) numbers for the pins
+   and NOT their physical pin numbers!
 
 3. Run it (manually or from cron) with a command in the form:
 
@@ -41,8 +44,11 @@ import os.path
 from gpiozero import LED
 
 # CONFIGURE THESE VARIABLES TO SUIT YOUR ACTUAL SETUP
-# don't use pin 8 on a Pi B+ as it's the "hard drive light" pin
-board_pins = [3, 5, 7, 26, 10, 11, 12, 13, 15, 16, 18, 19, 21, 22, 23, 24]
+# USE BCM (BROADCOM) NOT PHYSICAL PIN NUMBERS
+# don't use GPIO 14 / pin 8 on a Pi B+ as it's the "hard drive light" pin
+gpio_pins = [5, 29, 26, 37, 19, 23, 32, 33, 10, 36, 12, 35, 40, 15, 16, 18]
+# board_pins 3,  5,  7, 26, 10, 11, 12, 13, 15, 16, 18, 19, 21, 22, 23, 24
+
 
 # DON'T CHANGE THESE VARIABLES
 midnight = datetime.today().replace(
@@ -131,7 +137,7 @@ def control_row(row):
     if len(row) != len(pins):
         msg = '''
 Error:
-You must make sure the number of items in the board_pins
+You must make sure the number of items in the gpio_pins
 list in runshow.py is the same as each row in the show
 list defined in your show.json file
 '''
@@ -148,7 +154,7 @@ def setup_pins():
     Creates the LED instances for each of the pins to which
     you have relays connected and stores them in the pins list
     """
-    for pin_number in board_pins:
+    for pin_number in gpio_pins:
         pins.append(LED(pin_number))
 
 
