@@ -1,0 +1,25 @@
+{
+    "configurations": [
+        {
+            "name": "Mac",
+            "includePath": [
+                "/Users/timpoulsen/Documents/Arduino/libraries/FastLED",
+                "/Users/timpoulsen/Documents/Arduino/libraries/PubSubClient/src",
+                "/Users/timpoulsen/Library/Arduino15/packages/esp8266/hardware/esp8266/2.5.2/libraries/ESP8266mDNS/src",
+                "/Users/timpoulsen/Library/Arduino15/packages/esp8266/hardware/esp8266/2.5.2/libraries/ESP8266WiFi/src",
+                "/Users/timpoulsen/Library/Arduino15/packages/esp8266/tools/**",
+                "/Users/timpoulsen/Library/Arduino15/packages/esp8266/hardware/esp8266/2.5.2/**"
+            ],
+            "forcedInclude": [],
+            "macFrameworkPath": [
+                "/System/Library/Frameworks",
+                "/Library/Frameworks"
+            ],
+            "intelliSenseMode": "clang-x64",
+            "compilerPath": "/usr/bin/clang",
+            "cStandard": "c11",
+            "cppStandard": "c++17"
+        }
+    ],
+    "version": 4
+}
