@@ -1,39 +1,17 @@
+/*
+ * ESP8266 code to control RGB pixel strips
+ *  - Network connection code
+ *  - MQTT subscriber code
+ *  - FastLED based pixel control code
+*/
+
+#include <string>
+
 // MQTT library
 #include <PubSubClient.h>
 
-// must be set before including FastLED
-#define FASTLED_ESP8266_NODEMCU_PIN_ORDER
-
-// FastLED includes
-// #include <FastLED.h>
-// #include <bitswap.h>
-// #include <chipsets.h>
-// #include <color.h>
-// #include <colorpalettes.h>
-// #include <colorutils.h>
-// #include <controller.h>
-// #include <cpp_compat.h>
-// #include <dmx.h>
-// #include <fastled_config.h>
-// #include <fastled_delay.h>
-// #include <fastled_progmem.h>
-// #include <fastpin.h>
-// #include <fastspi.h>
-// #include <fastspi_bitbang.h>
-// #include <fastspi_dma.h>
-// #include <fastspi_nop.h>
-// #include <fastspi_ref.h>
-// #include <fastspi_types.h>
-// #include <hsv2rgb.h>
-// #include <led_sysdefs.h>
-// #include <lib8tion.h>
-// #include <noise.h>
-// #include <pixelset.h>
-// #include <pixeltypes.h>
-// #include <platforms.h>
-// #include <power_mgt.h>
-
 // Project-specific / custom libraries
+#include "lightsequences.h"
 #include "utils.h"
 
 #define MAX_MESSAGE_LENGTH 128
@@ -43,7 +21,7 @@ WiFiClient wifiClient;
 PubSubClient mqttClient(wifiClient);
 
 // CONFIGURE THESE VARIABLES TO MATCH YOUR SETUP
-const String hostname = "xmas";            // The hostname of this device -- eg. thishost.local
+const std::string hostname = "xmas";            // The hostname of this device -- eg. thishost.local
 const char *brokerHostname = "northpole";  // Hostname of the MQTT broker
 const char *topic = "test/message";
 
@@ -83,11 +61,11 @@ void mqttReconnect() {
 
 void setup() {
     // CONFIGURE AS NEEDED TO MATCH YOUR NETWORK'S SSID & PASSWORD
-	NetworkData net1, net2;
+    NetworkData net1, net2;
     net1.ssid = "poulsen";
-    net1.password = "hobbes22";
+    net1.password = "PASSWORD_GOES_HERE";
     net2.ssid = "poulsen2";
-    net2.password = "hobbes22";
+    net2.password = "PASSWORD_GOES_HERE";
     NetworkData networks[] = {net1, net2};
 
     // DON'T CHANGE BELOW HERE

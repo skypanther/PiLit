@@ -50,7 +50,7 @@ void disableLogging() {
 }
 
 
-void log(String message = "", bool withNewLine = true) {
+void log(std::string message = "", bool withNewLine = true) {
 	if (loggingEnabled) {
         Serial.print(message);
 		if (withNewLine) {
@@ -59,7 +59,7 @@ void log(String message = "", bool withNewLine = true) {
     }
 }
 
-void connectToNetwork(ESP8266WiFiMulti wifiMulti, String hostname, NetworkData networks[], int num_elems=0) {
+void connectToNetwork(ESP8266WiFiMulti wifiMulti, std::string hostname, NetworkData networks[], int num_elems=0) {
 	if (num_elems == 0) {
 		return;
 	}
