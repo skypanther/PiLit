@@ -38,18 +38,16 @@ void log(std::string message = "", bool withNewLine = true) {
   log(str, withNewLine);
 }
 
-std::vector<std::string> split(char text[], std::string delimiter) {
+std::vector<std::string> split(char text[], char delimiter[]=":") {
   std::vector<std::string> subStrings;
-  // Declaration of delimiter 
-  const char s[4] = ":"; 
   char* tok;
   
-  tok = strtok(text, s); 
+  tok = strtok(text, delimiter); 
   
   // Checks for delimeter 
   while (tok != 0) { 
     subStrings.push_back(tok);
-      tok = strtok(0, s); 
+      tok = strtok(0, delimiter); 
   }
   return subStrings; 
 } 

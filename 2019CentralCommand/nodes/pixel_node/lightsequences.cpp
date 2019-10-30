@@ -1,5 +1,7 @@
 // lightsequences.cpp -- include-able version of the lightsequences.ino file
 
+#define FASTLED_ESP8266_NODEMCU_PIN_ORDER
+
 #include <FastLED.h>
 #include <string>
 #include <unordered_map>
@@ -12,7 +14,6 @@
 #define BRIGHTNESS 50
 CRGB leds[NUM_LEDS];
 
-#define FASTLED_ESP8266_NODEMCU_PIN_ORDER
 
 int16_t positionRed = 0;   // Set initial start position of Red pixel
 int16_t positionWhite = 1; // Set initial start position of White pixel
@@ -24,6 +25,7 @@ int16_t slinkyPosition = 1;
 int16_t edgesCenterPosition = 0;
 
 CRGB currentColor = CRGB::Black;
+char *lsCurrentColorName = "black";
 char *current_function = "solid_color";
 //
 // Lookup table of colors - to convert string to CRGB reference
@@ -117,9 +119,9 @@ std::unordered_map<std::string, CRGB> colorTable = {
 // of a function to be run on the ESP8266
 //
 
-typedef void (*ScriptFunction)(); // function pointer type
-typedef std::unordered_map<std::string, ScriptFunction> scriptMap;
-scriptMap functionsList;  // see the end of the file where this is populated
+//typedef void (*ScriptFunction)(); // function pointer type
+//typedef std::unordered_map<std::string, ScriptFunction> scriptMap;
+//scriptMap functionsList;  // see the end of the file where this is populated
 
 
 //
@@ -128,6 +130,8 @@ scriptMap functionsList;  // see the end of the file where this is populated
 
 void set_color(char *colorName) {
   if (colorTable.count(colorName) > 0) {
+    Serial.print("Setting color to ---> ");Serial.println(colorName);
+    lsCurrentColorName = colorName;
     currentColor = colorTable[colorName];
   }
 }
@@ -137,8 +141,7 @@ void set_color(char *colorName) {
 // LED pattern functions
 //
 void solid_color() {
-//  Serial.print("solid_color() with currentColor = ");
-//  Serial.println(currentColor);
+  Serial.println("solid_color()");
   FastLED.showColor(currentColor);
 }
 
@@ -274,35 +277,35 @@ void lightsequences_setup() {
   FastLED.addLeds<LED_TYPE, DATA_PIN, CLOCK_PIN, COLOR_ORDER>(leds, NUM_LEDS);
   FastLED.setBrightness(BRIGHTNESS);
   FastLED.clear();
-  functionsList.emplace("solid_color", &solid_color);
-  functionsList.emplace("center_out", &center_out);
-  functionsList.emplace("edges_in", &edges_in);
-  functionsList.emplace("slinky", &slinky);
-  functionsList.emplace("slinky_backwards", &slinky_backwards);
-  functionsList.emplace("bounce", &bounce);
+//  functionsList.emplace("solid_color", &solid_color);
+//  functionsList.emplace("center_out", &center_out);
+//  functionsList.emplace("edges_in", &edges_in);
+//  functionsList.emplace("slinky", &slinky);
+//  functionsList.emplace("slinky_backwards", &slinky_backwards);
+//  functionsList.emplace("bounce", &bounce);
 }
 
-void run_animation(char *funcName) {
-  Serial.print("run_animation() called with ");
-  Serial.println(funcName);
-  String foo = String(funcName);
-  if (foo.length() < 5) {
-    Serial.print("length < 5, it is ");
-    Serial.println(foo.length());
-      auto sub_iter = functionsList.find(current_function);
-      if (sub_iter == functionsList.end()) {
-        Serial.print("what? ");
-        Serial.println(current_function);
-        return;
-      }
-      (*sub_iter->second)();
-      return;
-  }
-    auto iter = functionsList.find(funcName);
-    if (iter == functionsList.end()) {
-      Serial.println("function not found, returning...");
-      return;
-    }
-    current_function = funcName;
-    (*iter->second)();
-}
+//void run_animation(char *funcName) {
+//  Serial.print("run_animation() called with ");
+//  Serial.println(funcName);
+//  String foo = String(funcName);
+//  if (foo.length() < 5) {
+//    Serial.print("length < 5, it is ");
+//    Serial.println(foo.length());
+//      auto sub_iter = functionsList.find(current_function);
+//      if (sub_iter == functionsList.end()) {
+//        Serial.print("what? ");
+//        Serial.println(current_function);
+//        return;
+//      }
+//      (*sub_iter->second)();
+//      return;
+//  }
+//    auto iter = functionsList.find(funcName);
+//    if (iter == functionsList.end()) {
+//      Serial.println("function not found, returning...");
+//      return;
+//    }
+//    current_function = funcName;
+//    (*iter->second)();
+//}
