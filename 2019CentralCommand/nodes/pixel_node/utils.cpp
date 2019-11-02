@@ -50,4 +50,15 @@ std::vector<std::string> split(char text[], char delimiter[]=":") {
       tok = strtok(0, delimiter); 
   }
   return subStrings; 
-} 
+}
+
+void to_lowercase(char* input) {
+    if ( *input == 0 ) {
+        return;
+    }
+
+    if ( *input >= 'A' && *input <= 'Z') {    
+       *input += 32; // convert capital letter to lowercase
+    }    
+    to_lowercase(++input); // simply move to next char in array
+}

@@ -5,11 +5,10 @@
     - FastLED based pixel control code
 */
 
-#define FASTLED_ESP8266_NODEMCU_PIN_ORDER
-
 #include <string>
 #include <unordered_map>
 
+#include <FastLED.h>
 #include <ESP8266mDNS.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266WiFiMulti.h>
@@ -18,13 +17,20 @@
 #include <WiFiServer.h>
 #include <WiFiServerSecure.h>
 #include <WiFiUdp.h>
-
-#include <PubSubClient.h>               // MQTT library
-#include "lightsequences.h"             // FastLED/pixel control library
-#include "utils.h"                      // General utilities
+#include <FastLED.h>
+#include <PubSubClient.h>
+#include "utils.h"
+#define FASTLED_ESP8266_NODEMCU_PIN_ORDER
 
 #define MAX_MESSAGE_LENGTH 128
+#define LED_TYPE APA102
+#define DATA_PIN 5
+#define CLOCK_PIN 4
+#define NUM_LEDS 100
+#define COLOR_ORDER BGR
+#define BRIGHTNESS 50
 
+CRGB leds[NUM_LEDS];
 struct NetworkData {
   char *ssid;
   char *password;
@@ -37,12 +43,16 @@ String topics[] = {                         // Create an array of topics to subs
   "all",                                    // add as many topics as necessary
   "arches"
 };
-char *brokerHostname = "192.168.1.3";       // Hostname/IP address of the MQTT broker
+char *brokerHostname = "Tim-Poulsen-MBP15.local";  // "192.168.1.6";       // Hostname/IP address of the MQTT broker
 char *net1_ssid = "poulsen";
 char *net1_password = "PASSWORD";
 char *net2_ssid = "poulsen2";
 char *net2_password = "PASSWORD";
-const uint16_t loopInterval = 20;         // Time (ms) between calls to animation function
+
+// Some base delay times
+uint16_t loopDelay = 10;     // Time (ms) between calls to animation function
+uint16_t holdTime = 50;      // Time (ms) delay at the end of some back-n-forth functions (e.g. bounce)
+
 
 // XXXXXXXXXX  DON'T CHANGE ANYTHING BELOW THIS IN THIS FILE  XXXXXXXXXX
 
@@ -51,37 +61,254 @@ WiFiClient wifiClient;
 PubSubClient mqttClient(wifiClient);
 boolean connectioWasAlive = true;
 
-char valid_colors[] = "white snow silver gray grey darkGray darkGrey black White Snow Silver Gray Grey DarkGray DarkGrey Black red crimson darkMagenta darkRed magenta maroon Red Crimson DarkMagenta DarkRed Magenta Maroon orange orangeRed darkOrange Orange OrangeRed DarkOrange yellow gold Yellow Gold green lime darkGreen forestGreen Green Lime DarkGreen ForestGreen cyan darkCyan Cyan DarkCyan blue deepSkyBlue royalBlue skyBlue darkBlue navy Blue DeepSkyBlue RoyalBlue SkyBlue DarkBlue Navy blueViolet purple violet indigo darkViolet BlueViolet Purple Violet Indigo DarkViolet";
+char valid_colors[] = "white snow silver gray grey darkgray darkgrey black red crimson darkmagenta darkred magenta maroon orange orangered darkorange yellow gold green lime darkgreen forestgreen cyan darkcyan blue deepskyblue royalblue skyblue darkblue navy blueviolet purple violet indigo darkviolet";
 char valid_functions[] = "solid_color center_out edges_in slinky slinky_backwards bounce";
 char delim[] = ":";
 char *current_color = "black";
-std::function<void(void)> currentAnimation = solid_color;
+std::function<void(void)> currentAnimation;
+int16_t positionRed = 0;   // Set initial start position of Red pixel
+int16_t positionWhite = 1; // Set initial start position of White pixel
+int16_t positionBlue = 2;  // Set initial start position of Blue pixel
+int8_t delta = 1;          // Using a negative value will move pixels backwards.
 
+int16_t slinkyPosition = 1;
+int16_t edgesCenterPosition = 0;
+
+CRGB currentColor = CRGB::Black;
+char *current_function = "solid_color";
+uint16_t origLoopDelay = 10;
+uint16_t origHoldTime = 50;
+
+//
+// Lookup table of colors - to convert string to CRGB reference
+//
+std::unordered_map<std::string, CRGB> colorTable = {
+  {"white", CRGB::White},
+  {"snow", CRGB::Snow},
+  {"silver", CRGB::Silver},
+  {"gray", CRGB::Gray},
+  {"grey", CRGB::Grey},
+  {"darkgray", CRGB::DarkGray},
+  {"darkgrey", CRGB::DarkGrey},
+  {"black", CRGB::Black},
+  
+  {"red", CRGB::Red},
+  {"crimson", CRGB::Crimson},
+  {"darkmagenta", CRGB::DarkMagenta},
+  {"darkred", CRGB::DarkRed},
+  {"magenta", CRGB::Magenta},
+  {"maroon", CRGB::Maroon},
+  
+  {"orange", CRGB::Orange},
+  {"orangered", CRGB::OrangeRed},
+  {"darkorange", CRGB::DarkOrange},
+  
+  {"yellow", CRGB::Yellow},
+  {"gold", CRGB::Gold},
+  
+  {"green", CRGB::Green},
+  {"lime", CRGB::Lime},
+  {"darkgreen", CRGB::DarkGreen},
+  {"forestgreen", CRGB::ForestGreen},
+  
+  {"cyan", CRGB::Cyan},
+  {"darkcyan", CRGB::DarkCyan},
+  
+  {"blue", CRGB::Blue},
+  {"deepskyblue", CRGB::DeepSkyBlue},
+  {"royalblue", CRGB::RoyalBlue},
+  {"skyblue", CRGB::SkyBlue},
+  {"darkblue", CRGB::DarkBlue},
+  {"navy", CRGB::Navy},
+  
+  {"blueviolet", CRGB::BlueViolet},
+  {"purple", CRGB::Purple},
+  {"violet", CRGB::Violet},
+  {"indigo", CRGB::Indigo},
+  {"darkviolet", CRGB::DarkViolet},
+};
 
 void saveCurrentAnimation(char *theFunction) {
   if (strcmp(theFunction, "solid_color") == 0) {
     currentAnimation = solid_color;
-    log("currentAnimate = solid_color");    
+    // log("currentAnimate = solid_color");    
   } else if (strcmp(theFunction, "center_out") == 0) {
     currentAnimation = center_out;
-    log("currentAnimate = center_out");    
+    // log("currentAnimate = center_out");    
   } else if (strcmp(theFunction, "edges_in") == 0) {
     currentAnimation = edges_in;
-    log("currentAnimate = edges_in");    
+    // log("currentAnimate = edges_in");    
   } else if (strcmp(theFunction, "slinky") == 0) {
     currentAnimation = slinky;
-    log("currentAnimate = slinky");    
+    // log("currentAnimate = slinky");    
   } else if (strcmp(theFunction, "slinky_backwards") == 0) {
     currentAnimation = slinky_backwards;
-    log("currentAnimate = slinky_backwards");    
+    // log("currentAnimate = slinky_backwards");    
   } else if (strcmp(theFunction, "bounce") == 0) {
     currentAnimation = bounce;
-    log("currentAnimate = bounce");    
+    // log("currentAnimate = bounce");    
   } else {
-    log("no matching function name found");    
+    // log("no matching function name found");    
   }
 }
 
+//
+// Helper functions
+//
+
+void set_color(char *colorName) {
+  if (colorTable.count(colorName) > 0) {
+    // Serial.print("Setting color to ");
+    // Serial.println(colorName);
+    currentColor = colorTable[colorName];
+  }
+}
+
+
+//
+// LED pattern functions
+//
+void solid_color() {
+  // log("solid_color()");
+  FastLED.showColor(currentColor);
+}
+
+void center_out() {
+  // log("center_out()");
+  for (int i = 0; i < NUM_LEDS; i++) {
+    if (i <= NUM_LEDS/2+edgesCenterPosition && i >= NUM_LEDS/2-edgesCenterPosition) {
+      leds[i] = currentColor;
+    } else {
+      leds[i] = CRGB::Black;
+    }
+  }
+  FastLED.show();
+
+  edgesCenterPosition = edgesCenterPosition + delta;
+  
+  if (edgesCenterPosition > NUM_LEDS/2+1) {
+    // log("Reverse ... towards pos 0");
+    edgesCenterPosition -= 1;
+    delta = -1;
+    delay(holdTime);
+  } else if (edgesCenterPosition < -1) {
+    // log("Forward we go!");
+    edgesCenterPosition += 1;
+    delta = 1;
+    delay(holdTime);
+  }
+}
+
+void edges_in() {
+  for (int i = 0; i < NUM_LEDS; i++) {
+    if (i <= edgesCenterPosition || i>=NUM_LEDS-(edgesCenterPosition+1)) {
+      leds[i] = currentColor;
+    } else {
+      leds[i] = CRGB::Black;
+    }
+  }
+  FastLED.show();
+
+  edgesCenterPosition = edgesCenterPosition + delta;
+  
+  if (edgesCenterPosition > NUM_LEDS/2+1) {
+    // log("Reverse ... towards pos 0");
+    edgesCenterPosition -= 1;
+    delta = -1;
+    delay(holdTime);
+  } else if (edgesCenterPosition < -1) {
+    // log("Forward we go!");
+    edgesCenterPosition += 1;
+    delta = 1;
+    delay(holdTime);
+  }
+}
+
+
+void slinky_backwards() {
+  for (int i = 0; i < NUM_LEDS; i++) {
+    if (i > slinkyPosition) {
+      leds[i] = currentColor;
+    } else {
+      leds[i] = CRGB::Black;
+    }
+  }
+  FastLED.show();
+
+  if (slinkyPosition == NUM_LEDS - 1) {
+    // log("Reverse ... towards pos 0");
+    delta = -1;
+    delay(holdTime);
+  } else if (slinkyPosition == 0) {
+    // log("Forward we go!");
+    delta = 1;
+    delay(holdTime);
+  }
+  slinkyPosition = (slinkyPosition + delta + NUM_LEDS) % NUM_LEDS;
+}
+
+void slinky() {
+  for (int i = 0; i < NUM_LEDS; i++) {
+    if (i <= slinkyPosition) {
+      leds[i] = currentColor;
+    } else {
+      leds[i] = CRGB::Black;
+    }
+  }
+  FastLED.show();
+
+  if (slinkyPosition == NUM_LEDS - 1) {
+    // log("Reverse ... towards pos 0");
+    delta = -1;
+    delay(holdTime);
+  } else if (slinkyPosition == 0) {
+    // log("Forward we go!");
+    delta = 1;
+    delay(holdTime);
+  }
+  slinkyPosition = (slinkyPosition + delta + NUM_LEDS) % NUM_LEDS;
+}
+
+void bounce() {
+  // Set pixel color
+  leds[positionRed] = currentColor;
+  leds[positionWhite] = currentColor;
+  leds[positionBlue] = currentColor;
+
+  // Show the pixels
+  FastLED.show();
+
+  // Set pixels back to Black for the next loop around.
+  leds[positionRed] = CRGB::Black;
+  leds[positionWhite] = CRGB::Black;
+  leds[positionBlue] = CRGB::Black;
+
+  // Set new position, moving (forward or backward) by delta.
+  // NUM_LEDS is added to the position before doing the modulo
+  // to cover cases where delta is a negative value.
+  if (positionBlue == NUM_LEDS - 1) {
+    // log("Reverse ... towards pos 0");
+    delta = -1;
+  } else if (positionBlue == 1) {
+    // log("Forward we go!");
+    delta = 1;
+  }
+  positionRed = (positionRed + delta + NUM_LEDS) % NUM_LEDS;
+  positionWhite = (positionWhite + delta + NUM_LEDS) % NUM_LEDS;
+  positionBlue = (positionBlue + delta + NUM_LEDS) % NUM_LEDS;
+}
+
+void off() {
+  saveCurrentAnimation("solid_color");
+  current_color = "black";
+  loopDelay = origLoopDelay;
+  holdTime = origHoldTime;
+}
+
+void reset() {
+  loopDelay = origLoopDelay;
+  holdTime = origHoldTime;
+}
 
 void handleMqttMessage(char *topic, byte *payload, unsigned int length) {
   char message[MAX_MESSAGE_LENGTH + 1];
@@ -92,6 +319,14 @@ void handleMqttMessage(char *topic, byte *payload, unsigned int length) {
   strncpy(message, (char *)payload, length);
   message[length] = '\0';
   log("message: ", false);log(message);
+  if (strcmp(message, (char *)"off") == 0) {
+    off();
+    return;
+  }
+  if (strcmp(message, (char *)"reset") == 0) {
+    reset();
+    return;
+  }
   if (length < 9 || !strstr(message, delim)) {
     // shortest color = red, shortest anim func = bounce = 9
     // and messages are in the form color:func_name
@@ -101,19 +336,41 @@ void handleMqttMessage(char *topic, byte *payload, unsigned int length) {
   // split it into a color:animation pair
   std::vector<std::string> results;
   results = split(message, delim);
-  if (results.size() != 2) return;
-  // results[0] should be a color name
+  if (results.size() < 1) return;
+
+  // results[0] should be a color name or "reset"
   char *theColor = const_cast<char*>(results[0].c_str());
-  char *theFunction = const_cast<char*>(results[1].c_str());
-  log("theColor: ", false);
-  log(theColor);
-  log("theFunction: ", false);
-  log(theFunction);
+  to_lowercase(theColor);
+  // log("theColor: ", false);
+  // log(theColor);  
   if (strstr(valid_colors, theColor)) {
     current_color = theColor;
   }
-  if (strstr(valid_functions, theFunction)) {
-    saveCurrentAnimation(theFunction);
+
+  if (results.size() >= 2) {
+    // results[1] should be a function name
+    char *theFunction = const_cast<char*>(results[1].c_str());
+    // log("theFunction: ", false);log(theFunction);
+    if (strstr(valid_functions, theFunction)) {
+      saveCurrentAnimation(theFunction);
+    }
+
+    if (results.size() >= 3) {
+      // if there's a third param, it will be the loopDelay
+      char *tmpLoopDelayChar = const_cast<char*>(results[2].c_str());
+      uint16_t tmpLoopDelay = atoi(tmpLoopDelayChar);
+      if (tmpLoopDelay > 0) {
+        loopDelay = tmpLoopDelay;
+      }
+    }
+    if (results.size() == 4) {
+      // if there's a fourth param, it will be the holdTime
+      char *tmpHoldTimeChar = const_cast<char*>(results[3].c_str());
+      uint16_t tmpHoldTime = atoi(tmpHoldTimeChar);
+      if (tmpHoldTime > 0) {
+        holdTime = tmpHoldTime;
+      }
+    }
   }
 }
 
@@ -130,7 +387,7 @@ void mqttReconnect() {
         mqttClient.subscribe(topic.c_str());
       }
     } else {
-      log("failed");
+      // log("failed");
       delay(1000);
     }
   }
@@ -155,28 +412,36 @@ void connectToNetwork(ESP8266WiFiMulti wifiMulti, char *hostname, NetworkData ne
   if (!MDNS.begin(hostname)) { // Start the mDNS responder for esp8266.local
     log("Error setting up MDNS responder!");
   }
-  log("mDNS responder started");
+  // log("mDNS responder started");
 }
 
 void monitorWiFi(ESP8266WiFiMulti wifiMulti) {
   if (wifiMulti.run() != WL_CONNECTED) {
     if (connectioWasAlive == true) {
       connectioWasAlive = false;
-      log("Looking for WiFi ");
+      // log("Looking for WiFi ");
     }
-    log(".", false);
+    // log(".", false);
     delay(500);
     MDNS.notifyAPChange();
   } else if (connectioWasAlive == false) {
     connectioWasAlive = true;
-    log(" connected to " + WiFi.SSID());
+    // log(" connected to " + WiFi.SSID());
   }
   // Calling update() is key to getting the ESP8266 to respond to hostname.local
   MDNS.update();
 }
 
 void setup() {
-  lightsequences_setup();
+  Serial.begin(115200);
+  pinMode(DATA_PIN, OUTPUT);
+  pinMode(CLOCK_PIN, OUTPUT);
+  delay(3000); // Startup delay
+  FastLED.addLeds<LED_TYPE, DATA_PIN, CLOCK_PIN, COLOR_ORDER>(leds, NUM_LEDS);
+  FastLED.setBrightness(BRIGHTNESS);
+  FastLED.clear();
+  FastLED.showColor(CRGB::Black);
+  currentAnimation = solid_color;
   NetworkData net1, net2;
   net1.ssid = net1_ssid;
   net1.password = net1_password;
@@ -194,11 +459,8 @@ void loop() {
   if (!mqttClient.connected()) {
     mqttReconnect();
   }
-  // this is ESSENTIAL!
-  mqttClient.loop();
-  // these functions in lightsequences will take care of ignoring bad color/function names
+  mqttClient.loop();  // this is ESSENTIAL!
   set_color(current_color);
   currentAnimation();
-  // idle
-      delay(500);
+  delay(loopDelay);
 }
