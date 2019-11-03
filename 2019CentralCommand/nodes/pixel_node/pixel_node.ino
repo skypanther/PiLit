@@ -17,12 +17,12 @@
 #include <WiFiServer.h>
 #include <WiFiServerSecure.h>
 #include <WiFiUdp.h>
-#include <FastLED.h>
 #include <PubSubClient.h>
 #include "utils.h"
 #define FASTLED_ESP8266_NODEMCU_PIN_ORDER
-
 #define MAX_MESSAGE_LENGTH 128
+
+// CHANGE THESE TO MATCH THE PIXEL TYPE AND SPECIFICS OF YOUR SETUP
 #define LED_TYPE APA102
 #define DATA_PIN 5
 #define CLOCK_PIN 4
@@ -30,18 +30,12 @@
 #define COLOR_ORDER BGR
 #define BRIGHTNESS 50
 
-CRGB leds[NUM_LEDS];
-struct NetworkData {
-  char *ssid;
-  char *password;
-};
-
-
 // ------> CONFIGURE THESE VARIABLES TO MATCH YOUR SETUP  <------
-char *hostname = "xmas";                    // The hostname of this device -- eg. thishost.local
+char *hostname = "arch1";                   // The hostname of this device -- eg. thishost.local
 String topics[] = {                         // Create an array of topics to subscribe to
   "all",                                    // add as many topics as necessary
-  "arches"
+  "arches",
+  "arch1"
 };
 char *brokerHostname = "Tim-Poulsen-MBP15.local";  // "192.168.1.6";       // Hostname/IP address of the MQTT broker
 char *net1_ssid = "poulsen";
@@ -55,6 +49,12 @@ uint16_t holdTime = 50;      // Time (ms) delay at the end of some back-n-forth 
 
 
 // XXXXXXXXXX  DON'T CHANGE ANYTHING BELOW THIS IN THIS FILE  XXXXXXXXXX
+
+CRGB leds[NUM_LEDS];
+struct NetworkData {
+  char *ssid;
+  char *password;
+};
 
 ESP8266WiFiMulti wifiMulti;
 WiFiClient wifiClient;

@@ -20,6 +20,8 @@ These node types accept these MQTT messages in this form:
 
 ```
 topic color:animation_type:loop_delay:hold_time
+topic off
+topic reset
 ```
 
 Where:
@@ -29,6 +31,8 @@ Where:
 * `animation_type` is one of the valid animations below.
 * `loop_delay` is a number of milliseconds, default is 10. Increasing this has the effect of slowing the animation.
 * `hold_time` is a number of milliseconds, default is 50. Some animations, such as bounce, pause briefly when the moving light reaches the end of the strip. Changing `hold_time` changes this pause. Don't set it much above 300-500 ms though, or the animation gets all funky.
+
+Two special forms of the command are `off` and `reset`. Using `off` is the same as setting all LEDs to black and running the solid_color animation -- in other words the strip goes off. Using `reset` keeps whatever animation was running going, but resets the loop delay and hold times to their default values.
 
 **Valid color names:** white, snow, silver, gray, grey, darkgray, darkgrey, black, red, crimson, darkmagenta, darkred, magenta, maroon, orange, orangered, darkorange, yellow, gold, green, lime, darkgreen, forestgreen, cyan, darkcyan, blue, deepskyblue, royalblue, skyblue, darkblue, navy, blueviolet, purple, violet, indigo, darkviolet
 
@@ -48,6 +52,9 @@ Where:
 ```
 mosquitto_pub -h 192.168.1.10 -i publisher -t arches -m 'blue:slinky'
 mosquitto_pub -h 192.168.1.10 -i publisher -t arches -m 'blue:slinky:20:250'
+mosquitto_pub -h 192.168.1.10 -i publisher -t arches -m 'reset'
+mosquitto_pub -h 192.168.1.10 -i publisher -t arches -m 'off'
+
 ```
 
 ### onoff_node
