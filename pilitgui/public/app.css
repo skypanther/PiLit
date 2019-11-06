@@ -20,45 +20,71 @@
 /* ----------------------------------------------
     ROW / CHANNEL STYLES
    ---------------------------------------------- */
-.row-wrapper {
+
+.row-outer-wrapper {
   margin: 0;
+  padding: 0;
+  min-width: 100%;
+  height: 70pt;
   background-color: #eee;
   border-bottom: 1px solid #ccc;
-  width: 100%;
+}
+.row-wrapper {
+  margin: 0;
+  padding: 0;
+  min-width: 100%;
   height: 70pt;
+  display: flex;
+  justify-content: flex-start;
 }
 
 .row-inner-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 0;
 }
 
 .row-title {
   background-color: black;
   color: white;
+  width: 30pt;
+  height: 70pt;
+  text-align: center;
+}
+.row-title-text {
   transform: rotate(-90deg) translateX(-70pt);
   transform-origin: top left;
+  color: white;
+  height: 30pt;
   width: 70pt;
-  text-align: center;
-  font-size: 9pt;
   padding: 6pt 0;
-  float: left;
+  font-size: 9pt;
 }
 
+.row-image {
+  height: 70pt;
+  width: 70pt;
+  background-color: #eee;
+  border-bottom: 1px solid #ccc;
+}
+
+.button-wrapper {
+  height: 30pt;
+  margin: auto 1px;
+}
 /* ----------------------------------------------
     NODE STYLES
    ---------------------------------------------- */
 .node-wrapper {
   padding: 4pt;
-  margin: 1pt 4pt;
   width: 200pt;
+  background-color: #eee;
+  border-bottom: 1px solid #ccc;
 }
 .node-inner-wrapper {
   border: 1px solid darkslateblue;
-  border-radius: 4pt;
+  border-radius: 3pt;
   padding: 4pt;
   margin: 1pt 4pt;
   background-color: slategray;
-  float: left;
-}
-
-.add-node-button {
 }
