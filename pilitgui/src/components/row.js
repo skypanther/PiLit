@@ -28,15 +28,6 @@ class Row extends Component {
           <div id="rowWrapper" className="row-inner-wrapper">
             <PixelNode />
             <PixelNode />
-            <PixelNode />
-            <PixelNode />
-            <PixelNode />
-            <PixelNode />
-            <PixelNode />
-            <PixelNode />
-            <PixelNode />
-            <PixelNode />
-            <PixelNode />
           </div>
           <div className="button-wrapper">
             <Button variant="light"><FontAwesomeIcon icon={faPlusCircle} onClick={() => { this.handleAddNode() }} /></Button>

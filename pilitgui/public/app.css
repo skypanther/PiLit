@@ -77,7 +77,7 @@
    ---------------------------------------------- */
 .node-wrapper {
   padding: 4pt;
-  width: 200pt;
+  width: 800pt;
   background-color: #eee;
   border-bottom: 1px solid #ccc;
 }
@@ -87,4 +87,32 @@
   padding: 4pt;
   margin: 1pt 4pt;
   background-color: slategray;
+}
+
+.react-select-container {
+  width: 100pt;
+  white-space: nowrap;
+  display: inline-block;
+  vertical-align: top;
+}
+.react-select__control {
+  padding: 0;
+  margin: 0;
+}
+.react-select__indicators {
+  padding: 0;
+  margin: 0;
+}
+
+.node-checkbox {
+  font-size: 8pt;
+  width: 100pt;
+  display: inline-block;
+  color: white;
+}
+
+.form-control {
+  font-size: 8pt;
+  width: 100pt;
+  display: inline-block;
 }
