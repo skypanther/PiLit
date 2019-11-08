@@ -5,7 +5,7 @@ import PixelNode from './nodes/pixelnode';
 import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import Button from 'react-bootstrap/Button';
+import Button from 'react-bootstrap/Button'
 
 import leaping_arch from '../../public/images/leaping_arch.jpg';
 
@@ -15,19 +15,20 @@ class Row extends Component {
   }
 
   handleAddNode = () => {
-
   }
-
+  saveNodeConfig = (index, newConfig) => {
+    console.log("saving animation " + index);
+  }
   render() {
     var rowTitle = "Arch 1";
-    return (
+      return (
       <div className="row-outer-wrapper">
         <div className="row-wrapper">
           <div className="row-title"><div className="row-title-text">{rowTitle}</div></div>
           <div className="row-image-wrapper" id="rowImage"><img src={leaping_arch} className="row-image" /></div>
           <div id="rowWrapper" className="row-inner-wrapper">
-            <PixelNode />
-            <PixelNode />
+            <PixelNode saveNodeConfig={this.saveNodeConfig} index="0" />
+            <PixelNode saveNodeConfig={this.saveNodeConfig} index="1" />
           </div>
           <div className="button-wrapper">
             <Button variant="light"><FontAwesomeIcon icon={faPlusCircle} onClick={() => { this.handleAddNode() }} /></Button>

@@ -8,6 +8,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal'
+import Container from 'react-bootstrap/Container'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 
 const dot = (color = '#ccc') => ({
   alignItems: 'center',
@@ -136,8 +140,30 @@ const animations = [
 
 
 class PixelNode extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      show: false
+    };
+    this.handleShow = this.handleShow.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+  }
 
-    // [
+  handleShow = () => {
+    console.log('showing modal')
+    this.setState({show:true});
+  }
+  handleClose = () => {
+    this.setState({show:false});
+    console.log('closing....')
+  }
+  handleSave = () => {
+    this.setState({show:false});
+    this.props.saveNodeConfig(this.props.index, {})
+    console.log('saving and closing....')
+  }
+
+  // [
     //     {
     //         "label": "Animation",
     //         "displayPosition": 0,
@@ -187,41 +213,76 @@ class PixelNode extends Component {
 
     render() {
       return (
-        <div className = "node-wrapper">
-          <div className = "node-inner-wrapper">
-            <div>
-              <Select 
-                className='react-select-container'
-                classNamePrefix="react-select"
-                placeholder="Animation"
-                options={animations}
-                styles={animationStyles} />
-              <Form.Check type="checkbox" label="Repeat?" className="node-checkbox" style={{marginLeft: '10px', marginTop: '10pt'}} inline="true" defaultChecked onChange={e => this.isRepeatable(e.target.checked)}/>
+        <>
+          <Modal show={this.state.show} onHide={this.handleClose} animation={true}>
+            <Modal.Header closeButton>
+              <Modal.Title>Pixel Animation Settings</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Container>
+                <Row>
+                  <Col xs={8}>
+                    <Select 
+                      className='react-select-container'
+                      classNamePrefix="react-select"
+                      placeholder="Animation"
+                      options={animations}
+                      styles={animationStyles} />
+                  </Col>
+                  <Col xs={4}>
+                    <Form.Check
+                      type="checkbox"
+                      label="Repeat?"
+                      className="node-checkbox"
+                      style={{marginLeft: '10px', marginTop: '10pt'}}
+                      inline="true"
+                      defaultChecked
+                      onChange={e => this.isRepeatable(e.target.checked)}/>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs={8}>
+                    <Select 
+                      className='react-select-container'
+                      classNamePrefix="react-select"
+                      placeholder="Color"
+                      options={colors}
+                      styles={colorStyles} />
+                  </Col>
+                  <Col xs={4}></Col>
+                </Row>
+                <Row>
+                  <Col xs={3} className="modal-label">Duration</Col>
+                  <Col xs={3}><Form.Control type="text" className="form-control" defaultValue="10" onChange={e => this.setLoopDelay(e.target.value)}/></Col>
+                  <Col xs={6} className="modal-label"> (seconds)</Col>
+                </Row>
+                <Row>
+                  <Col xs={3} className="modal-label">Loop Delay</Col>
+                  <Col xs={3}><Form.Control type="text" className="form-control" defaultValue="10" onChange={e => this.setLoopDelay(e.target.value)}/></Col>
+                  <Col xs={6} className="modal-label"> (milliseconds)</Col>
+                </Row>
+                <Row>
+                  <Col xs={3} className="modal-label">Hold Time</Col>
+                  <Col xs={3}><Form.Control type="text" className="form-control" defaultValue="50" onChange={e => this.setLoopDelay(e.target.value)}/></Col>
+                  <Col xs={6} className="modal-label"> (milliseconds)</Col>
+                </Row>
+              </Container>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={this.handleClose}>
+                Close
+              </Button>
+              <Button variant="primary" onClick={this.handleSave}>
+                Save Changes
+              </Button>
+            </Modal.Footer>
+          </Modal>
+          <div className = "node-wrapper">
+            <div className = "node-inner-wrapper" onClick={this.handleShow}>
+              <p>This is some contents in the node...</p>
             </div>
-            <div>
-              <Select 
-                className='react-select-container'
-                classNamePrefix="react-select"
-                placeholder="Color"
-                options={colors}
-                styles={colorStyles} />
           </div>
-          <div className="node-titles">
-            <Form.Group as={Form.Row} controlId="formPlaintextEmail">
-              <Form.Label column sm="2">
-                Email
-              </Form.Label>
-              <Form.Col sm="10">
-                <Form.Control plaintext readOnly defaultValue="email@example.com" />
-              </Form.Col>
-            </Form.Group>
-
-
-            <Form.Label className="form-control">Loop Delay</Form.Label>
-            <Form.Control type="text" className="form-control" defaultValue="10" onChange={e => this.setLoopDelay(e.target.value)}/>
-          </div>
-         </div>
-       </div>
+        </>
       )
     }
 }
