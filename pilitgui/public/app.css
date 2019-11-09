@@ -1,7 +1,11 @@
 #app-title-bar {
   margin: 0 0 10pt 0;
   padding: 5pt 10pt;
-  background-color: darkslategrey;
+  background: rgb(0,36,0);
+  background: -moz-linear-gradient(0deg, rgba(0,36,0,1) 0%, rgba(0,78,0,1) 42%, rgba(0,147,0,1) 100%);
+  background: -webkit-linear-gradient(0deg, rgba(0,36,0,1) 0%, rgba(0,78,0,1) 42%, rgba(0,147,0,1) 100%);
+  background: linear-gradient(0deg, rgba(0,36,0,1) 0%, rgba(0,78,0,1) 42%, rgba(0,147,0,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#002400",endColorstr="#009300",GradientType=1);
   height: 30pt;
   border-bottom: 2px solid black;
   position: fixed;
@@ -13,9 +17,89 @@
   font-size: 11pt;
 }
 
-#contents-wrapper {
-  margin-top: 40pt;
+#timelinebar-wrapper {
+  margin: 30pt 0 0 0;
+  height: 20pt;
+  width: 100%;
+  left: 0;
+  right: 0;
+  border-bottom: 1px solid #182848;
 }
+.timelinebar-left-col {
+  text-align: left;
+  padding-left: 5pt;
+  padding-top: 4pt;
+  width: 100pt;
+  min-width: 100pt;
+  float: left;
+  font-size: 8pt;
+}
+.timelinebar-right-col {
+  text-align: left;
+  width: 100%;
+}
+
+#contents-wrapper {
+  margin-top: 0pt;
+}
+
+/* ----------------------------------------------
+    STYLES FOR A NEW/EMPTY SHOW COMPONENT
+   ---------------------------------------------- */
+.emptyshow-wrapper {
+  width: 250pt;
+  height: 250pt;
+  border: 1px solid #eee;
+  border-radius: 10pt;
+  text-align: center;
+  vertical-align: middle;
+  justify-content: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+}
+.emptyshow-wrapper p {
+  margin-top: 75pt;
+}
+.emptyshow-title {
+  color: #999;
+}
+.emptyshow-button-wrapper {
+  padding-top: 20pt;
+}
+.emptyshow-button-wrapper .btn {
+  padding: 20pt;
+}
+
+/* ----------------------------------------------
+    STYLES FOR THE ADD NEW ROW/CHANNEL COMPONENT
+   ---------------------------------------------- */
+.addchannel-wrapper {
+  width: 250pt;
+  height: 120pt;
+  border: 1px solid #eee;
+  border-radius: 10pt;
+  text-align: center;
+  vertical-align: middle;
+  justify-content: center;
+  margin: 10pt auto;
+}
+.addchannel-wrapper p {
+  margin-top: 10pt;
+}
+.addchannel-title {
+  color: #999;
+}
+.addchannel-button-wrapper {
+  padding-top: 5pt;
+}
+.addchannel-button-wrapper .btn {
+  padding: 20pt;
+}
+
+
 
 /* ----------------------------------------------
     ROW / CHANNEL STYLES
@@ -27,7 +111,7 @@
   min-width: 100%;
   height: 60pt;
   background-color: #eee;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #182848;
 }
 .row-wrapper {
   margin: 0;
@@ -45,7 +129,7 @@
 }
 
 .row-title {
-  background-color: black;
+  background-color: #182848;
   color: white;
   width: 30pt;
   height: 60pt;
@@ -65,10 +149,10 @@
   height: 60pt;
   width: 60pt;
   background-color: #eee;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #182848;
 }
 
-.button-wrapper {
+.row-button-wrapper {
   height: 30pt;
   margin: auto 1px;
 }
@@ -89,7 +173,7 @@
   padding: 4pt 1pt;
   width: 100pt;
   background-color: #eee;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #182848;
   height: 60pt;
 }
 .node-inner-wrapper {
@@ -97,10 +181,37 @@
   border-radius: 3pt;
   padding: 4pt;
   margin: 1pt 4pt;
-  background-color: slategray;
+  background: rgb(6,27,70);
+  background: -moz-linear-gradient(180deg, rgba(6,27,70,1) 21%, rgba(17,43,96,1) 54%, rgba(46,83,170,1) 100%);
+  background: -webkit-linear-gradient(180deg, rgba(6,27,70,1) 21%, rgba(17,43,96,1) 54%, rgba(46,83,170,1) 100%);
+  background: linear-gradient(180deg, rgba(6,27,70,1) 21%, rgba(17,43,96,1) 54%, rgba(46,83,170,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#061b46",endColorstr="#2e53aa",GradientType=1);
   overflow: hidden;
   height: 50pt;
   text-overflow: clip;
+}
+.node-inner-wrapper p {
+  white-space: nowrap;
+  font-size: 10pt;
+  margin-top: 12pt;
+  color: white;
+}
+.removeNode {
+  position: relative;
+  right: 17pt;
+  top: 3pt;
+  height: 8pt;
+  width: 8pt;
+  float: right;
+}
+.removeNode .btn {
+  border: 0;
+  padding: 2pt;
+  color: orange;
+}
+.removeNode .btn:hover {
+  background-color: orange;
+  padding: 2pt;
 }
 
 .react-select-container {
