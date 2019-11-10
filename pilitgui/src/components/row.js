@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PixelNode from './nodes/pixelnode';
+import OnOffNode from './nodes/onoffnode';
 
 // FontAwesome
 import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
@@ -25,19 +26,40 @@ class Row extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      nextIndex: 0,
       nodes: []
     }
   }
 
   handleAddNode = () => {
-    let index = this.state.nodes.length;
-    var newNode = (
-      <PixelNode key={"node"+index}
-        saveNodeConfig={this.saveNodeConfig}
-        removeNode={this.removeNode}
-        index={index} />
-    );
-    this.setState({ nodes: [...this.state.nodes, newNode]});
+    let index = this.state.nextIndex;
+    var newNode;
+    switch (this.props.type) {
+      case 'PixelNode':
+        newNode = (
+          <PixelNode key={"node"+index}
+            mqttName={this.props.channelName}
+            type={this.props.type}
+            saveNodeConfig={this.saveNodeConfig}
+            removeNode={this.removeNode}
+            index={index} />
+        );
+      break;
+      case 'OnOffNode':
+        newNode = (
+          <OnOffNode key={"node"+index}
+            mqttName={this.props.channelName}
+            type={this.props.type}
+            saveNodeConfig={this.saveNodeConfig}
+            removeNode={this.removeNode}
+            index={index} />
+        );
+      break;
+    }
+    this.setState({
+      nodes: [...this.state.nodes, newNode],
+      nextIndex: index + 1
+    });
   }
 
   removeNode = (index) => {
@@ -48,6 +70,7 @@ class Row extends Component {
 
   saveNodeConfig = (index, newConfig) => {
     console.log("saving animation " + index);
+    console.log(newConfig);
   }
 
   render() {

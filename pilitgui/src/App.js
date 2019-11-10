@@ -42,7 +42,6 @@ class App extends Component {
       channelName: newRow.channelName,
       rows: [...this.state.rows, newRow]
     });
-
   }
 
 

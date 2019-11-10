@@ -58,14 +58,12 @@ class AddChannel extends Component {
   }
 
   setShowName = (val) => {
-    console.log('show name = ' + val)
     this.setState({ showName: val});
   }
   setChannelType = (val) => {
     this.setState({ channelType: val});
   }
   setChannelName = (val) => {
-    console.log('channel name = ' + val)
     this.setState({ channelName: val});
   }
 
@@ -90,7 +88,7 @@ class AddChannel extends Component {
                 </Col>
               </Row>
               <Row>
-                <Col xs={4} className="modal-label">Channel Name</Col>
+                <Col xs={4} className="modal-label">MQTT Subscriber</Col>
                 <Col xs={8}><Form.Control type="text" className="form-control" defaultValue="" onChange={e => this.setChannelName(e.target.value)}/></Col>
               </Row>
             </Container>

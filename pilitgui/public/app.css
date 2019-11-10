@@ -20,27 +20,42 @@
 #timelinebar-wrapper {
   margin: 30pt 0 0 0;
   height: 20pt;
-  width: 100%;
+  width: 10000px;
   left: 0;
-  right: 0;
   border-bottom: 1px solid #182848;
 }
 .timelinebar-left-col {
   text-align: left;
   padding-left: 5pt;
   padding-top: 4pt;
-  width: 100pt;
-  min-width: 100pt;
+  width: 90pt;
+  min-width: 90pt;
   float: left;
   font-size: 8pt;
 }
 .timelinebar-right-col {
+  width: 10000px;
   text-align: left;
-  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  margin-top: 0;
+  padding-top: 0;
+  position:relative;
+  top: -6px;
+  left: 75pt;
 }
 
 #contents-wrapper {
   margin-top: 0pt;
+}
+
+.tick-mark {
+  display: inline-block;
+  height: 8pt;
+  width: 20px;
+  border-right: 1px solid black;
+  margin: 0;
+  padding: 0;
 }
 
 /* ----------------------------------------------
@@ -108,7 +123,7 @@
 .row-outer-wrapper {
   margin: 0;
   padding: 0;
-  min-width: 100%;
+  width: 10000px;
   height: 60pt;
   background-color: #eee;
   border-bottom: 1px solid #182848;
@@ -191,10 +206,10 @@
   text-overflow: clip;
 }
 .node-inner-wrapper p {
-  white-space: nowrap;
   font-size: 10pt;
-  margin-top: 12pt;
   color: white;
+  font-size: 8pt;
+  white-space: pre-wrap;
 }
 .removeNode {
   position: relative;

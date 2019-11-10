@@ -68,78 +68,26 @@ const animationStyles = {
   option: styles => ({...styles, fontSize: '8pt', padding: '4pt'})
 }
 
-const colors = [
-      { label: "Black / Off", value: "black" },
-      { label: "White", value: "white" },
-      { label: "Snow", value: "snow" },
-      { label: "Silver", value: "silver" },
-      { label: "Gray", value: "gray" },
-      { label: "Dark Gray", value: "darkgray" },
-      { label: "Red", value: "red" },
-      { label: "Crimson", value: "crimson" },
-      { label: "Dark Magenta", value: "darkmagenta" },
-      { label: "Dark Red", value: "darkred" },
-      { label: "Magenta", value: "magenta" },
-      { label: "Maroon", value: "maroon" },
-      { label: "Orange", value: "orange" },
-      { label: "Orange Red", value: "orangered" },
-      { label: "Dark Orange", value: "darkorange" },
-      { label: "Yellow", value: "yellow" },
-      { label: "Gold", value: "gold" },
-      { label: "Green", value: "green" },
-      { label: "Lime", value: "lime" },
-      { label: "Dark Green", value: "darkgreen" },
-      { label: "Forest Green", value: "forestgreen" },
-      { label: "Cyan", value: "cyan" },
-      { label: "Dark Cyan", value: "darkcyan" },
-      { label: "Blue", value: "blue" },
-      { label: "Deep Sky Blue", value: "deepskyblue" },
-      { label: "Royal Blue", value: "royalblue" },
-      { label: "Sky Blue", value: "skyblue" },
-      { label: "Dark Blue", value: "darkblue" },
-      { label: "Navy", value: "navy" },
-      { label: "Blue Violet", value: "blueviolet" },
-      { label: "Purple", value: "purple" },
-      { label: "Violet", value: "violet" },
-      { label: "Indigo", value: "indigo" },
-      { label: "Dark Violet", value: "darkviolet" }
-    ];
-
 const animations = [
       {
-        label: "Solid color",
-        value: "solid_color",
-        description: "Turn all LEDs to a single color"
+        label: "On",
+        value: "on",
+        description: "Turn the decoration on"
       },
       {
-        label: "Center-outwards",
-        value: "center_out",
-        description: "LEDs light up, one-by-one, from the center towards the end till the whole strip is on"
+        label: "Off",
+        value: "off",
+        description: "Turn the decoration off"
       },
       {
-        label: "Edges-inward",
-        value: "edges_in",
-        description: "LEDs light up, one-by-one, from two ends towards the center till the whole strip is on"
+        label: "Toggle",
+        value: "toggle",
+        description: "If on, turn off the decoration and vice-versa"
       },
-      {
-        label: "Slinky",
-        value: "slinky",
-        description: "LEDs light up, one-by-one, starting from end closest to the microcontroller towards the other end till the whole strip is on"
-      },
-      {
-        label: "Slinky backwards",
-        value: "slinky_backwards",
-        description: "LEDs light up, one-by-one, starting from end furthest from the microcontroller towards the other end till the whole strip is on"
-      },
-      {
-        label: "Bounce",
-        value: "bounce",
-        description: "3 LEDs light up, then move as a group to the other end with the rest of the LEDs all off. Once they reach the far end, they move back towards the beginning."
-      }
     ];
 
 
-class PixelNode extends Component {
+class OnOffNode extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -147,12 +95,7 @@ class PixelNode extends Component {
       nodeText: "",
       animation: "",
       animationIndex: null,
-      color: "",
-      colorIndex: null,
       duration: 10,
-      loopDelay: 10,
-      holdTime: 50,
-      repeatable: true,
       mqttName: this.props.mqttName,
       type: this.props.type,
     };
@@ -168,7 +111,7 @@ class PixelNode extends Component {
     this.setState({show:false});
   }
   handleSave = () => {
-    let nodeText = this.state.animation + "\n" + this.state.color + "\n" + this.state.loopDelay + "\n" + this.state.holdTime
+    let nodeText = this.state.animation + "\n" + this.state.duration;
     this.setState({
       show: false,
       nodeText: nodeText
@@ -186,24 +129,8 @@ class PixelNode extends Component {
       animationIndex: animationIndex
     });
   }
-  isRepeatable(isChecked) {
-    this.setState({repeatable: isChecked});
-  }
-  setColor(colorObj) {
-    let colorIndex = colors.findIndex(item => item.value === colorObj.value);
-    this.setState({
-      color: colorObj.value,
-      colorIndex: colorIndex
-    });
-  }
   setDuration(newValue) {
     this.setState({duration: parseInt(newValue)});
-  }
-  setLoopDelay(newValue) {
-    this.setState({loopDelay: parseInt(newValue)});
-  }
-  setHoldTime(newValue) {
-    this.setState({holdTime: parseInt(newValue)});
   }
 
   render() {
@@ -227,44 +154,11 @@ class PixelNode extends Component {
                     value={this.state.animationIndex !== null ? animations[this.state.animationIndex] : null}
                     onChange={e => this.setAnimationType(e)} />
                 </Col>
-                <Col xs={4}>
-                  <Form.Check
-                    type="checkbox"
-                    label="Repeat?"
-                    className="node-checkbox"
-                    style={{marginLeft: '10px', marginTop: '10pt'}}
-                    inline="true"
-                    checked={this.state.repeatable}
-                    onChange={e => this.isRepeatable(e.target.checked)}/>
-                </Col>
-              </Row>
-              <Row>
-                <Col xs={8}>
-                  <Select 
-                    className='react-select-container'
-                    classNamePrefix="react-select"
-                    placeholder="Color"
-                    options={colors}
-                    styles={colorStyles}
-                    value={this.state.colorIndex !== null ? colors[this.state.colorIndex] : null}
-                    onChange={e => this.setColor(e)} />
-                </Col>
-                <Col xs={4}></Col>
               </Row>
               <Row>
                 <Col xs={3} className="modal-label">Duration</Col>
                 <Col xs={3}><Form.Control type="text" className="form-control" value={this.state.duration} onChange={e => this.setDuration(e.target.value)}/></Col>
                 <Col xs={6} className="modal-label"> (seconds)</Col>
-              </Row>
-              <Row>
-                <Col xs={3} className="modal-label">Loop Delay</Col>
-                <Col xs={3}><Form.Control type="text" className="form-control" value={this.state.loopDelay} onChange={e => this.setLoopDelay(e.target.value)}/></Col>
-                <Col xs={6} className="modal-label"> (milliseconds)</Col>
-              </Row>
-              <Row>
-                <Col xs={3} className="modal-label">Hold Time</Col>
-                <Col xs={3}><Form.Control type="text" className="form-control" value={this.state.holdTime} onChange={e => this.setHoldTime(e.target.value)}/></Col>
-                <Col xs={6} className="modal-label"> (milliseconds)</Col>
               </Row>
             </Container>
           </Modal.Body>
@@ -288,4 +182,4 @@ class PixelNode extends Component {
   }
 }
 
-export default PixelNode;
+export default OnOffNode;
