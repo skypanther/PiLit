@@ -81,12 +81,12 @@ class EmptyShow extends Component {
                 <Col xs={8}><Form.Control type="text" className="form-control" defaultValue="" onChange={e => this.setShowName(e.target.value)}/></Col>
               </Row>
               <Row>
-                <Col xs={4} className="modal-label"></Col>
+                <Col xs={4} className="modal-label">First Channel Type</Col>
                 <Col xs={8}>
                   <Select 
                     className='react-select-container'
                     classNamePrefix="react-select"
-                    placeholder="First Channel Type"
+                    placeholder="Channel Type"
                     options={nodeTypes}
                     onChange={e => this.setChannelType(e.value)} />
                 </Col>

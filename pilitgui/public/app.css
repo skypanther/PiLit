@@ -1,11 +1,11 @@
 #app-title-bar {
   margin: 0 0 10pt 0;
   padding: 5pt 10pt;
-  background: rgb(0,36,0);
-  background: -moz-linear-gradient(0deg, rgba(0,36,0,1) 0%, rgba(0,78,0,1) 42%, rgba(0,147,0,1) 100%);
-  background: -webkit-linear-gradient(0deg, rgba(0,36,0,1) 0%, rgba(0,78,0,1) 42%, rgba(0,147,0,1) 100%);
-  background: linear-gradient(0deg, rgba(0,36,0,1) 0%, rgba(0,78,0,1) 42%, rgba(0,147,0,1) 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#002400",endColorstr="#009300",GradientType=1);
+  background: rgb(7,65,0);
+  background: -moz-linear-gradient(0deg, rgba(7,65,0,1) 18%, rgba(28,78,21,1) 61%, rgba(62,99,57,1) 100%);
+  background: -webkit-linear-gradient(0deg, rgba(7,65,0,1) 18%, rgba(28,78,21,1) 61%, rgba(62,99,57,1) 100%);
+  background: linear-gradient(0deg, rgba(7,65,0,1) 18%, rgba(28,78,21,1) 61%, rgba(62,99,57,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#074100",endColorstr="#3e6339",GradientType=1);
   height: 30pt;
   border-bottom: 2px solid black;
   position: fixed;
@@ -17,13 +17,42 @@
   font-size: 11pt;
 }
 
+#export-button-wrapper {
+  position: absolute;
+  right: 5pt;
+  top: 3pt;
+}
+
 #timelinebar-wrapper {
   margin: 30pt 0 0 0;
-  height: 20pt;
+  height: 65pt;
   width: 10000px;
   left: 0;
   border-bottom: 1px solid #182848;
+  background: rgb(235,235,235);
+  background: -moz-linear-gradient(0deg, rgba(235,235,235,1) 4%, rgba(255,255,255,1) 40%, rgba(255,255,255,1) 44%);
+  background: -webkit-linear-gradient(0deg, rgba(235,235,235,1) 4%, rgba(255,255,255,1) 40%, rgba(255,255,255,1) 44%);
+  background: linear-gradient(0deg, rgba(235,235,235,1) 4%, rgba(255,255,255,1) 40%, rgba(255,255,255,1) 44%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ebebeb",endColorstr="#ffffff",GradientType=1); 
 }
+.show-info-wrapper {
+  margin-top: 10pt;
+  margin-bottom: 10pt;
+  width: 300pt;
+}
+.col1 {
+  width: 115;
+  display: inline-block;
+  font-size: 10pt;
+  padding-left: 3pt;
+}
+.col2 {
+  width: 185pt;
+  display: inline-block;
+  font-size: 10pt;
+}
+
+
 .timelinebar-left-col {
   text-align: left;
   padding-left: 5pt;
@@ -41,7 +70,7 @@
   margin-top: 0;
   padding-top: 0;
   position:relative;
-  top: -6px;
+  top: -4px;
   left: 75pt;
 }
 
@@ -210,6 +239,7 @@
   color: white;
   font-size: 8pt;
   white-space: pre-wrap;
+  line-height: 10pt;
 }
 .removeNode {
   position: relative;

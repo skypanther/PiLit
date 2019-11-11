@@ -155,6 +155,7 @@ class PixelNode extends Component {
       repeatable: true,
       mqttName: this.props.mqttName,
       type: this.props.type,
+      nodeIndex: this.props.index
     };
     this.handleShow = this.handleShow.bind(this);
     this.handleClose = this.handleClose.bind(this);

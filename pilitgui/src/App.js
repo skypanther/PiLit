@@ -14,6 +14,37 @@ const nodeTypes = [
   { label: "Pixel Tree", value: "PixelTree" },
 ]
 
+/*
+
+    {
+      mqttName: "arch1",
+      type: "PixelNode",
+      animations: [
+        {
+          color: "red",
+          animation: "edges_in",
+          duration: 5,
+          loopDelay: 10,
+          holdTime: 50,
+          repeatable: true
+        }
+      ],
+      defaultAnimation: {
+        animation: "off"
+      }
+    },
+
+*/
+
+
+const show = {
+  showName: "showName",
+  version: 1,
+  startTime: "00:00",
+  stopTime: "00:00",
+  channels: [],
+}
+
 
 class App extends Component {
   constructor(props) {
@@ -23,25 +54,55 @@ class App extends Component {
       rows: [],
       showName: "",
       channelName: "",
+      show: show,
+      showExport: false,
+    }
+  }
+
+  saveShowTimes = (showTimes) => {
+    let newShow = this.state.show;
+    newShow.startTime = showTimes.startTime;
+    newShow.stopTime = showTimes.stopTime;
+    this.setState({
+      show: newShow
+    });
+  }
+
+  createShowChannel = (channelIndex, newRow) => {
+    return {
+      channelIndex: channelIndex,
+      mqttName: newRow.channelName,
+      type: newRow.channelType,
+      animations: [],
     }
   }
 
   handleAddRow = (newRow) => {
     var showName = this.state.showName;
+    let newShow = this.state.show;
     if (newRow.showName) {
       // creating a brand new show and adding our first channel
       showName = newRow.showName;
+      newShow.showName = newRow.showName;
     }
     let index = this.state.nextIndex;
-    var newRow = (
+    var rowToAdd = (
       <Row key={"row"+index} type={newRow.channelType} channelName={newRow.channelName} />
     );
+    let newChannel = this.createShowChannel(index, newRow);
+    newShow.channels.push(newChannel);
     this.setState({ 
       nextIndex: index + 1,
       showName: showName,
       channelName: newRow.channelName,
-      rows: [...this.state.rows, newRow]
+      rows: [...this.state.rows, rowToAdd],
+      show: newShow,
+      showExport: true,
     });
+  }
+
+  handleExport = () => {
+    console.log(JSON.stringify(show));
   }
 
 
@@ -58,8 +119,8 @@ class App extends Component {
 
     return (
         <div className="App">
-          <TitleBar />
-          <TimeLineBar title={this.state.showName} />
+          <TitleBar showExportVisible={this.state.showExport} doExport={this.handleExport}  />
+          <TimeLineBar title={this.state.showName} saveShowTimes={this.saveShowTimes} />
           <div id="contents-wrapper">
             { contents }
             { addNewRow }

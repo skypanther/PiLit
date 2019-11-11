@@ -98,6 +98,7 @@ class OnOffNode extends Component {
       duration: 10,
       mqttName: this.props.mqttName,
       type: this.props.type,
+      nodeIndex: this.props.index
     };
     this.handleShow = this.handleShow.bind(this);
     this.handleClose = this.handleClose.bind(this);
