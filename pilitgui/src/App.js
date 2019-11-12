@@ -14,29 +14,6 @@ const nodeTypes = [
   { label: "Pixel Tree", value: "PixelTree" },
 ]
 
-/*
-
-    {
-      mqttName: "arch1",
-      type: "PixelNode",
-      animations: [
-        {
-          color: "red",
-          animation: "edges_in",
-          duration: 5,
-          loopDelay: 10,
-          holdTime: 50,
-          repeatable: true
-        }
-      ],
-      defaultAnimation: {
-        animation: "off"
-      }
-    },
-
-*/
-
-
 const show = {
   showName: "showName",
   version: 1,
@@ -53,7 +30,6 @@ class App extends Component {
       nextIndex: 0,
       rows: [],
       showName: "",
-      channelName: "",
       show: show,
       showExport: false,
     }
@@ -77,6 +53,22 @@ class App extends Component {
     }
   }
 
+  handleAddAnimation = (animObj) => {
+    // Save an animation to a channel's list of animations
+    // Called from row.js
+
+    let channelIndex = this.state.show.channels.findIndex(item => item.mqttName === animObj.mqttName);
+    // Remove various fields from original object with destructuring & spread operator
+    const {show, nodeText, animationIndex, mqttName, type, ...subset} = animObj;
+    let tmpShow = this.state.show;
+    tmpShow.channels[channelIndex].animations.push(subset);
+    this.setState({show: tmpShow});
+  }
+
+  handleRemoveAnimation = () => {
+
+  }
+
   handleAddRow = (newRow) => {
     var showName = this.state.showName;
     let newShow = this.state.show;
@@ -86,15 +78,15 @@ class App extends Component {
       newShow.showName = newRow.showName;
     }
     let index = this.state.nextIndex;
+    newRow.channelName = newRow.channelName.replace(/\s+/g, "")
     var rowToAdd = (
-      <Row key={"row"+index} type={newRow.channelType} channelName={newRow.channelName} />
+      <Row key={"row"+index} type={newRow.channelType} channelName={newRow.channelName} handleAddAnimation={this.handleAddAnimation} />
     );
     let newChannel = this.createShowChannel(index, newRow);
     newShow.channels.push(newChannel);
     this.setState({ 
       nextIndex: index + 1,
       showName: showName,
-      channelName: newRow.channelName,
       rows: [...this.state.rows, rowToAdd],
       show: newShow,
       showExport: true,

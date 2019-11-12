@@ -70,7 +70,7 @@ class Row extends Component {
 
   saveNodeConfig = (index, newConfig) => {
     console.log("saving animation " + index);
-    console.log(newConfig);
+    this.props.handleAddAnimation(newConfig);
   }
 
   render() {
