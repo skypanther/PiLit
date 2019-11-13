@@ -22,6 +22,9 @@
   right: 5pt;
   top: 3pt;
 }
+#export-button-wrapper .btn {
+  margin-left: 5pt;
+}
 
 #timelinebar-wrapper {
   margin: 30pt 0 0 0;

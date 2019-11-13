@@ -62,15 +62,17 @@ class Row extends Component {
     });
   }
 
-  removeNode = (index) => {
-    var currentNodes = [...this.state.nodes];
-    currentNodes.splice(index, 1);
-    this.setState({ nodes: currentNodes});
+  removeNode = (index, nodeToRemove) => {
+    var currentNodes = this.state.nodes;
+    let removedNodes = currentNodes.splice(index, 1);
+    if (removedNodes.length === 1) {
+      this.props.handleRemoveAnimation(nodeToRemove)
+      this.setState({ nodes: currentNodes});
+    }
   }
 
-  saveNodeConfig = (index, newConfig) => {
-    console.log("saving animation " + index);
-    this.props.handleAddAnimation(newConfig);
+  saveNodeConfig = (index, nodeToAddOrUpdate) => {
+    this.props.handleAddAnimation(nodeToAddOrUpdate);
   }
 
   render() {

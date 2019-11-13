@@ -177,7 +177,7 @@ class PixelNode extends Component {
     this.props.saveNodeConfig(this.props.index, this.state);
   }
   handleDelete = () => {
-    this.props.removeNode(this.props.index);
+    this.props.removeNode(this.props.index, this.state);
   }
 
   setAnimationType(animObj) {
