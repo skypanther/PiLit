@@ -96,7 +96,7 @@ class AddChannel extends Component {
             <Button variant="secondary" onClick={this.handleClose}>
               Close
             </Button>
-            <Button variant="primary" onClick={this.handleSave}>
+            <Button variant="primary" onClick={this.handleSave} disabled={!(this.state.channelName && this.state.channelType)}>
               Save Changes
             </Button>
           </Modal.Footer>

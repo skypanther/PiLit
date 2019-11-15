@@ -198,13 +198,19 @@ class PixelNode extends Component {
     });
   }
   setDuration(newValue) {
-    this.setState({duration: parseInt(newValue)});
+    if (newValue) {
+      this.setState({duration: parseInt(newValue)});
+    }
   }
   setLoopDelay(newValue) {
-    this.setState({loopDelay: parseInt(newValue)});
+    if (newValue) {
+      this.setState({loopDelay: parseInt(newValue)});      
+    }
   }
   setHoldTime(newValue) {
-    this.setState({holdTime: parseInt(newValue)});
+    if (newValue) {
+      this.setState({holdTime: parseInt(newValue)});
+    }
   }
 
   render() {
@@ -273,7 +279,7 @@ class PixelNode extends Component {
             <Button variant="secondary" onClick={this.handleClose}>
               Close
             </Button>
-            <Button variant="primary" onClick={this.handleSave}>
+            <Button variant="primary" onClick={this.handleSave} disabled={!(this.state.animation && this.state.color)}>
               Save Changes
             </Button>
           </Modal.Footer>

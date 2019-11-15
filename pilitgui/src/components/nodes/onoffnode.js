@@ -131,7 +131,9 @@ class OnOffNode extends Component {
     });
   }
   setDuration(newValue) {
-    this.setState({duration: parseInt(newValue)});
+    if (newValue) {
+      this.setState({duration: parseInt(newValue)});
+    }
   }
 
   render() {
@@ -167,7 +169,7 @@ class OnOffNode extends Component {
             <Button variant="secondary" onClick={this.handleClose}>
               Close
             </Button>
-            <Button variant="primary" onClick={this.handleSave}>
+            <Button variant="primary" onClick={this.handleSave} disabled={!this.state.animation}>
               Save Changes
             </Button>
           </Modal.Footer>

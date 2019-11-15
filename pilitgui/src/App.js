@@ -7,9 +7,6 @@ MIT License
 TODO:
  - Either finish Save button functionality (save to localstorage, load from there)
     or, build an import function instead (to import a previously exported show JSON file)
- - Add checks for required data -- like when creating a row, you must supply values for all fields
- - Prompt for start/stop times if you try to export without having set them
- - Edit row functionality -- change the mqtt name
 
 Node changes:
  - Update pixel_node to use the repeatable boolean (so that an animation can run once)
@@ -20,6 +17,7 @@ Future:
  - Add a show previewer (using CSS, JS, or Canvas animations)
  - Create an ESP8266/Arduino version of the MegaTree node type
  - Add a music player / FM broadcast node type
+ - Edit row functionality -- change the mqtt name, probably not row type though
 */
 
 import React, { Component } from 'react';
@@ -37,7 +35,7 @@ const nodeTypes = [
   { label: "Mega Tree (multi-relay)", value: "MegaTree" },
 ]
 
-const show = {
+const showTemplate = {
   showName: "showName",
   version: 1,
   startTime: "00:00",
@@ -53,7 +51,7 @@ class App extends Component {
       nextIndex: 0,
       rows: [],
       showName: "",
-      show: show,
+      show: showTemplate,
       showExport: false,
     }
   }
@@ -143,7 +141,10 @@ class App extends Component {
   }
 
   handleExport = () => {
-    // console.log(JSON.stringify(show));
+    if (this.state.show.startTime === this.state.show.stopTime) {
+      alert("You can't set start and stop times to the same value. Did you forget to set them?");
+      return;
+    }
     let filename = this.state.showName + ".json";
     let contentType = "application/json;charset=utf-8;";
     if (window.navigator && window.navigator.msSaveOrOpenBlob) {
@@ -160,6 +161,35 @@ class App extends Component {
      }
   }
 
+  makeRowForImport = (newRow, index, showName) => {
+    var rowToAdd = (
+      <Row key={"row"+index}
+        type={newRow.type}
+        channelName={newRow.mqttName}
+        handleAddAnimation={this.handleAddAnimation}
+        handleRemoveAnimation={this.handleRemoveAnimation} />
+    );
+    return rowToAdd;
+  }
+
+  handleImport = (showContents) => {
+    try {
+      let newShow = JSON.parse(showContents);
+      let newRows = newShow.channels.map((chnnl, index) => {
+        return this.makeRowForImport(chnnl, index, newShow.showName)
+      })
+      this.setState({
+        nextIndex: newShow.channels.length,
+        rows: newRows,
+        showName: newShow.showName,
+        show: newShow,
+        showExport: true,
+      })
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
 
   render() {
     var contents;
@@ -174,7 +204,7 @@ class App extends Component {
 
     return (
         <div className="App">
-          <TitleBar showExportVisible={this.state.showExport} doExport={this.handleExport}  />
+          <TitleBar showExportVisible={this.state.showExport} doExport={this.handleExport} doImport={this.handleImport} />
           <TimeLineBar title={this.state.showName} saveShowTimes={this.saveShowTimes} />
           <div id="contents-wrapper">
             { contents }
