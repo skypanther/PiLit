@@ -157,6 +157,25 @@ class PixelNode extends Component {
       type: this.props.type,
       nodeIndex: this.props.index
     };
+    if (this.props.initialProperties) {
+      let animationIndex = animations.findIndex(item => item.value === this.props.initialProperties.animation);
+      let nodeText = this.props.initialProperties.animation + "\n" + this.props.initialProperties.color + "\n" + this.props.initialProperties.loopDelay + "\n" + this.props.initialProperties.holdTime
+      this.state = {
+        show: false,
+        nodeText: nodeText,
+        animation: this.props.initialProperties.animation,
+        animationIndex: animationIndex,
+        color: this.props.initialProperties.color,
+        colorIndex: this.props.initialProperties.colorIndex,
+        duration: this.props.initialProperties.duration,
+        loopDelay: this.props.initialProperties.loopDelay,
+        holdTime: this.props.initialProperties.holdTime,
+        repeatable: this.props.initialProperties.repeatable,
+        mqttName: this.props.mqttName,
+        type: this.props.type,
+        nodeIndex: this.props.index
+      };
+    }
     this.handleShow = this.handleShow.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
@@ -174,7 +193,7 @@ class PixelNode extends Component {
       show: false,
       nodeText: nodeText
     });
-    this.props.saveNodeConfig(this.props.index, this.state);
+    this.props.saveNodeConfig(this.state);
   }
   handleDelete = () => {
     this.props.removeNode(this.props.index, this.state);

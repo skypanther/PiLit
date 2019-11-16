@@ -1,3 +1,6 @@
+/*
+  Creates a row (aka an animation channel)
+*/
 import React, { Component } from 'react';
 import PixelNode from './nodes/pixelnode';
 import OnOffNode from './nodes/onoffnode';
@@ -29,9 +32,48 @@ class Row extends Component {
       nextIndex: 0,
       nodes: []
     }
+    if (this.props.animationsFromImport && this.props.animationsFromImport.length > 0) {
+      this.createAnimationsFromImport()
+    }
+  }
+
+  createAnimationsFromImport = () => {
+    // called as part of the import flow, this function creates the animation nodes
+    // from the imported data
+    let animationsToImport = this.props.animationsFromImport.map((anim) => {
+      var newNode;
+      switch (this.props.type) {
+        case 'PixelNode':
+          newNode = (
+            <PixelNode key={"node"+anim.nodeIndex}
+              mqttName={this.props.channelName}
+              type={this.props.type}
+              saveNodeConfig={this.saveNodeConfig}
+              removeNode={this.removeNode}
+              index={anim.nodeIndex}
+              initialProperties={anim} />
+          );
+        break;
+        case 'OnOffNode':
+          newNode = (
+            <OnOffNode key={"node"+anim.nodeIndex}
+              mqttName={this.props.channelName}
+              type={this.props.type}
+              saveNodeConfig={this.saveNodeConfig}
+              removeNode={this.removeNode}
+              index={anim.nodeIndex}
+              initialProperties={anim} />
+          );
+        break;
+      }
+      return newNode;
+    });
+    this.state.nodes = animationsToImport;
+    this.state.nextIndex = animationsToImport.length + 1;
   }
 
   handleAddNode = () => {
+    // Called when adding a new animation node via the UI.
     let index = this.state.nextIndex;
     var newNode;
     switch (this.props.type) {
@@ -63,6 +105,9 @@ class Row extends Component {
   }
 
   removeNode = (index, nodeToRemove) => {
+    // Called when removing an animation node via the UI. Passed to the the child node components.
+    // index - the nodes index within the array of nodes
+    // nodeToRemove - a reference to the node being removed so that we can remove it from state
     var currentNodes = this.state.nodes;
     let removedNodes = currentNodes.splice(index, 1);
     if (removedNodes.length === 1) {
@@ -71,7 +116,9 @@ class Row extends Component {
     }
   }
 
-  saveNodeConfig = (index, nodeToAddOrUpdate) => {
+  saveNodeConfig = (nodeToAddOrUpdate) => {
+    // Called when adding or updating an animation node via the UI. Passed to the the child node components.
+    // nodeToAddOrUpdate - a reference to the node being added/updated so that we can update it in state
     this.props.handleAddAnimation(nodeToAddOrUpdate);
   }
 

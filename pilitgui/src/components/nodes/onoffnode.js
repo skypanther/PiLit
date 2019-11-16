@@ -100,6 +100,20 @@ class OnOffNode extends Component {
       type: this.props.type,
       nodeIndex: this.props.index
     };
+    if (this.props.initialProperties) {
+      let animationIndex = animations.findIndex(item => item.value === this.props.initialProperties.animation);
+      let nodeText = this.props.initialProperties.animation + "\n" + this.props.initialProperties.duration;
+        this.state = {
+        show: false,
+        nodeText: nodeText,
+        animation: this.props.initialProperties.animation,
+        animationIndex: animationIndex,
+        duration: this.props.initialProperties.duration,
+        mqttName: this.props.mqttName,
+        type: this.props.type,
+        nodeIndex: this.props.initialProperties.nodeIndex
+      };
+    }
     this.handleShow = this.handleShow.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
@@ -117,7 +131,7 @@ class OnOffNode extends Component {
       show: false,
       nodeText: nodeText
     });
-    this.props.saveNodeConfig(this.props.index, this.state);
+    this.props.saveNodeConfig(this.state);
   }
   handleDelete = () => {
     this.props.removeNode(this.props.index, this.state);

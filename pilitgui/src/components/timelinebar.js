@@ -1,3 +1,6 @@
+/*
+  timelinebar.js -- creates the timeline and show details bar
+*/
 import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal'
@@ -13,7 +16,7 @@ class TimeLineBar extends Component {
     this.state = {
       modalVisible: false,
       modalTitle: startTimeTitle,
-      showTitle: this.props.title,
+      showTitle: this.props.show.showName,
       startTime: {
           formatted24: '00:00',
           formatted12: '00:00 pm',
@@ -21,7 +24,7 @@ class TimeLineBar extends Component {
           hour: 0,
           hour12: 0,
           minute: 0,
-          meridiem: 'pm'        
+          meridiem: 'pm'
       },
       stopTime: {
           formatted24: '00:00',
@@ -30,7 +33,7 @@ class TimeLineBar extends Component {
           hour: 0,
           hour12: 0,
           minute: 0,
-          meridiem: 'pm'        
+          meridiem: 'pm'
       }
     }
   }
@@ -72,7 +75,7 @@ class TimeLineBar extends Component {
   }
 
   makeTickBar = () => {
-    let docWidth = 10000;
+    let docWidth = 10000; // arbitrary width which will surely fail to be wide enough for a long show
     // console.log(docWidth)
     let numTicks = Math.floor(docWidth / 20);
     let ticks = [];
@@ -109,11 +112,11 @@ class TimeLineBar extends Component {
             </div>
             <div>
               <span className="col1">Start Time:</span>
-              <span className="col2" onClick={this.showStartTimeModal}>{ this.state.startTime.formatted24 }</span>
+              <span className="col2" onClick={this.showStartTimeModal}>{ this.props.show.startTime }</span>
             </div>
             <div>
               <span className="col1">Stop Time:</span>
-              <span className="col2" onClick={this.showStopTimeModal}>{ this.state.stopTime.formatted24 }</span>
+              <span className="col2" onClick={this.showStopTimeModal}>{ this.props.show.stopTime }</span>
             </div>
           </div>
           <div>
