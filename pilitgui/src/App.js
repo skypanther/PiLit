@@ -4,17 +4,6 @@ PiLit GUI - a web tool for creating PiLit light show sequences
 (c) 2019 Tim Poulsen
 MIT License
 
-TODO:
-  Node changes:
-   - Update pixel_node to use the repeatable boolean (so that an animation can run once)
-   - Add more animation functions for pixel_nodes
-   - Create the MetaTree node animations (Raspberry Pi / Python)
-
-  Future:
-   - Add a show previewer (using CSS, JS, or Canvas animations)
-   - Create an ESP8266/Arduino version of the MegaTree node type
-   - Add a music player / FM broadcast node type
-   - Edit row functionality -- change the mqtt name, probably not row type though
 */
 
 import React, { Component } from 'react';

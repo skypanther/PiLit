@@ -1,0 +1,11 @@
+TODO:
+   - Test the multi_relay scripts
+   - Update PiLit GUI to use the multi_relay script
+   - Create the show player script
+   - Finalize setup instructions and readme files
+   - Add more animation functions for pixel_nodes
+   - Update pixel_node to use the repeatable boolean (so that an animation can run once)
+
+
+Advanced Python Scheduler https://apscheduler.readthedocs.io/en/v3.6.2/
+(run code at fixed intervals)
