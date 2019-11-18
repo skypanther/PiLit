@@ -26,9 +26,9 @@
 #define LED_TYPE APA102
 #define DATA_PIN 5
 #define CLOCK_PIN 4
-#define NUM_LEDS 100
+#define NUM_LEDS 92
 #define COLOR_ORDER BGR
-#define BRIGHTNESS 50
+#define BRIGHTNESS 150
 
 // ------> CONFIGURE THESE VARIABLES TO MATCH YOUR SETUP  <------
 char *hostname = "arch1";                   // The hostname of this device -- eg. thishost.local
@@ -46,7 +46,7 @@ char *net2_password = "PASSWORD";
 // Some base delay times
 uint16_t loopDelay = 10;     // Time (ms) between calls to animation function
 uint16_t holdTime = 50;      // Time (ms) delay at the end of some back-n-forth functions (e.g. bounce)
-
+bool repeat = true;          // Repeat the animations. If false, they complete once then stop
 
 // XXXXXXXXXX  DON'T CHANGE ANYTHING BELOW THIS IN THIS FILE  XXXXXXXXXX
 
@@ -62,7 +62,7 @@ PubSubClient mqttClient(wifiClient);
 boolean connectioWasAlive = true;
 
 char valid_colors[] = "white snow silver gray grey darkgray darkgrey black red crimson darkmagenta darkred magenta maroon orange orangered darkorange yellow gold green lime darkgreen forestgreen cyan darkcyan blue deepskyblue royalblue skyblue darkblue navy blueviolet purple violet indigo darkviolet";
-char valid_functions[] = "solid_color center_out edges_in slinky slinky_backwards bounce";
+char valid_functions[] = "solid_color center_out edges_in slinky slinky_backwards bounce bounce_backwards circle circle_backwards";
 char delim[] = ":";
 char *current_color = "black";
 std::function<void(void)> currentAnimation;
@@ -78,6 +78,7 @@ CRGB currentColor = CRGB::Black;
 char *current_function = "solid_color";
 uint16_t origLoopDelay = 10;
 uint16_t origHoldTime = 50;
+bool doneTheNonRepeatingAnimationOnce = false;
 
 //
 // Lookup table of colors - to convert string to CRGB reference
@@ -147,6 +148,15 @@ void saveCurrentAnimation(char *theFunction) {
   } else if (strcmp(theFunction, "bounce") == 0) {
     currentAnimation = bounce;
     // log("currentAnimate = bounce");    
+  } else if (strcmp(theFunction, "bounce_backwards") == 0) {
+    currentAnimation = bounce_backwards;
+    // log("currentAnimate = bounce_backwards");    
+  } else if (strcmp(theFunction, "circle") == 0) {
+    currentAnimation = circle;
+    // log("currentAnimate = circle");    
+  } else if (strcmp(theFunction, "circle_backwards") == 0) {
+    currentAnimation = circle_backwards;
+    // log("currentAnimate = circle_backwards");    
   } else {
     // log("no matching function name found");    
   }
@@ -169,145 +179,288 @@ void set_color(char *colorName) {
 // LED pattern functions
 //
 void solid_color() {
-  // log("solid_color()");
   FastLED.showColor(currentColor);
 }
 
 void center_out() {
-  // log("center_out()");
-  for (int i = 0; i < NUM_LEDS; i++) {
-    if (i <= NUM_LEDS/2+edgesCenterPosition && i >= NUM_LEDS/2-edgesCenterPosition) {
-      leds[i] = currentColor;
-    } else {
-      leds[i] = CRGB::Black;
-    }
+  if (!repeat && doneTheNonRepeatingAnimationOnce == true) {
+    edgesCenterPosition = 0;
+    return; 
   }
-  FastLED.show();
-
-  edgesCenterPosition = edgesCenterPosition + delta;
+  doneTheNonRepeatingAnimationOnce = true;
+  for (int j=0;j<NUM_LEDS;j++) {
+    for (int i = 0; i < NUM_LEDS; i++) {
+      if (i <= NUM_LEDS/2+edgesCenterPosition && i >= NUM_LEDS/2-edgesCenterPosition) {
+        leds[i] = currentColor;
+      } else {
+        leds[i] = CRGB::Black;
+      }
+    }
+    FastLED.show();
   
-  if (edgesCenterPosition > NUM_LEDS/2+1) {
-    // log("Reverse ... towards pos 0");
-    edgesCenterPosition -= 1;
-    delta = -1;
-    delay(holdTime);
-  } else if (edgesCenterPosition < -1) {
-    // log("Forward we go!");
-    edgesCenterPosition += 1;
-    delta = 1;
-    delay(holdTime);
+    edgesCenterPosition = edgesCenterPosition + delta;
+    
+    if (edgesCenterPosition > NUM_LEDS/2+1) {
+      // log("Reverse ... towards pos 0");
+      edgesCenterPosition -= 1;
+      delta = -1;
+      delay(holdTime);
+    } else if (edgesCenterPosition < -1) {
+      // log("Forward we go!");
+      edgesCenterPosition += 1;
+      delta = 1;
+      delay(holdTime);
+    }
+    delay(loopDelay);
   }
 }
 
 void edges_in() {
-  for (int i = 0; i < NUM_LEDS; i++) {
-    if (i <= edgesCenterPosition || i>=NUM_LEDS-(edgesCenterPosition+1)) {
-      leds[i] = currentColor;
-    } else {
-      leds[i] = CRGB::Black;
-    }
+  if (!repeat && doneTheNonRepeatingAnimationOnce == true) {
+    edgesCenterPosition = 0;
+    return; 
   }
-  FastLED.show();
-
-  edgesCenterPosition = edgesCenterPosition + delta;
+  doneTheNonRepeatingAnimationOnce = true;
+  for (int j=0;j<NUM_LEDS;j++) {
+    for (int i = 0; i < NUM_LEDS; i++) {
+      if (i <= edgesCenterPosition || i>=NUM_LEDS-(edgesCenterPosition+1)) {
+        leds[i] = currentColor;
+      } else {
+        leds[i] = CRGB::Black;
+      }
+    }
+    FastLED.show();
   
-  if (edgesCenterPosition > NUM_LEDS/2+1) {
-    // log("Reverse ... towards pos 0");
-    edgesCenterPosition -= 1;
-    delta = -1;
-    delay(holdTime);
-  } else if (edgesCenterPosition < -1) {
-    // log("Forward we go!");
-    edgesCenterPosition += 1;
-    delta = 1;
-    delay(holdTime);
+    edgesCenterPosition = edgesCenterPosition + delta;
+    
+    if (edgesCenterPosition > NUM_LEDS/2+1) {
+      // log("Reverse ... towards pos 0");
+      edgesCenterPosition -= 1;
+      delta = -1;
+      delay(holdTime);
+    } else if (edgesCenterPosition < -1) {
+      // log("Forward we go!");
+      edgesCenterPosition += 1;
+      delta = 1;
+      delay(holdTime);
+    }
+    delay(loopDelay);
   }
 }
 
 
 void slinky_backwards() {
-  for (int i = 0; i < NUM_LEDS; i++) {
-    if (i > slinkyPosition) {
-      leds[i] = currentColor;
-    } else {
-      leds[i] = CRGB::Black;
-    }
-  }
-  FastLED.show();
-
-  if (slinkyPosition == NUM_LEDS - 1) {
-    // log("Reverse ... towards pos 0");
+  if (!repeat && doneTheNonRepeatingAnimationOnce == true) {
+    slinkyPosition = NUM_LEDS;
     delta = -1;
-    delay(holdTime);
-  } else if (slinkyPosition == 0) {
-    // log("Forward we go!");
-    delta = 1;
-    delay(holdTime);
+    return; 
   }
-  slinkyPosition = (slinkyPosition + delta + NUM_LEDS) % NUM_LEDS;
+  doneTheNonRepeatingAnimationOnce = true;
+  for (int j=0;j<NUM_LEDS;j++) {
+    for (int i = 0; i < NUM_LEDS; i++) {
+      if (i > slinkyPosition) {
+        leds[i] = currentColor;
+      } else {
+        leds[i] = CRGB::Black;
+      }
+    }
+    FastLED.show();
+  
+    if (slinkyPosition == NUM_LEDS - 1) {
+      // log("Reverse ... towards pos 0");
+      delta = -1;
+      delay(holdTime);
+    } else if (slinkyPosition == 0) {
+      // log("Forward we go!");
+      delta = 1;
+      delay(holdTime);
+    }
+    slinkyPosition = (slinkyPosition + delta + NUM_LEDS) % NUM_LEDS;
+    delay(loopDelay);
+  }
 }
 
 void slinky() {
-  for (int i = 0; i < NUM_LEDS; i++) {
-    if (i <= slinkyPosition) {
-      leds[i] = currentColor;
-    } else {
-      leds[i] = CRGB::Black;
-    }
-  }
-  FastLED.show();
-
-  if (slinkyPosition == NUM_LEDS - 1) {
-    // log("Reverse ... towards pos 0");
-    delta = -1;
-    delay(holdTime);
-  } else if (slinkyPosition == 0) {
-    // log("Forward we go!");
+  if (!repeat && doneTheNonRepeatingAnimationOnce == true) {
+    slinkyPosition = 1;
     delta = 1;
-    delay(holdTime);
+    return; 
   }
-  slinkyPosition = (slinkyPosition + delta + NUM_LEDS) % NUM_LEDS;
+  doneTheNonRepeatingAnimationOnce = true;
+  for (int j=0;j<NUM_LEDS;j++) {
+    for (int i = 0; i < NUM_LEDS; i++) {
+      if (i <= slinkyPosition) {
+        leds[i] = currentColor;
+      } else {
+        leds[i] = CRGB::Black;
+      }
+    }
+    FastLED.show();
+  
+    if (slinkyPosition == NUM_LEDS - 1) {
+      // log("Reverse ... towards pos 0");
+      delta = -1;
+      delay(holdTime);
+    } else if (slinkyPosition == 0) {
+      // log("Forward we go!");
+      delta = 1;
+      delay(holdTime);
+    }
+    slinkyPosition = (slinkyPosition + delta + NUM_LEDS) % NUM_LEDS;
+    delay(loopDelay);
+  }
 }
 
 void bounce() {
-  // Set pixel color
-  leds[positionRed] = currentColor;
-  leds[positionWhite] = currentColor;
-  leds[positionBlue] = currentColor;
-
-  // Show the pixels
-  FastLED.show();
-
-  // Set pixels back to Black for the next loop around.
-  leds[positionRed] = CRGB::Black;
-  leds[positionWhite] = CRGB::Black;
-  leds[positionBlue] = CRGB::Black;
-
-  // Set new position, moving (forward or backward) by delta.
-  // NUM_LEDS is added to the position before doing the modulo
-  // to cover cases where delta is a negative value.
-  if (positionBlue == NUM_LEDS - 1) {
-    // log("Reverse ... towards pos 0");
-    delta = -1;
-  } else if (positionBlue == 1) {
-    // log("Forward we go!");
+  if (!repeat && doneTheNonRepeatingAnimationOnce == true) {
+    positionRed = 0; 
+    positionWhite = 1;
+    positionBlue = 2;
     delta = 1;
+    return; 
   }
-  positionRed = (positionRed + delta + NUM_LEDS) % NUM_LEDS;
-  positionWhite = (positionWhite + delta + NUM_LEDS) % NUM_LEDS;
-  positionBlue = (positionBlue + delta + NUM_LEDS) % NUM_LEDS;
+  doneTheNonRepeatingAnimationOnce = true;
+  // Set pixel color
+  for (int i=0;i<NUM_LEDS;i++) {
+    leds[positionRed] = currentColor;
+    leds[positionWhite] = currentColor;
+    leds[positionBlue] = currentColor;
+  
+    // Show the pixels
+    FastLED.show();
+  
+    // Set pixels back to Black for the next loop around.
+    leds[positionRed] = CRGB::Black;
+    leds[positionWhite] = CRGB::Black;
+    leds[positionBlue] = CRGB::Black;
+  
+    // Set new position, moving (forward or backward) by delta.
+    // NUM_LEDS is added to the position before doing the modulo
+    // to cover cases where delta is a negative value.
+    if (positionWhite == NUM_LEDS - 1) {
+      // log("Reverse ... towards pos 0");
+      delta = -1;
+    } else if (positionBlue == 1) {
+      // log("Forward we go!");
+      delta = 1;
+    }
+    positionRed = (positionRed + delta + NUM_LEDS) % NUM_LEDS;
+    positionWhite = (positionWhite + delta + NUM_LEDS) % NUM_LEDS;
+    positionBlue = (positionBlue + delta + NUM_LEDS) % NUM_LEDS;
+    delay(loopDelay);
+  }
+}
+
+void bounce_backwards() {
+  if (!repeat && doneTheNonRepeatingAnimationOnce == true) {
+    positionRed = NUM_LEDS - 2; 
+    positionWhite = NUM_LEDS - 1;
+    positionBlue = NUM_LEDS;
+    delta = -1;
+    return; 
+  }
+  doneTheNonRepeatingAnimationOnce = true;
+  // Set pixel color
+  for (int i=0;i<NUM_LEDS;i++) {
+    leds[positionRed] = currentColor;
+    leds[positionWhite] = currentColor;
+    leds[positionBlue] = currentColor;
+  
+    // Show the pixels
+    FastLED.show();
+  
+    // Set pixels back to Black for the next loop around.
+    leds[positionRed] = CRGB::Black;
+    leds[positionWhite] = CRGB::Black;
+    leds[positionBlue] = CRGB::Black;
+  
+    // Set new position, moving (forward or backward) by delta.
+    // NUM_LEDS is added to the position before doing the modulo
+    // to cover cases where delta is a negative value.
+    if (positionWhite == NUM_LEDS - 1) {
+      // log("Reverse ... towards pos 0");
+      delta = -1;
+    } else if (positionBlue == 1) {
+      // log("Forward we go!");
+      delta = 1;
+    }
+    positionRed = (positionRed + delta + NUM_LEDS) % NUM_LEDS;
+    positionWhite = (positionWhite + delta + NUM_LEDS) % NUM_LEDS;
+    positionBlue = (positionBlue + delta + NUM_LEDS) % NUM_LEDS;
+    delay(loopDelay);
+  }
+}
+
+void circle() {
+  if (!repeat && doneTheNonRepeatingAnimationOnce == true) {
+    return; 
+  }
+  doneTheNonRepeatingAnimationOnce = true;
+  // Set pixel color
+  delta = 1;
+  for (int i=0;i<NUM_LEDS;i++) {
+    leds[positionRed] = currentColor;
+    leds[positionWhite] = currentColor;
+    leds[positionBlue] = currentColor;
+  
+    // Show the pixels
+    FastLED.show();
+  
+    // Set pixels back to Black for the next loop around.
+    leds[positionRed] = CRGB::Black;
+    leds[positionWhite] = CRGB::Black;
+    leds[positionBlue] = CRGB::Black;
+  
+    positionRed = (positionRed + delta + NUM_LEDS) % NUM_LEDS;
+    positionWhite = (positionWhite + delta + NUM_LEDS) % NUM_LEDS;
+    positionBlue = (positionBlue + delta + NUM_LEDS) % NUM_LEDS;
+    delay(loopDelay);
+  }
+}
+
+void circle_backwards() {
+  if (!repeat && doneTheNonRepeatingAnimationOnce == true) {
+    return; 
+  }
+  doneTheNonRepeatingAnimationOnce = true;
+  // Set pixel color
+  delta = -1;
+  for (int i=0;i<NUM_LEDS;i++) {
+    leds[positionRed] = currentColor;
+    leds[positionWhite] = currentColor;
+    leds[positionBlue] = currentColor;
+  
+    // Show the pixels
+    FastLED.show();
+  
+    // Set pixels back to Black for the next loop around.
+    leds[positionRed] = CRGB::Black;
+    leds[positionWhite] = CRGB::Black;
+    leds[positionBlue] = CRGB::Black;
+  
+    positionRed = (positionRed + delta + NUM_LEDS) % NUM_LEDS;
+    positionWhite = (positionWhite + delta + NUM_LEDS) % NUM_LEDS;
+    positionBlue = (positionBlue + delta + NUM_LEDS) % NUM_LEDS;
+    delay(loopDelay);
+  }
 }
 
 void off() {
   saveCurrentAnimation("solid_color");
   current_color = "black";
-  loopDelay = origLoopDelay;
-  holdTime = origHoldTime;
+  reset();
 }
 
 void reset() {
   loopDelay = origLoopDelay;
   holdTime = origHoldTime;
+  positionRed = 0; 
+  positionWhite = 1;
+  positionBlue = 2;
+  delta = 1;
+  slinkyPosition = 1;
+  edgesCenterPosition = 0;
+
 }
 
 void handleMqttMessage(char *topic, byte *payload, unsigned int length) {
@@ -350,7 +503,6 @@ void handleMqttMessage(char *topic, byte *payload, unsigned int length) {
   if (results.size() >= 2) {
     // results[1] should be a function name
     char *theFunction = const_cast<char*>(results[1].c_str());
-    // log("theFunction: ", false);log(theFunction);
     if (strstr(valid_functions, theFunction)) {
       saveCurrentAnimation(theFunction);
     }
@@ -363,12 +515,23 @@ void handleMqttMessage(char *topic, byte *payload, unsigned int length) {
         loopDelay = tmpLoopDelay;
       }
     }
-    if (results.size() == 4) {
+    if (results.size() >= 4) {
       // if there's a fourth param, it will be the holdTime
       char *tmpHoldTimeChar = const_cast<char*>(results[3].c_str());
       uint16_t tmpHoldTime = atoi(tmpHoldTimeChar);
       if (tmpHoldTime > 0) {
         holdTime = tmpHoldTime;
+      }
+    }
+    if (results.size() >= 5) {
+      // if there's a fifth param, it will be the repeat boolean
+      char *tmpRepeat = const_cast<char*>(results[4].c_str());
+      if (strcmp(tmpRepeat, "false") == 0) {
+        repeat = false;
+        doneTheNonRepeatingAnimationOnce = false;
+      } else {
+        repeat = true;
+        doneTheNonRepeatingAnimationOnce = false;
       }
     }
   }
@@ -462,5 +625,4 @@ void loop() {
   mqttClient.loop();  // this is ESSENTIAL!
   set_color(current_color);
   currentAnimation();
-  delay(loopDelay);
 }
