@@ -44,6 +44,17 @@ Two special forms of the command are `off` and `reset`. Using `off` is the same 
 * slinky -- LEDs light up, one-by-one, starting from end closest to the microcontroller towards the other end till the whole strip is on
 * slinky_backwards -- LEDs light up, one-by-one, starting from end furthest from the microcontroller towards the other end till the whole strip is on
 * bounce -- 3 LEDs light up, then move as a group to the other end with the rest of the LEDs all off. Once they reach the far end, they move back towards the beginning.
+* bounce_backwards -- Same as bounce, starting from opposite end
+* circle -- 3 LEDs light up, then move as a group to the other end with the rest of the LEDs all off. Once they reach the far end, they start over from the original end
+* circle_backwards -- Same as circle, starting from the opposite end
+* flash -- Whole strip lights up at full brightness, then fades to black
+* rainbow -- A moving, blended (continuous) rainbow pattern fills the entire strip (*see note*)
+* rainbow_stripes -- Like rainbow, but with discrete stripes of rainbow colors separated by black (*see note*)
+* ocean -- A moving, blended (continuous) pattern of blues, greens, and white fills the entire strip (*see note*)
+* stripes -- Multiple discrete stripes of a single color travel down the strip with black between
+* stripes_white -- Multiple discrete stripes of a single color travel down the strip with white between
+
+NOTE: You must supply a color parameter when using the rainbow, rainbow_stripes, and ocean animations even though that color will be ignored. Also note that the animations will move quite slowly at the default loop_delay time. Best effect will be achieved with a loop_delay between 1 - 10.
 
 **Examples (using command-line mosquitto tool)**
 
@@ -51,7 +62,8 @@ Two special forms of the command are `off` and `reset`. Using `off` is the same 
 
 ```
 mosquitto_pub -h 192.168.1.10 -i publisher -t arches -m 'blue:slinky'
-mosquitto_pub -h 192.168.1.10 -i publisher -t arches -m 'blue:slinky:20:250'
+mosquitto_pub -h 192.168.1.10 -i publisher -t arches -m 'crimson:slinky:20:250'
+mosquitto_pub -h 192.168.1.10 -i publisher -t arches -m 'red:rainbow:3'
 mosquitto_pub -h 192.168.1.10 -i publisher -t arches -m 'reset'
 mosquitto_pub -h 192.168.1.10 -i publisher -t arches -m 'off'
 

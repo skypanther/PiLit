@@ -135,9 +135,53 @@ const animations = [
         label: "Bounce",
         value: "bounce",
         description: "3 LEDs light up, then move as a group to the other end with the rest of the LEDs all off. Once they reach the far end, they move back towards the beginning."
-      }
+      },
+      {
+        label: "Bounce backwards",
+        value: "bounce_backwards",
+        description: "Same as bounce, starting from opposite end."
+      },
+      {
+        label: "Circle",
+        value: "circle",
+        description: "3 LEDs light up, then move as a group to the other end with the rest of the LEDs all off. Once they reach the far end, they start over from the original end."
+      },
+      {
+        label: "Circle backwards",
+        value: "circle_backwards",
+        description: "Same as circle, starting from the opposite end."
+      },
+      {
+        label: "Flash",
+        value: "flash",
+        description: "Whole strip lights up at full brightness, then fades to black."
+      },
+      {
+        label: "Rainbow",
+        value: "rainbow",
+        description: "A moving, blended (continuous) rainbow pattern fills the entire strip."
+      },
+      {
+        label: "Rainbow stripes",
+        value: "rainbow_stripes",
+        description: "Like rainbow, but with discrete stripes of rainbow colors separated by black."
+      },
+      {
+        label: "Ocean",
+        value: "ocean",
+        description: "A moving, blended (continuous) pattern of blues, greens, and white fills the entire strip."
+      },
+      {
+        label: "Stripes on black",
+        value: "stripes",
+        description: "Multiple discrete stripes of a single color travel down the strip with black between."
+      },
+      {
+        label: "Stripes on white",
+        value: "stripes_white",
+        description: "Multiple discrete stripes of a single color travel down the strip with white between."
+      },
     ];
-
 
 class PixelNode extends Component {
   constructor(props) {

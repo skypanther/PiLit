@@ -3,6 +3,16 @@
     - Network connection code
     - MQTT subscriber code
     - FastLED based pixel control code
+
+
+TODO:
+
+- From the FastLED ColorPalette demo, add:
+    currentPalette = RainbowColors_p;         currentBlending = LINEARBLEND
+    currentPalette = RainbowStripeColors_p;   currentBlending = NOBLEND
+    SetupBlackAndWhiteStripedPalette();       currentBlending = NOBLEND  <-- make work with current color
+    currentPalette = OceanColors_p;           currentBlending = NOBLEND
+
 */
 
 #include <string>
@@ -39,9 +49,9 @@ String topics[] = {                         // Create an array of topics to subs
 };
 char *brokerHostname = "Tim-Poulsen-MBP15.local";  // "192.168.1.6";       // Hostname/IP address of the MQTT broker
 char *net1_ssid = "poulsen";
-char *net1_password = "PASSWORD";
+char *net1_password = "hobbes22";
 char *net2_ssid = "poulsen2";
-char *net2_password = "PASSWORD";
+char *net2_password = "hobbes22";
 
 // Some base delay times
 uint16_t loopDelay = 10;     // Time (ms) between calls to animation function
@@ -62,7 +72,7 @@ PubSubClient mqttClient(wifiClient);
 boolean connectioWasAlive = true;
 
 char valid_colors[] = "white snow silver gray grey darkgray darkgrey black red crimson darkmagenta darkred magenta maroon orange orangered darkorange yellow gold green lime darkgreen forestgreen cyan darkcyan blue deepskyblue royalblue skyblue darkblue navy blueviolet purple violet indigo darkviolet";
-char valid_functions[] = "solid_color center_out edges_in slinky slinky_backwards bounce bounce_backwards circle circle_backwards";
+char valid_functions[] = "solid_color center_out edges_in slinky slinky_backwards bounce bounce_backwards circle circle_backwards flash rainbow rainbow_stripes stripes stripes_white ocean";
 char delim[] = ":";
 char *current_color = "black";
 std::function<void(void)> currentAnimation;
@@ -79,6 +89,9 @@ char *current_function = "solid_color";
 uint16_t origLoopDelay = 10;
 uint16_t origHoldTime = 50;
 bool doneTheNonRepeatingAnimationOnce = false;
+
+CRGBPalette16 currentPalette;
+TBlendType    currentBlending;
 
 //
 // Lookup table of colors - to convert string to CRGB reference
@@ -157,6 +170,34 @@ void saveCurrentAnimation(char *theFunction) {
   } else if (strcmp(theFunction, "circle_backwards") == 0) {
     currentAnimation = circle_backwards;
     // log("currentAnimate = circle_backwards");    
+  } else if (strcmp(theFunction, "flash") == 0) {
+    currentAnimation = flash;
+    // log("currentAnimate = flash");    
+  } else if (strcmp(theFunction, "rainbow") == 0) {
+    currentAnimation = animatePalette;
+    currentPalette = RainbowColors_p;
+    currentBlending = LINEARBLEND;
+    // log("currentAnimate = rainbow");    
+  } else if (strcmp(theFunction, "rainbow_stripes") == 0) {
+    currentAnimation = animatePalette;
+    currentPalette = RainbowStripeColors_p;
+    currentBlending = NOBLEND;
+    // log("currentAnimate = rainbow_stripes");    
+  } else if (strcmp(theFunction, "ocean") == 0) {
+    currentAnimation = animatePalette;
+    currentPalette = OceanColors_p;
+    currentBlending = NOBLEND;
+    // log("currentAnimate = ocean");    
+  } else if (strcmp(theFunction, "stripes") == 0) {
+    setupColorPalette(CRGB::Black);
+    currentAnimation = animatePalette;
+    currentBlending = NOBLEND;
+    // log("currentAnimate = stripes");    
+  } else if (strcmp(theFunction, "stripes_white") == 0) {
+    setupColorPalette(CRGB::White);
+    currentAnimation = animatePalette;
+    currentBlending = NOBLEND;
+    // log("currentAnimate = stripes_white");    
   } else {
     // log("no matching function name found");    
   }
@@ -174,6 +215,13 @@ void set_color(char *colorName) {
   }
 }
 
+void FillLEDsFromPaletteColors( uint8_t colorIndex) {
+    uint8_t brightness = 255;
+    for( int i = 0; i < NUM_LEDS; i++) {
+        leds[i] = ColorFromPalette( currentPalette, colorIndex, BRIGHTNESS, currentBlending);
+        colorIndex += 3;
+    }
+}
 
 //
 // LED pattern functions
@@ -443,6 +491,50 @@ void circle_backwards() {
     positionBlue = (positionBlue + delta + NUM_LEDS) % NUM_LEDS;
     delay(loopDelay);
   }
+}
+
+void flash() {
+  if (!repeat && doneTheNonRepeatingAnimationOnce == true) {
+    return; 
+  }
+  doneTheNonRepeatingAnimationOnce = true;
+  for (int i=0; i<NUM_LEDS; i++) {
+    leds[i] = currentColor;
+    leds[i].maximizeBrightness();
+  }
+  FastLED.show();
+  delay(15);
+  for (int i=0; i<NUM_LEDS; i++) {
+    leds[i].nscale8( 192 );
+  }
+  FastLED.show();
+  delay(1000);
+  for (int f=0; f<30; f++) {
+    for (int i=0; i<NUM_LEDS; i++) {
+      leds[i].nscale8( 224 );
+    }
+    FastLED.show();
+    delay(33);
+  }
+}
+
+void setupColorPalette(CRGB fillColor) {
+  // 'black out' all 16 palette entries...
+  fill_solid( currentPalette, 16, fillColor);
+  // and set every fourth one to currentColor.
+  currentPalette[0] = currentColor;
+  currentPalette[4] = currentColor;
+  currentPalette[8] = currentColor;
+  currentPalette[12] = currentColor;
+}
+
+void animatePalette() {
+  static uint8_t startIndex = 0;
+  startIndex = startIndex + 1; /* motion speed */
+
+  FillLEDsFromPaletteColors(startIndex);
+  FastLED.show();
+  delay(loopDelay);
 }
 
 void off() {
