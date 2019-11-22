@@ -4,15 +4,22 @@ PiLit Player - the player for PiLit light show sequences
 (c) 2019 Tim Poulsen
 MIT License
 
+Usage:
+
+    python3 pilit_player.py <show_file_name.json>
+
 """
 
 import json
 import os
+import paho.mqtt.publish as publish
 import sys
 from datetime import datetime
 from time import sleep
 
+mqtt_server = "Tim-Poulsen-MBP15.local"
 show_loop_interval = 0.5  # seconds
+logging_enabled = True
 
 def main():
     if (len(args) == 0):
@@ -54,7 +61,7 @@ def preprocess_file(show_file):
         for animation in channel["animations"]:
             sum_of_durations = sum_of_durations + int(animation["duration"])
             animation_command = make_animation_command(channel["type"], animation)
-            channel_commands.append( (channel["mqttName"], animation_command, str(sum_of_durations)) )
+            channel_commands.append( (channel["mqttName"], animation_command, sum_of_durations) )
         channels.append(channel_commands)
     show = {
         start_time: start_time,
@@ -82,33 +89,63 @@ def make_animation_command(type, animation):
     return "off"
 
 def get_show_times(show_file):
-    start_time = show_file["startTime"]
-    stop_time = show_file["stopTime"]
+    start_time = show_file["startTime"].split(':')
+    stop_time = show_file["stopTime"].split(':')
     return ( (int(start_time[0]), int(start_time[1])), (int(stop_time[0]), int(stop_time[1])) )
 
 def get_show_times_for_today(start_time, stop_time):
     st = datetime.today().replace(hour=start_time[0], minute=start_time[1], second=0, microsecond=0)
-    et = datetime.today().replace(hour=stop_time[0], minute=stop_time[1], second=59, microsecond=999999)
+    if stop_time <= 12:
+        # we're stopping after midnight
+        tomorrow = datetime.today() + datetime.timedelta(days=1)
+        et = tomorrow.replace(hour=stop_time[0], minute=stop_time[1], second=59, microsecond=999999)
+    else:
+        et = datetime.today().replace(hour=stop_time[0], minute=stop_time[1], second=59, microsecond=999999)
     return st, et
 
-def send_command(mqtt_name, anim):
+def log(msg):
+    if logging_enabled:
+        print(msg)
+
+def send_command(topic, payload):
     # paho mqtt send command here
+    log(f"{topic} --> {payload}")
+    publish.single(topic, payload=payload, hostname=mqtt_server)
+
+def lengths(x):
+    # https://stackoverflow.com/a/30902673/292947
+    # Find the longest list in a list of lists (recursive)
+    # Usage: max(lengths(list_of_lists))
+    if isinstance(x,list):
+        yield len(x)
+        for y in x:
+            yield from lengths(y)
 
 def run_show(show):
+    max_animations_length = max(lengths(show.channels))  # find the length of the longest list of animations
+    mqtt_names = [channel[0][0] for channel in show.channels]
     while True:
         current_time = datetime.now()
         show_start_time, show_stop_time = get_show_times_for_today(show.start_time, show.end_time)
-        if current_time > show_start_time and current_time < show_stop_time:
+        while current_time > show_start_time and current_time < show_stop_time:
             duration_counter = 0
-            while True:
+            for i in range(max_animations_length):
                 duration_counter += show_loop_interval
-                for channel in channels_list:
-                    mqtt_name, anim, sum_of_durations = channel[0]
-                    if sum_of_durations >= duration_counter:
-                        send_command(mqtt_name, anim)
-                        # need to pop() off first element of the channel now
-                        # but, we'll need the original list once we've exhausted all the anims in the list
-        time.sleep(show_loop_interval)
+                for channel in show.channels:
+                    channel_mqtt_name = channel[0]["mqtt_name"]
+                    if channel[i] is not None:
+                        mqtt_name, anim, sum_of_durations = channel[i]
+                        if duration_counter >= sum_of_durations:
+                            send_command(mqtt_name, anim)
+                    else:
+                        send_command(channel_mqtt_name, "off")
+                time.sleep(show_loop_interval)
+            time.sleep(show_loop_interval)
+            current_time = datetime.now()
+        # while the show is not running, send "off" to all nodes to be sure they're off
+        for mqtt_name in mqtt_names:
+            send_command(mqtt_name, "off")
+        time.sleep(show_loop_interval * 10)
 
 if __name__ == '__main__':
     main()
