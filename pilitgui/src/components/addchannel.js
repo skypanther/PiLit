@@ -15,7 +15,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const nodeTypes = [
   { label: "RGB Pixel Node", value: "PixelNode" },
   { label: "On / Off (spotlight) Node", value: "OnOffNode" },
-  { label: "Mega Tree (multi-relay)", value: "MegaTree" },
+  { label: "Mega Tree (multi-relay)", value: "MultiRelayNode" },
 ]
 
 class AddChannel extends Component {

@@ -72,12 +72,12 @@ def anim(f):
 # pattern to set the pins
 
 @anim
-def all_on():
+def on():
     # Turns on all relays
     return [1] * num_pins
 
 @anim
-def all_off():
+def off():
     # Turns off all relays
     return [0] * num_pins
 
@@ -147,13 +147,13 @@ def alternate():
 
 ### FILL / OTHER PATTERNS NOT HANDLED AS ABOVE ###
 
-@anim
-def fill_up():
-    pass
+# @anim
+# def fill_up():
+#     pass
 
-@anim
-def empty_out():
-    pass
+# @anim
+# def empty_out():
+#     pass
 
 
 ### OPERATIONAL FUNCTIONS ###

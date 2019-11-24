@@ -4,6 +4,7 @@
 import React, { Component } from 'react';
 import PixelNode from './nodes/pixelnode';
 import OnOffNode from './nodes/onoffnode';
+import MultiRelayNode from './nodes/multirelaynode';
 
 // FontAwesome
 import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
@@ -20,7 +21,7 @@ import spotlight from '../../public/images/spotlight.jpg';
 const nodeTypes = {
   PixelNode: leaping_arch,
   OnOffNode: spotlight,
-  MegaTree: mega_tree,
+  MultiRelayNode: mega_tree,
   PixelTree: pixel_tree,
 }
 
@@ -65,6 +66,17 @@ class Row extends Component {
               initialProperties={anim} />
           );
         break;
+        case 'MultiRelayNode':
+          newNode = (
+            <MultiRelayNode key={"node"+anim.nodeIndex}
+              mqttName={this.props.channelName}
+              type={this.props.type}
+              saveNodeConfig={this.saveNodeConfig}
+              removeNode={this.removeNode}
+              index={anim.nodeIndex}
+              initialProperties={anim} />
+          );
+        break;
       }
       return newNode;
     });
@@ -90,6 +102,16 @@ class Row extends Component {
       case 'OnOffNode':
         newNode = (
           <OnOffNode key={"node"+index}
+            mqttName={this.props.channelName}
+            type={this.props.type}
+            saveNodeConfig={this.saveNodeConfig}
+            removeNode={this.removeNode}
+            index={index} />
+        );
+      break;
+      case 'MultiRelayNode':
+        newNode = (
+          <MultiRelayNode key={"node"+index}
             mqttName={this.props.channelName}
             type={this.props.type}
             saveNodeConfig={this.saveNodeConfig}

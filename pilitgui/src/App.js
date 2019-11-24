@@ -15,12 +15,6 @@ import Row from './components/row';
 import EmptyShow from './components/emptyshow';
 import AddChannel from './components/addchannel';
 
-const nodeTypes = [
-  { label: "RGB Pixel Node", value: "PixelNode" },
-  { label: "On / Off (spotlight) Node", value: "OnOffNode" },
-  { label: "Mega Tree (multi-relay)", value: "MegaTree" },
-]
-
 const showTemplate = {
   showName: "showName",
   version: 1,
