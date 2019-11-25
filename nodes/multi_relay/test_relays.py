@@ -65,7 +65,7 @@ def main():
     while True:
         set_pins()
         pattern = rotate(pattern, 1)
-        sleep(delay)
+        _ = raw_input("Press any key to turn on the next relay");
 
 if __name__ == '__main__':
     main()
