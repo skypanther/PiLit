@@ -11,6 +11,9 @@ Plug a light into each of your sockets. Run this script. It will turn on the
 outlets, one by one, with a 2-second pause for each outlet so that you can be
 sure you've got things hooked up correctly.
 
+Depending on how you've wired your relay board and whether it is normally high
+or normally low, you might need to swap pin.on() and pin.off() below.
+
 """
 
 from gpiozero import LED
@@ -53,9 +56,9 @@ def set_pins():
     for idx, pin in enumerate(pins):
         if pattern[idx] == 1:
             print(f"Physical pin: {physical_pins[idx]} / GPIO pin: {gpio_pins[idx]} is ON")
-            pin.on()
-        else:
             pin.off()
+        else:
+            pin.on()
 
 
 def main():
@@ -64,8 +67,8 @@ def main():
     global pattern
     while True:
         set_pins()
-        pattern = rotate(pattern, 1)
-        _ = raw_input("Press any key to turn on the next relay");
+        pattern = rotate(pattern, -1)
+        _ = input("Press any key to turn on the next relay ");
 
 if __name__ == '__main__':
     main()

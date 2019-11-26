@@ -40,8 +40,8 @@ from time import sleep
 ######## GPIO PIN CONFIGURATION ########
 # USE BCM (BROADCOM) NOT PHYSICAL PIN NUMBERS
 # also don't use GPIO 14 / pin 8 on a Pi B+ as it's the "hard drive light" pin
-gpio_pins =    [2, 3, 4, 7, 15, 17, 18, 27, 22, 23, 24, 10, 9, 25, 11, 8]
-# physical pins 3, 5, 7, 26, 10, 11, 12, 13, 15, 16, 18, 19, 21, 22, 23, 24
+gpio_pins =     [2, 3, 4, 7,  15, 17, 18, 27, 22, 23, 24, 10, 9,  25, 11, 8]
+# physical_pins = [3, 5, 7, 26, 10, 11, 12, 13, 15, 16, 18, 19, 21, 22, 23, 24]
 
 ######## MQTT/NETWORK CONFIGURATION ########
 mqtt_server = "Tim-Poulsen-MBP15.local"  # IP address or name of the broker (server)
@@ -170,14 +170,15 @@ def rotate(l, n):
     """
     Rotate (shift) the list, moving values n places to the left/right
     """
+    n = -n  # so that we step through the list in the correct direction
     return l[n:] + l[:n]
 
 def set_pins():
     for idx, pin in enumerate(pins):
         if pattern[idx] == 1:
-            pin.on()
-        else:
             pin.off()
+        else:
+            pin.on()
 
 def on_connect(client, userdata, flags, rc):
     """

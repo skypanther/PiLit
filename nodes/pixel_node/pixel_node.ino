@@ -49,9 +49,9 @@ String topics[] = {                         // Create an array of topics to subs
 };
 char *brokerHostname = "Tim-Poulsen-MBP15.local";  // "192.168.1.6";       // Hostname/IP address of the MQTT broker
 char *net1_ssid = "poulsen";
-char *net1_password = "hobbes22";
+char *net1_password = "PASSWORD";
 char *net2_ssid = "poulsen2";
-char *net2_password = "hobbes22";
+char *net2_password = "PASSWORD";
 
 // Some base delay times
 uint16_t loopDelay = 10;     // Time (ms) between calls to animation function
