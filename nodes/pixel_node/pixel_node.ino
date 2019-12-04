@@ -47,7 +47,7 @@ String topics[] = {                         // Create an array of topics to subs
   "arches",
   "arch1"
 };
-char *brokerHostname = "Tim-Poulsen-MBP15.local";  // "192.168.1.6";       // Hostname/IP address of the MQTT broker
+char *brokerHostname = "northpole.local";  // or "192.168.1.6";  // Hostname/IP address of the MQTT broker
 char *net1_ssid = "poulsen";
 char *net1_password = "PASSWORD";
 char *net2_ssid = "poulsen2";

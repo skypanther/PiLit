@@ -17,7 +17,7 @@ import sys
 from datetime import datetime
 from time import sleep
 
-mqtt_server = "Tim-Poulsen-MBP15.local"
+mqtt_server = "northpole.local"  # my server is named northpole, change this
 show_loop_interval = 0.5  # seconds
 logging_enabled = True
 times_shutoff_cmd_sent = 0

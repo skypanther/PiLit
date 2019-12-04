@@ -44,7 +44,7 @@ gpio_pins =     [2, 3, 4, 7,  15, 17, 18, 27, 22, 23, 24, 10, 9,  25, 11, 8]
 # physical_pins = [3, 5, 7, 26, 10, 11, 12, 13, 15, 16, 18, 19, 21, 22, 23, 24]
 
 ######## MQTT/NETWORK CONFIGURATION ########
-mqtt_server = "Tim-Poulsen-MBP15.local"  # IP address or name of the broker (server)
+mqtt_server = "northpole.local"  # IP address or name of the broker (server)
 mqtt_name = "megatree"
 mqtt_topics = [
     "all",
