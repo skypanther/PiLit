@@ -108,7 +108,7 @@ class TimeLineBar extends Component {
           <div className="show-info-wrapper">
             <div>
               <span className="col1">Show Name:</span>
-              <span className="col2">{ this.props.title || emptyTitle }</span>
+              <span className="col2">{ this.props.show.showName || emptyTitle }</span>
             </div>
             <div>
               <span className="col1">Start Time:</span>

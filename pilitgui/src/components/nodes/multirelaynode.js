@@ -76,19 +76,21 @@ class MultiRelayNode extends Component {
       animation: "",
       animationIndex: null,
       duration: 10,
+      loopDelay: 200,
       mqttName: this.props.mqttName,
       type: this.props.type,
       nodeIndex: this.props.index
     };
     if (this.props.initialProperties) {
       let animationIndex = animations.findIndex(item => item.value === this.props.initialProperties.animation);
-      let nodeText = this.props.initialProperties.animation + "\n" + this.props.initialProperties.duration;
+      let nodeText = this.props.initialProperties.animation + "\nD: " + this.props.initialProperties.duration + "\nLD: " + this.props.initialProperties.loopDelay;
         this.state = {
         show: false,
         nodeText: nodeText,
         animation: this.props.initialProperties.animation,
         animationIndex: animationIndex,
         duration: this.props.initialProperties.duration,
+        loopDelay: this.props.initialProperties.loopDelay,
         mqttName: this.props.mqttName,
         type: this.props.type,
         nodeIndex: this.props.initialProperties.nodeIndex
@@ -106,7 +108,7 @@ class MultiRelayNode extends Component {
     this.setState({show:false});
   }
   handleSave = () => {
-    let nodeText = this.state.animation + "\n" + this.state.duration;
+    let nodeText = this.state.animation + "\nD: " + this.state.duration + "\nLD: " + this.state.loopDelay;
     this.setState({
       show: false,
       nodeText: nodeText
@@ -127,6 +129,14 @@ class MultiRelayNode extends Component {
   setDuration(newValue) {
     if (newValue) {
       this.setState({duration: parseInt(newValue)});
+    }
+  }
+  setLoopDelay(newValue) {
+    if (newValue) {
+      if (newValue < 200) {
+        newValue = 200;
+      }
+      this.setState({loopDelay: parseInt(newValue)});      
     }
   }
 
@@ -156,6 +166,11 @@ class MultiRelayNode extends Component {
                 <Col xs={3} className="modal-label">Duration</Col>
                 <Col xs={3}><Form.Control type="text" className="form-control" value={this.state.duration} onChange={e => this.setDuration(e.target.value)}/></Col>
                 <Col xs={6} className="modal-label"> (seconds)</Col>
+              </Row>
+              <Row>
+                <Col xs={3} className="modal-label">Loop Delay</Col>
+                <Col xs={3}><Form.Control type="text" className="form-control" value={this.state.loopDelay} onChange={e => this.setLoopDelay(e.target.value)}/></Col>
+                <Col xs={6} className="modal-label"> (milliseconds, 200 minimum)</Col>
               </Row>
             </Container>
           </Modal.Body>

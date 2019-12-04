@@ -3,6 +3,7 @@
 */
 import React, { Component } from 'react';
 import PixelNode from './nodes/pixelnode';
+import PixelTree from './nodes/pixeltree';
 import OnOffNode from './nodes/onoffnode';
 import MultiRelayNode from './nodes/multirelaynode';
 
@@ -31,7 +32,8 @@ class Row extends Component {
     super(props);
     this.state = {
       nextIndex: 0,
-      nodes: []
+      nodes: [],
+      totalDuration: "00:00"
     }
     if (this.props.animationsFromImport && this.props.animationsFromImport.length > 0) {
       this.createAnimationsFromImport()
@@ -47,6 +49,17 @@ class Row extends Component {
         case 'PixelNode':
           newNode = (
             <PixelNode key={"node"+anim.nodeIndex}
+              mqttName={this.props.channelName}
+              type={this.props.type}
+              saveNodeConfig={this.saveNodeConfig}
+              removeNode={this.removeNode}
+              index={anim.nodeIndex}
+              initialProperties={anim} />
+          );
+        break;
+        case 'PixelTree':
+          newNode = (
+            <PixelTree key={"node"+anim.nodeIndex}
               mqttName={this.props.channelName}
               type={this.props.type}
               saveNodeConfig={this.saveNodeConfig}
@@ -99,6 +112,16 @@ class Row extends Component {
             index={index} />
         );
       break;
+      case 'PixelTree':
+        newNode = (
+          <PixelTree key={"node"+index}
+            mqttName={this.props.channelName}
+            type={this.props.type}
+            saveNodeConfig={this.saveNodeConfig}
+            removeNode={this.removeNode}
+            index={index} />
+        );
+      break;
       case 'OnOffNode':
         newNode = (
           <OnOffNode key={"node"+index}
@@ -142,14 +165,52 @@ class Row extends Component {
     // Called when adding or updating an animation node via the UI. Passed to the the child node components.
     // nodeToAddOrUpdate - a reference to the node being added/updated so that we can update it in state
     this.props.handleAddAnimation(nodeToAddOrUpdate);
+    this.updateTotalDuration(nodeToAddOrUpdate.duration);
   }
+
+  updateTotalDuration = (duration) => {
+    let currentTotalDuration = this.hmsToSeconds(this.state.totalDuration)
+    console.log(currentTotalDuration, this.secondsToHms(currentTotalDuration + duration))
+    this.setState({
+      totalDuration: this.secondsToHms(currentTotalDuration + duration)
+    })
+  }
+
+  hmsToSeconds = (hms) => {
+    let hmsParts = hms.split(":");
+    let seconds = 0;
+    if (hmsParts.length === 3) {
+      seconds += parseInt(hmsParts[0], 10) * 60 * 60;
+      seconds += parseInt(hmsParts[1], 10) * 60;
+      seconds += parseInt(hmsParts[2], 10);
+    } else {
+      seconds += parseInt(hmsParts[0], 10) * 60;
+      seconds += parseInt(hmsParts[1], 10);
+    }
+    return seconds;
+  }
+
+  secondsToHms = (sec) => {
+    var h = Math.floor(sec / 3600);
+    var m = Math.floor(sec % 3600 / 60);
+    var s = Math.floor(sec % 3600 % 60);
+
+    var hDisplay = h > 0 ? (h + ":") : "";
+    var mDisplay = m > 0 ? m : "00";
+    var sDisplay = s > 0 ? s : "00";
+    return hDisplay + mDisplay + ":" + sDisplay; 
+  }
+
 
   render() {
     return (
       <div className="row-outer-wrapper">
         <div className="row-wrapper">
           <div className="row-title"><div className="row-title-text">{this.props.channelName}</div></div>
-          <div className="row-image-wrapper" id="rowImage"><img src={nodeTypes[this.props.type]} className="row-image" /></div>
+          <div className="row-image-wrapper" id="rowImage">
+            <img src={nodeTypes[this.props.type]} className="row-image" />
+            <span className="duration">{this.state.totalDuration}</span>
+          </div>
           <div id="rowWrapper" className="row-inner-wrapper">
             { this.state.nodes }
           </div>

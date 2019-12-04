@@ -199,6 +199,19 @@
   border-bottom: 1px solid #182848;
 }
 
+.duration {
+  display: block;
+  position: relative;
+  bottom: 13pt;
+  left: 0;
+  width: 99%;
+  height: 12pt;
+  background-color: silver;
+  color: black;
+  font-size: 8pt;
+  text-align: center;
+}
+
 .row-button-wrapper {
   height: 30pt;
   margin: auto 1px;

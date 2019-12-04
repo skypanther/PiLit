@@ -102,7 +102,7 @@ class OnOffNode extends Component {
     };
     if (this.props.initialProperties) {
       let animationIndex = animations.findIndex(item => item.value === this.props.initialProperties.animation);
-      let nodeText = this.props.initialProperties.animation + "\n" + this.props.initialProperties.duration;
+      let nodeText = this.props.initialProperties.animation + "\nD: " + this.props.initialProperties.duration;
         this.state = {
         show: false,
         nodeText: nodeText,
@@ -126,7 +126,7 @@ class OnOffNode extends Component {
     this.setState({show:false});
   }
   handleSave = () => {
-    let nodeText = this.state.animation + "\n" + this.state.duration;
+    let nodeText = this.state.animation + "\nD: " + this.state.duration;
     this.setState({
       show: false,
       nodeText: nodeText

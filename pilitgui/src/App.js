@@ -33,6 +33,7 @@ class App extends Component {
       showName: "",
       show: showTemplate,
       showExport: false,
+      totalDuration: 0
     }
   }
 

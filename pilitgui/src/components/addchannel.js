@@ -14,6 +14,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const nodeTypes = [
   { label: "RGB Pixel Node", value: "PixelNode" },
+  { label: "RGB Pixel Tree", value: "PixelTree" },
   { label: "On / Off (spotlight) Node", value: "OnOffNode" },
   { label: "Mega Tree (multi-relay)", value: "MultiRelayNode" },
 ]

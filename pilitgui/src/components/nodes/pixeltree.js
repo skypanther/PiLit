@@ -183,7 +183,7 @@ const animations = [
       },
     ];
 
-class PixelNode extends Component {
+class PixelTree extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -358,4 +358,4 @@ class PixelNode extends Component {
   }
 }
 
-export default PixelNode;
+export default PixelTree;
