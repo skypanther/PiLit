@@ -138,6 +138,7 @@ def run_show(show):
     mqtt_names = [channel[0][0] for channel in show["channels"]]
     animation_indexes = [0] * len(show["channels"])
     duration_counter = 0
+    global times_shutoff_cmd_sent
     while True:
         current_time = datetime.now()
         show_start_time, show_stop_time = get_show_times_for_today(show["start_time"], show["end_time"])
