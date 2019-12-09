@@ -1,11 +1,50 @@
-TODO:
-   - Test the multi_relay scripts
-   - Update PiLit GUI to use the multi_relay script
-   - Create the show player script
-   - Finalize setup instructions and readme files
-   - Add more animation functions for pixel_nodes
-   - Update pixel_node to use the repeatable boolean (so that an animation can run once)
+My setup:
+
+Spiral tree (pixel node)
+==================================
+#define LED_TYPE APA102
+#define DATA_PIN 5
+#define CLOCK_PIN 4
+#define NUM_LEDS 266
+#define COLOR_ORDER BGR
+#define BRIGHTNESS 180
+
+char *hostname = "tree1";
+String topics[] = {
+  "all",
+  "trees",
+  "tree1"
+};
+
+Arches
+==================================
+#define LED_TYPE APA102
+#define DATA_PIN 5
+#define CLOCK_PIN 4
+#define NUM_LEDS 92
+#define COLOR_ORDER BGR
+#define BRIGHTNESS 180
+
+char *hostname = "arch1";
+String topics[] = {
+  "all",
+  "arches",
+  "arch1"
+};
+
+Two other trees
+==================================
+#define LED_TYPE WS2812B
+#define DATA_PIN 5
+#define NUM_LEDS 100
+#define COLOR_ORDER RGB
+#define BRIGHTNESS 180
+
+char *hostname = "tree2";
+String topics[] = {
+  "all",
+  "trees",
+  "tree2"
+};
 
 
-Advanced Python Scheduler https://apscheduler.readthedocs.io/en/v3.6.2/
-(run code at fixed intervals)
