@@ -1,0 +1,38 @@
+{
+  "showName": "Christmas 2019",
+  "version": 1,
+  "startTime": "hh:mm:ss",
+  "stopTime": "hh:mm:ss",
+  "channels": [
+    {
+      "mqttName": "arch1",
+      "type": "PixelNode",
+      "animations": [
+        {
+          "color": "red",
+          "animation": "edges_in",
+          "duration": 5,
+          "loopDelay": 10,
+          "holdTime": 50,
+          "repeatable": true
+        }
+      ],
+      "defaultAnimation": {
+        "animation": "off"
+      }
+    },
+    {
+      "mqttName": "sleigh",
+      "type": "OnOffNode",
+      "animations": [
+        {
+          "animation": "on",
+          "duration": 30
+        }
+      ],
+      "defaultAnimation": {
+        "animation": "off"
+      }
+    }    
+  ]
+}

@@ -1,0 +1,299 @@
+#app-title-bar {
+  margin: 0 0 10pt 0;
+  padding: 5pt 10pt;
+  background: rgb(7,65,0);
+  background: -moz-linear-gradient(0deg, rgba(7,65,0,1) 18%, rgba(28,78,21,1) 61%, rgba(62,99,57,1) 100%);
+  background: -webkit-linear-gradient(0deg, rgba(7,65,0,1) 18%, rgba(28,78,21,1) 61%, rgba(62,99,57,1) 100%);
+  background: linear-gradient(0deg, rgba(7,65,0,1) 18%, rgba(28,78,21,1) 61%, rgba(62,99,57,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#074100",endColorstr="#3e6339",GradientType=1);
+  height: 30pt;
+  border-bottom: 2px solid black;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+}
+
+#app-name {
+  color: cornsilk;
+  font-size: 11pt;
+}
+
+#export-button-wrapper {
+  position: absolute;
+  right: 5pt;
+  top: 3pt;
+}
+#export-button-wrapper .btn {
+  margin-left: 5pt;
+}
+
+#timelinebar-wrapper {
+  margin: 30pt 0 0 0;
+  height: 65pt;
+  width: 10000px;
+  left: 0;
+  border-bottom: 1px solid #182848;
+  background: rgb(235,235,235);
+  background: -moz-linear-gradient(0deg, rgba(235,235,235,1) 4%, rgba(255,255,255,1) 40%, rgba(255,255,255,1) 44%);
+  background: -webkit-linear-gradient(0deg, rgba(235,235,235,1) 4%, rgba(255,255,255,1) 40%, rgba(255,255,255,1) 44%);
+  background: linear-gradient(0deg, rgba(235,235,235,1) 4%, rgba(255,255,255,1) 40%, rgba(255,255,255,1) 44%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ebebeb",endColorstr="#ffffff",GradientType=1); 
+}
+.show-info-wrapper {
+  margin-top: 10pt;
+  margin-bottom: 10pt;
+  width: 300pt;
+}
+.col1 {
+  width: 115;
+  display: inline-block;
+  font-size: 10pt;
+  padding-left: 3pt;
+}
+.col2 {
+  width: 185pt;
+  display: inline-block;
+  font-size: 10pt;
+}
+
+
+.timelinebar-left-col {
+  text-align: left;
+  padding-left: 5pt;
+  padding-top: 4pt;
+  width: 90pt;
+  min-width: 90pt;
+  float: left;
+  font-size: 8pt;
+}
+.timelinebar-right-col {
+  width: 10000px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  margin-top: 0;
+  padding-top: 0;
+  position:relative;
+  top: -4px;
+  left: 75pt;
+}
+
+#contents-wrapper {
+  margin-top: 0pt;
+}
+
+.tick-mark {
+  display: inline-block;
+  height: 8pt;
+  width: 20px;
+  border-right: 1px solid black;
+  margin: 0;
+  padding: 0;
+}
+
+/* ----------------------------------------------
+    STYLES FOR A NEW/EMPTY SHOW COMPONENT
+   ---------------------------------------------- */
+.emptyshow-wrapper {
+  width: 250pt;
+  height: 250pt;
+  border: 1px solid #eee;
+  border-radius: 10pt;
+  text-align: center;
+  vertical-align: middle;
+  justify-content: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+}
+.emptyshow-wrapper p {
+  margin-top: 75pt;
+}
+.emptyshow-title {
+  color: #999;
+}
+.emptyshow-button-wrapper {
+  padding-top: 20pt;
+}
+.emptyshow-button-wrapper .btn {
+  padding: 20pt;
+}
+
+/* ----------------------------------------------
+    STYLES FOR THE ADD NEW ROW/CHANNEL COMPONENT
+   ---------------------------------------------- */
+.addchannel-wrapper {
+  width: 250pt;
+  height: 120pt;
+  border: 1px solid #eee;
+  border-radius: 10pt;
+  text-align: center;
+  vertical-align: middle;
+  justify-content: center;
+  margin: 10pt auto;
+}
+.addchannel-wrapper p {
+  margin-top: 10pt;
+}
+.addchannel-title {
+  color: #999;
+}
+.addchannel-button-wrapper {
+  padding-top: 5pt;
+}
+.addchannel-button-wrapper .btn {
+  padding: 20pt;
+}
+
+
+
+/* ----------------------------------------------
+    ROW / CHANNEL STYLES
+   ---------------------------------------------- */
+
+.row-outer-wrapper {
+  margin: 0;
+  padding: 0;
+  width: 10000px;
+  height: 60pt;
+  background-color: #eee;
+  border-bottom: 1px solid #182848;
+}
+.row-wrapper {
+  margin: 0;
+  padding: 0;
+  min-width: 100%;
+  height: 60pt;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.row-inner-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 0;
+}
+
+.row-title {
+  background-color: #182848;
+  color: white;
+  width: 30pt;
+  height: 60pt;
+  text-align: center;
+}
+.row-title-text {
+  transform: rotate(-90deg) translateX(-60pt);
+  transform-origin: top left;
+  color: white;
+  height: 30pt;
+  width: 60pt;
+  padding: 6pt 0;
+  font-size: 9pt;
+}
+
+.row-image {
+  height: 60pt;
+  width: 60pt;
+  background-color: #eee;
+  border-bottom: 1px solid #182848;
+}
+
+.duration {
+  display: block;
+  position: relative;
+  bottom: 13pt;
+  left: 0;
+  width: 99%;
+  height: 12pt;
+  background-color: silver;
+  color: black;
+  font-size: 8pt;
+  text-align: center;
+}
+
+.row-button-wrapper {
+  height: 30pt;
+  margin: auto 1px;
+}
+/* ----------------------------------------------
+  MODAL STYLES
+---------------------------------------------- */
+.row {
+  margin-top: 4pt;
+}
+.modal-label {
+  padding-top: 6pt;
+  font-size: 10pt;
+}
+/* ----------------------------------------------
+    NODE STYLES
+   ---------------------------------------------- */
+.node-wrapper {
+  padding: 4pt 1pt;
+  width: 100pt;
+  background-color: #eee;
+  border-bottom: 1px solid #182848;
+  height: 60pt;
+}
+.node-inner-wrapper {
+  border: 1px solid darkslateblue;
+  border-radius: 3pt;
+  padding: 4pt;
+  margin: 1pt 4pt;
+  background: rgb(6,27,70);
+  background: -moz-linear-gradient(180deg, rgba(6,27,70,1) 21%, rgba(17,43,96,1) 54%, rgba(46,83,170,1) 100%);
+  background: -webkit-linear-gradient(180deg, rgba(6,27,70,1) 21%, rgba(17,43,96,1) 54%, rgba(46,83,170,1) 100%);
+  background: linear-gradient(180deg, rgba(6,27,70,1) 21%, rgba(17,43,96,1) 54%, rgba(46,83,170,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#061b46",endColorstr="#2e53aa",GradientType=1);
+  overflow: hidden;
+  height: 50pt;
+  text-overflow: clip;
+}
+.node-inner-wrapper p {
+  font-size: 10pt;
+  color: white;
+  font-size: 8pt;
+  white-space: pre-wrap;
+  line-height: 10pt;
+}
+.removeNode {
+  position: relative;
+  right: 17pt;
+  top: 3pt;
+  height: 8pt;
+  width: 8pt;
+  float: right;
+}
+.removeNode .btn {
+  border: 0;
+  padding: 2pt;
+  color: orange;
+}
+.removeNode .btn:hover {
+  background-color: orange;
+  padding: 2pt;
+}
+
+.react-select-container {
+  white-space: nowrap;
+  vertical-align: top;
+}
+.react-select__control {
+  padding: 0;
+  margin: 0;
+}
+.react-select__indicators {
+  padding: 0;
+  margin: 0;
+}
+
+.node-checkbox {
+  font-size: 8pt;
+  display: inline-block;
+}
+
+.form-control {
+  font-size: 8pt;
+  display: inline-block;
+}
