@@ -1,38 +1,76 @@
-# 2019 Rewrite - Central Command
+# Nodes
 
-Goals for this year's rewrite are:
+Nodes are the lighting controllers. Currently, PiLit supplies 3 types of nodes:
 
-* Central Raspberry Pi controls multiple nodes
-* The various nodes control the actual devices - relays, pixel strips, eventually sound
-* Uses MQTT to send messages from the central Pi to the nodes
+* pixel_node -- (Arduino / ESP8266) used to control "neopixel" strips
+* onoff_node -- (Arduino / ESP8266) used to control simple on/off relays
+* multi_relay -- (Python / Raspberry Pi) used to control multi-relay boards
+
+In general, for all three types of nodes, you will need to customize a few variables in each script before loading it onto your microcontroller/Pi.
 
 
-
-## Nodes
-
-These are the Arduino / ESP8266 programs used to control the actual light displays in the yard. Each is an MQTT subscriber / client that accepts various commands which control how the lights are displayed.
-
-### pixel_node
+## pixel_node
 
 This node is to control "neopixel" strips. In my setup, I use a generic off-brand ESP8266 microcontroller, a level shifter, and APA102C or other LED strips or strings. I use these for leaping arches, pixel trees, and more.
 
-These node types accept these MQTT messages in this form:
+### Configuration and installation
+
+Open pixel_node.ino with the Arduino editor and customize the following values to match your setup:
+
+```c++
+// CHANGE THESE TO MATCH THE PIXEL TYPE AND SPECIFICS OF YOUR SETUP
+#define LED_TYPE APA102
+#define DATA_PIN 5
+#define CLOCK_PIN 4
+#define NUM_LEDS 92
+#define COLOR_ORDER BGR
+#define BRIGHTNESS 150
+
+char *hostname = "arch1";                   // The hostname of this device -- eg. thishost.local
+String topics[] = {                         // Create an array of topics to subscribe to
+  "all",                                    // add as many topics as necessary
+  "arches",
+  "arch1"
+};
+char *brokerHostname = "northpole.local";  // or "192.168.1.6";  // Hostname/IP address of the MQTT broker
+char *net1_ssid = "YOUR_WIFI_NET_NAME";
+char *net1_password = "PASSWORD";
+char *net2_ssid = "YOUR_WIFI_NET_NAME2";
+char *net2_password = "PASSWORD";
+```
+
+Then, upload to your microcontroller. You can use the serial monitor to confirm that it connects to your network and subscribes to the channels (topics).
+
+### Animation details
+
+These node types listen for MQTT messages in this form:
 
 ```
-topic color:animation_type:loop_delay:hold_time
-topic off
-topic reset
+<color>:<animation_type>:<loop_delay>:<hold_time>:<repeat>
 ```
 
 Where:
 
-* `topic` is the MQTT topic, such as all, leaping\_arches, spiral\_tree, etc.
 * `color` is one of the valid color names below.
 * `animation_type` is one of the valid animations below.
 * `loop_delay` is a number of milliseconds, default is 10. Increasing this has the effect of slowing the animation.
 * `hold_time` is a number of milliseconds, default is 50. Some animations, such as bounce, pause briefly when the moving light reaches the end of the strip. Changing `hold_time` changes this pause. Don't set it much above 300-500 ms though, or the animation gets all funky.
+* `repeat` is either true (to repeat the animation until the next one is received) or false (to run it once)
 
-Two special forms of the command are `off` and `reset`. Using `off` is the same as setting all LEDs to black and running the solid_color animation -- in other words the strip goes off. Using `reset` keeps whatever animation was running going, but resets the loop delay and hold times to their default values.
+For example:
+
+```
+red:bounce:5:50:true 
+```
+
+There are wo special forms of the command
+
+```
+topic off
+topic reset
+```
+
+ Using `off` is the same as setting all LEDs to black and running the solid_color animation -- in other words the strip goes off. Using `reset` keeps whatever animation was running going, but resets the loop delay and hold times to their default values.
 
 **Valid color names:** white, snow, silver, gray, grey, darkgray, darkgrey, black, red, crimson, darkmagenta, darkred, magenta, maroon, orange, orangered, darkorange, yellow, gold, green, lime, darkgreen, forestgreen, cyan, darkcyan, blue, deepskyblue, royalblue, skyblue, darkblue, navy, blueviolet, purple, violet, indigo, darkviolet
 
@@ -69,9 +107,28 @@ mosquitto_pub -h 192.168.1.10 -i publisher -t arches -m 'off'
 
 ```
 
-### onoff_node
+## onoff_node
 
 This node is to control simple on/off relays. In my setup, I use these nodes to control spot lights, traditional holiday light strings, and other devices to be simply turned on or off.
+
+Open onoff_node.ino with the Arduino editor and customize the following values to match your setup:
+
+```c++
+#define gpioPin 5                           // Change this to match the GPIO pin you're using
+char *hostname = "spotlight1";              // The hostname of this device -- eg. thishost.local
+String topics[] = {                         // Create an array of topics to subscribe to
+  "all",                                    // add as many topics as necessary
+  "onoffnodes",
+  "spotlight1"
+};
+char *brokerHostname = "northpole.local";  // or "192.168.1.6";  // Hostname/IP address of the MQTT broker
+char *net1_ssid = "YOUR_WIFI_NET_NAME";
+char *net1_password = "PASSWORD";
+char *net2_ssid = "YOUR_WIFI_NET_NAME2";
+char *net2_password = "PASSWORD";
+```
+
+### Animation details
 
 These node types accept these MQTT messages in this form:
 
@@ -92,3 +149,39 @@ Where:
 mosquitto_pub -h 192.168.1.10 -i publisher -t spotlight -m 'on'
 ```
 
+## multi_relay
+
+I use this node type to control strings of "normal" Christmas lights on my megatree. I have a 16-relay Sainsmart board hooked up to 16 outlets into which those lights are plugged. This node turns them on and off in various patterns.
+
+**Note** This script requires Python 3.6 or newer.
+
+### Configuration and installation
+
+Open multi_relay.py and customize the values shown below.
+
+```python
+######## GPIO PIN CONFIGURATION ########
+# USE BCM (BROADCOM) NOT PHYSICAL PIN NUMBERS
+# also don't use GPIO 14 / pin 8 on a Pi B+ as it's the "hard drive light" pin
+gpio_pins =     [2, 3, 4, 7,  15, 17, 18, 27, 22, 23, 24, 10, 9,  25, 11, 8]
+# physical_pins = [3, 5, 7, 26, 10, 11, 12, 13, 15, 16, 18, 19, 21, 22, 23, 24]
+
+######## MQTT/NETWORK CONFIGURATION ########
+mqtt_server = "northpole.local"  # IP address or name of the broker (server)
+mqtt_name = "megatree"
+mqtt_topics = [
+    "all",
+    "megatree"
+]
+```
+
+You will need to install the paho-mqtt and gpiozero packages to use the script. If Python 3 is not your system default, I recommend you use a virtual environment set to Python 3.
+
+```
+pip install paho-mqtt
+pip install gpiozero
+```
+
+You will need to configure your Pi to connect automatically to your WiFi network. Using the GUI, simply connecting to WiFi will save your password (assuming Stretch or Buster). See the Raspbian docs to configure WiFi from the command line if you don't use the GUI. You won't need the GUI to run multi_relay.py
+
+See the running_on_boot.md file in the multi_relay folder for information on one way to run the script when your Pi boots.
