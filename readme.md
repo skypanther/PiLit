@@ -47,16 +47,14 @@ If you want to use this project for yourself, you will need some or all of the f
 * ESP8266 or other WiFi-enabled Arduino-compatible microcontrollers for controlling RGB pixels or relays.
 * A Raspberry Pi (with WiFi) and a multi-channel relay board to control various standard holiday lights.
 * A bunch of outlets, electrical boxes, wire, connectors, etc.
-* A pack of female-to-female jumpers (you'll find a bunch of [multipacks like this on Amazon](https://www.amazon.com/gp/product/B00JUKL4XI/ref=oh_aui_detailpage_o09_s00?ie=UTF8&psc=1))
-* As many [1000 ohm resistors](https://www.amazon.com/gp/product/B0185FJ6L0/ref=oh_aui_detailpage_o09_s00?ie=UTF8&psc=1) as you have relays
-* Something waterproof to house the final product since it will sit outside for the holiday season. I used a large storage tub.
+* Something waterproof to house the final product since it will sit outside for the holiday season. I use various sized storage tubs.
 
 ## Usage
 
 You will need programming, electronics, and electrical skills to implement PiLit. This is a DIY system, not a pre-built, out-of-the-box solution. Timing is *not* precisely controlled, so you'll be unlikely to create a whole-yard, synchronized Neopixel extravaganza.
 
 ### Show creation
-
+s
 See the pilitgui folder for information on the show creation tool. While in theory, it should run on any platform, I've tested it only on my Mac.
 
 ### Running a show
