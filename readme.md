@@ -2,6 +2,10 @@
 
 The free, open source, DIY holiday light show animation system.
 
+![My 2019 lights](images/christmas2019.gif)
+
+*My 2019 Christmas lights, powered by PiLit*
+
 There are lots of commercial lighting systems and software. Most are more expensive than I care to pay. So, I built my own.
 
 <blockquote style="background-color: #ff000033; padding-top: 5pt; padding-bottom: 5pt;">
@@ -10,7 +14,7 @@ Warning: Building a PiLit system involves wiring and working with wall/mains vol
 
 ## Overview
 
-PiLit at a high level:
+PiLit at a high level is:
 
 * A show control application runs on a Raspberry Pi
 * Which sends MQTT messages across the network
@@ -49,17 +53,19 @@ If you want to use this project for yourself, you will need some or all of the f
 
 ## Usage
 
+You will need programming, electronics, and electrical skills to implement PiLit. This is a DIY system, not a pre-built, out-of-the-box solution. Timing is *not* precisely controlled, so you'll be unlikely to create a whole-yard, synchronized Neopixel extravaganza.
+
 ### Show creation
 
-See the pilitgui folder for information on the show creation tool.
+See the pilitgui folder for information on the show creation tool. While in theory, it should run on any platform, I've tested it only on my Mac.
 
 ### Running a show
 
-See the pilit_player folder for information on the show runner
+See the pilit_player folder for information on the show runner. You will need a current Python installation and command-line skills to run the player.
 
 ### Nodes
 
-See the nodes folder, and its children, for information on building, using, and customizing the nodes.
+See the nodes folder, and its children, for information on building, using, and customizing the nodes. You will need at least basic Arduino skills to load the sketches. You will need electronics and electrical skills to build the nodes.
 
 # License
 
