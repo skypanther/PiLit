@@ -37,6 +37,10 @@ class App extends Component {
     }
   }
 
+  componentDidMount() {
+    this.checkAndLoadSavedShows();
+  }
+
   saveShowTimes = (showTimes) => {
     // passed to, and called from timlinebar.js to save the show times
     let newShow = this.state.show;
@@ -45,11 +49,14 @@ class App extends Component {
     this.setState({
       show: newShow
     });
+    this.handleSave();
   }
 
   handleAddAnimation = (animObj) => {
     // Save an animation to a channel's list of animations
     // Called from row.js
+    console.log(`animObj: ${JSON.stringify(animObj)}`)
+    console.log(`channels: ${JSON.stringify(this.state.show.channels)}`)
     let channelIndex = this.state.show.channels.findIndex(item => item.mqttName === animObj.mqttName);
     if (channelIndex === -1) {
       console.log('MQTT channel not found, bail out...');
@@ -68,6 +75,7 @@ class App extends Component {
       tmpShow.channels[channelIndex].animations[nodeIndex] = subset;
     }
     this.setState({show: tmpShow});
+    this.handleSave();
   }
 
   handleRemoveAnimation = (animObj) => {
@@ -83,6 +91,7 @@ class App extends Component {
     if (nodeIndex > -1) {
       tmpShow.channels[channelIndex].animations.splice(nodeIndex, 1);
       this.setState({show: tmpShow});
+      this.handleSave();
     }
   }
 
@@ -91,10 +100,12 @@ class App extends Component {
     // and used in the final exported show file
     return {
       channelIndex: channelIndex,
-      mqttName: newRow.channelName,
+      channelName: newRow.channelName,
+      mqttName: newRow.mqttName,
+      isGroup: newRow.isGroup,
       type: newRow.channelType,
       animations: [],
-    }
+    };
   }
 
   handleAddRow = (newRow) => {
@@ -113,6 +124,8 @@ class App extends Component {
       <Row key={"row"+index}
         type={newRow.channelType}
         channelName={newRow.channelName}
+        mqttName={newRow.mqttName}
+        isGroup={newRow.isGroup}
         handleAddAnimation={this.handleAddAnimation}
         handleRemoveAnimation={this.handleRemoveAnimation} />
     );
@@ -125,6 +138,47 @@ class App extends Component {
       show: newShow,
       showExport: true,
     });
+    this.handleSave();
+  }
+
+  handleSave = () => {
+    /*
+    Sample saved show structure
+    "PiLitShows" : [
+      {
+        "showName": "foobar",
+        "show": JSON.stringify(this.state.show)
+      },
+      ...
+    ]
+    */
+    let showName = this.state.show.showName;
+    let savedShowsRaw = localStorage.getItem("PiLit");
+    let savedShows = [];
+    if (savedShowsRaw) {
+      savedShows = JSON.parse(savedShowsRaw);
+    }
+    let showToSave = savedShows.find(show => show.showName = showName);
+    if (showToSave) {
+      showToSave.show = this.state.show;
+    } else {
+      savedShows.push({
+        showName: showName,
+        show: this.state.show,
+      });
+    }
+    localStorage.setItem("PiLit", JSON.stringify(savedShows));
+  }
+
+  checkAndLoadSavedShows = () => {
+    let savedShowsRaw = localStorage.getItem("PiLit");
+    if (!savedShowsRaw) {
+      return;
+    }
+    let savedShows = JSON.parse(savedShowsRaw);
+    // TODO: Add means to select which show to load, for now, load the first
+    this.handleImport(JSON.stringify(savedShows[0].show));
+
   }
 
   handleExport = () => {
@@ -153,12 +207,16 @@ class App extends Component {
   makeRowForImport = (newRow, index, showName) => {
     // Creates a <Row> when importing a show file
     var rowToAdd = (
-      <Row key={"row"+index}
+      <Row
+        key={"row" + index}
         type={newRow.type}
-        channelName={newRow.mqttName}
+        channelName={newRow.channelName}
+        mqttName={newRow.mqttName}
+        isGroup={newRow.isGroup}
         handleAddAnimation={this.handleAddAnimation}
         handleRemoveAnimation={this.handleRemoveAnimation}
-        animationsFromImport={newRow.animations} />
+        animationsFromImport={newRow.animations}
+      />
     );
     return rowToAdd;
   }

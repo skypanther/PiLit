@@ -8,6 +8,8 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 
+import BootstrapSwitchButton from "bootstrap-switch-button-react";
+
 // FontAwesome
 import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -27,8 +29,10 @@ class AddChannel extends Component {
       showName: "",
       channelType: "",
       channelName: "",
-      nodes: []
-    }
+      mqttName: "",
+      isGroup: false,
+      nodes: [],
+    };
     this.handleShow = this.handleShow.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.handleClose = this.handleClose.bind(this);
@@ -36,60 +40,125 @@ class AddChannel extends Component {
     this.setShowName = this.setShowName.bind(this);
     this.setChannelType = this.setChannelType.bind(this);
     this.setChannelName = this.setChannelName.bind(this);
+    this.setMqttName = this.setMqttName.bind(this);
+    this.setIsGroup = this.setIsGroup.bind(this);
   }
 
   handleShow = () => {
-    this.setState({show:true});
-  }
+    this.setState({ show: true });
+  };
   handleClose = () => {
-    this.setState({show:false});
-  }
+    this.setState({ show: false });
+  };
   handleSave = () => {
     this.setState({ show: false });
     this.props.handleAddNewRow({
       showName: this.state.showName,
       channelType: this.state.channelType,
       channelName: this.state.channelName,
+      mqttName: this.state.mqttName,
+      isGroup: this.state.isGroup,
     });
-  }
+  };
 
   handleAddRow = () => {
-    this.setState({ show: true});
-  }
+    this.setState({ show: true });
+  };
 
   setShowName = (val) => {
-    this.setState({ showName: val});
-  }
+    this.setState({ 
+      showName: val
+    });
+  };
   setChannelType = (val) => {
-    this.setState({ channelType: val});
-  }
+    this.setState({
+      channelType: val,
+    });
+  };
   setChannelName = (val) => {
-    this.setState({ channelName: val});
+    this.setState({
+      channelName: val,
+    });
+  };
+  setMqttName = (val) => {
+    this.setState({
+      mqttName: val,
+    });
+  };
+  setIsGroup = (val) => {
+    this.setState({
+      isGroup: val
+    });
   }
 
   render() {
     return (
       <>
-        <Modal show={this.state.show} onHide={this.handleClose} animation={true}>
+        <Modal
+          show={this.state.show}
+          onHide={this.handleClose}
+          animation={true}
+        >
           <Modal.Header closeButton>
-            <Modal.Title>Add An Animation Channel</Modal.Title>
+            <Modal.Title>Add An Animation Channel / Group</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Container>
               <Row>
-                <Col xs={4} className="modal-label"></Col>
+                <Col xs={4} className="modal-label">
+                  Title
+                </Col>
                 <Col xs={8}>
-                  <Select 
-                    className='react-select-container'
-                    classNamePrefix="react-select"
-                    placeholder="Channel Type"
-                    options={nodeTypes}
-                    onChange={e => this.setChannelType(e.value)} />
+                  <Form.Control
+                    type="text"
+                    className="form-control"
+                    defaultValue=""
+                    onChange={(e) => this.setChannelName(e.target.value)}
+                  />
                 </Col>
               </Row>
               <Row>
-                <Col xs={4} className="modal-label">MQTT Subscriber</Col>
-                <Col xs={8}><Form.Control type="text" className="form-control" defaultValue="" onChange={e => this.setChannelName(e.target.value)}/></Col>
+                <Col xs={4} className="modal-label">
+                  Node or Group?
+                </Col>
+                <Col xs={8}>
+                  <BootstrapSwitchButton
+                    checked={false}
+                    width={100}
+                    onlabel="Group"
+                    offlabel="Node"
+                    onstyle="outline-primary"
+                    offstyle="outline-success"
+                    onChange={(checked) => this.setIsGroup(checked)}
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={4} className="modal-label">
+                  Channel Type
+                </Col>
+                <Col xs={8}>
+                  <Select
+                    className="react-select-container"
+                    classNamePrefix="react-select"
+                    placeholder="Channel Type"
+                    options={nodeTypes}
+                    onChange={(e) => this.setChannelType(e.value)}
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={4} className="modal-label">
+                  MQTT Subscriber
+                </Col>
+                <Col xs={8}>
+                  <Form.Control
+                    type="text"
+                    className="form-control"
+                    defaultValue=""
+                    onChange={(e) => this.setMqttName(e.target.value)}
+                  />
+                </Col>
               </Row>
             </Container>
           </Modal.Body>
@@ -97,19 +166,32 @@ class AddChannel extends Component {
             <Button variant="secondary" onClick={this.handleClose}>
               Close
             </Button>
-            <Button variant="primary" onClick={this.handleSave} disabled={!(this.state.channelName && this.state.channelType)}>
+            <Button
+              variant="primary"
+              onClick={this.handleSave}
+              disabled={!(this.state.channelName && this.state.channelType)}
+            >
               Save Changes
             </Button>
           </Modal.Footer>
         </Modal>
         <div className="addchannel-wrapper">
-          <div className="addchannel-title"><p>Add Another Channel</p></div>
+          <div className="addchannel-title">
+            <p>Add Another Channel</p>
+          </div>
           <div className="addchannel-button-wrapper">
-            <Button variant="light" size="lg"><FontAwesomeIcon icon={faPlusCircle} onClick={() => { this.handleAddRow() }} /></Button>
+            <Button variant="light" size="lg">
+              <FontAwesomeIcon
+                icon={faPlusCircle}
+                onClick={() => {
+                  this.handleAddRow();
+                }}
+              />
+            </Button>
           </div>
         </div>
       </>
-    )
+    );
   }
 }
 

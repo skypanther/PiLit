@@ -104,42 +104,54 @@ class Row extends Component {
     switch (this.props.type) {
       case 'PixelNode':
         newNode = (
-          <PixelNode key={"node"+index}
-            mqttName={this.props.channelName}
+          <PixelNode
+            key={"node" + index}
+            mqttName={this.props.mqttName}
+            channelName={this.props.channelName}
             type={this.props.type}
             saveNodeConfig={this.saveNodeConfig}
             removeNode={this.removeNode}
-            index={index} />
+            index={index}
+          />
         );
       break;
       case 'PixelTree':
         newNode = (
-          <PixelTree key={"node"+index}
-            mqttName={this.props.channelName}
+          <PixelTree
+            key={"node" + index}
+            mqttName={this.props.mqttName}
+            channelName={this.props.channelName}
             type={this.props.type}
             saveNodeConfig={this.saveNodeConfig}
             removeNode={this.removeNode}
-            index={index} />
+            index={index}
+          />
         );
       break;
       case 'OnOffNode':
         newNode = (
-          <OnOffNode key={"node"+index}
-            mqttName={this.props.channelName}
+          <OnOffNode
+            key={"node" + index}
+            mqttName={this.props.mqttName}
+            channelName={this.props.channelName}
             type={this.props.type}
             saveNodeConfig={this.saveNodeConfig}
             removeNode={this.removeNode}
-            index={index} />
+            index={index}
+          />
         );
       break;
       case 'MultiRelayNode':
         newNode = (
-          <MultiRelayNode key={"node"+index}
-            mqttName={this.props.channelName}
+          <MultiRelayNode
+            key={"node" + index}
+            mqttName={this.props.mqttName}
+            channelName={this.props.channelName}
             type={this.props.type}
             saveNodeConfig={this.saveNodeConfig}
             removeNode={this.removeNode}
-            index={index} />
+            index={index}
+          />
         );
       break;
     }

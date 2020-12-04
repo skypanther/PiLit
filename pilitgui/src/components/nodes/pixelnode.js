@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import chroma from 'chroma-js';
 import Select from 'react-select';
 
 // FontAwesome
@@ -13,175 +12,13 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 
-const dot = (color = '#ccc') => ({
-  alignItems: 'center',
-  display: 'flex',
+import {
+  animations,
+  animationStyles,
+  colors,
+  colorStyles,
+} from "/src/constants";
 
-  ':before': {
-    backgroundColor: color,
-    borderRadius: 10,
-    content: '" "',
-    display: 'block',
-    marginRight: 8,
-    height: 10,
-    width: 10,
-  },
-});
-
-const colorStyles = {
-  control: styles => ({ ...styles, backgroundColor: 'white', fontSize: '8pt' }),
-  option: (styles, { data, isDisabled, isFocused, isSelected }) => {
-    const color = chroma(data.value);
-    return {
-      ...styles,
-      fontSize: '8pt',
-      backgroundColor: isDisabled
-        ? null
-        : isSelected
-        ? data.value
-        : isFocused
-        ? chroma.contrast(color, 'white') > 2 ? color.alpha(0.1).css() : '#ccc'
-        : null,
-      color: isDisabled
-        ? '#ccc'
-        : isSelected
-        ? chroma.contrast(color, 'white') > 2
-          ? 'white'
-          : 'black'
-        : chroma.contrast(color, 'white') > 2
-        ? data.value
-        : 'black',
-      cursor: isDisabled ? 'not-allowed' : 'default',
-
-      ':active': {
-        ...styles[':active'],
-        backgroundColor: !isDisabled && (isSelected ? data.value : color.alpha(0.3).css()),
-      },
-    };
-  },
-  input: styles => ({ ...styles, ...dot() }),
-  placeholder: styles => ({ ...styles, ...dot() }),
-  singleValue: (styles, { data }) => ({ ...styles, ...dot(data.value) }),
-};
-const animationStyles = {
-  control: styles => ({...styles, fontSize: '8pt' }),
-  option: styles => ({...styles, fontSize: '8pt', padding: '4pt'})
-}
-
-const colors = [
-      { label: "Black / Off", value: "black" },
-      { label: "White", value: "white" },
-      { label: "Snow", value: "snow" },
-      { label: "Silver", value: "silver" },
-      { label: "Gray", value: "gray" },
-      { label: "Dark Gray", value: "darkgray" },
-      { label: "Red", value: "red" },
-      { label: "Crimson", value: "crimson" },
-      { label: "Dark Magenta", value: "darkmagenta" },
-      { label: "Dark Red", value: "darkred" },
-      { label: "Magenta", value: "magenta" },
-      { label: "Maroon", value: "maroon" },
-      { label: "Orange", value: "orange" },
-      { label: "Orange Red", value: "orangered" },
-      { label: "Dark Orange", value: "darkorange" },
-      { label: "Yellow", value: "yellow" },
-      { label: "Gold", value: "gold" },
-      { label: "Green", value: "green" },
-      { label: "Lime", value: "lime" },
-      { label: "Dark Green", value: "darkgreen" },
-      { label: "Forest Green", value: "forestgreen" },
-      { label: "Cyan", value: "cyan" },
-      { label: "Dark Cyan", value: "darkcyan" },
-      { label: "Blue", value: "blue" },
-      { label: "Deep Sky Blue", value: "deepskyblue" },
-      { label: "Royal Blue", value: "royalblue" },
-      { label: "Sky Blue", value: "skyblue" },
-      { label: "Dark Blue", value: "darkblue" },
-      { label: "Navy", value: "navy" },
-      { label: "Blue Violet", value: "blueviolet" },
-      { label: "Purple", value: "purple" },
-      { label: "Violet", value: "violet" },
-      { label: "Indigo", value: "indigo" },
-      { label: "Dark Violet", value: "darkviolet" }
-    ];
-
-const animations = [
-      {
-        label: "Solid color",
-        value: "solid_color",
-        description: "Turn all LEDs to a single color"
-      },
-      {
-        label: "Center-outwards",
-        value: "center_out",
-        description: "LEDs light up, one-by-one, from the center towards the end till the whole strip is on"
-      },
-      {
-        label: "Edges-inward",
-        value: "edges_in",
-        description: "LEDs light up, one-by-one, from two ends towards the center till the whole strip is on"
-      },
-      {
-        label: "Slinky",
-        value: "slinky",
-        description: "LEDs light up, one-by-one, starting from end closest to the microcontroller towards the other end till the whole strip is on"
-      },
-      {
-        label: "Slinky backwards",
-        value: "slinky_backwards",
-        description: "LEDs light up, one-by-one, starting from end furthest from the microcontroller towards the other end till the whole strip is on"
-      },
-      {
-        label: "Bounce",
-        value: "bounce",
-        description: "3 LEDs light up, then move as a group to the other end with the rest of the LEDs all off. Once they reach the far end, they move back towards the beginning."
-      },
-      {
-        label: "Bounce backwards",
-        value: "bounce_backwards",
-        description: "Same as bounce, starting from opposite end."
-      },
-      {
-        label: "Circle",
-        value: "circle",
-        description: "3 LEDs light up, then move as a group to the other end with the rest of the LEDs all off. Once they reach the far end, they start over from the original end."
-      },
-      {
-        label: "Circle backwards",
-        value: "circle_backwards",
-        description: "Same as circle, starting from the opposite end."
-      },
-      {
-        label: "Flash",
-        value: "flash",
-        description: "Whole strip lights up at full brightness, then fades to black."
-      },
-      {
-        label: "Rainbow",
-        value: "rainbow",
-        description: "A moving, blended (continuous) rainbow pattern fills the entire strip."
-      },
-      {
-        label: "Rainbow stripes",
-        value: "rainbow_stripes",
-        description: "Like rainbow, but with discrete stripes of rainbow colors separated by black."
-      },
-      {
-        label: "Ocean",
-        value: "ocean",
-        description: "A moving, blended (continuous) pattern of blues, greens, and white fills the entire strip."
-      },
-      {
-        label: "Stripes on black",
-        value: "stripes",
-        description: "Multiple discrete stripes of a single color travel down the strip with black between."
-      },
-      {
-        label: "Stripes on white",
-        value: "stripes_white",
-        description: "Multiple discrete stripes of a single color travel down the strip with white between."
-      },
-    ];
 
 class PixelNode extends Component {
   constructor(props) {
@@ -280,7 +117,11 @@ class PixelNode extends Component {
     let nodeWidth = this.state.duration > 0 ? this.state.duration * 10 : 100;
     return (
       <>
-        <Modal show={this.state.show} onHide={this.handleClose} animation={true}>
+        <Modal
+          show={this.state.show}
+          onHide={this.handleClose}
+          animation={true}
+        >
           <Modal.Header closeButton>
             <Modal.Title>Pixel Animation Settings</Modal.Title>
           </Modal.Header>
@@ -288,53 +129,100 @@ class PixelNode extends Component {
             <Container>
               <Row>
                 <Col xs={8}>
-                  <Select 
-                    className='react-select-container'
+                  <Select
+                    className="react-select-container"
                     classNamePrefix="react-select"
                     placeholder="Animation"
                     options={animations}
                     styles={animationStyles}
-                    value={this.state.animationIndex !== null ? animations[this.state.animationIndex] : null}
-                    onChange={e => this.setAnimationType(e)} />
+                    value={
+                      this.state.animationIndex !== null
+                        ? animations[this.state.animationIndex]
+                        : null
+                    }
+                    onChange={(e) => this.setAnimationType(e)}
+                  />
                 </Col>
                 <Col xs={4}>
                   <Form.Check
                     type="checkbox"
                     label="Repeat?"
                     className="node-checkbox"
-                    style={{marginLeft: '10px', marginTop: '10pt'}}
+                    style={{ marginLeft: "10px", marginTop: "10pt" }}
                     inline="true"
                     checked={this.state.repeatable}
-                    onChange={e => this.isRepeatable(e.target.checked)}/>
+                    onChange={(e) => this.isRepeatable(e.target.checked)}
+                  />
                 </Col>
               </Row>
               <Row>
                 <Col xs={8}>
-                  <Select 
-                    className='react-select-container'
+                  <Select
+                    className="react-select-container"
                     classNamePrefix="react-select"
                     placeholder="Color"
                     options={colors}
                     styles={colorStyles}
-                    value={this.state.colorIndex !== null ? colors[this.state.colorIndex] : null}
-                    onChange={e => this.setColor(e)} />
+                    value={
+                      this.state.colorIndex !== null
+                        ? colors[this.state.colorIndex]
+                        : null
+                    }
+                    onChange={(e) => this.setColor(e)}
+                  />
                 </Col>
                 <Col xs={4}></Col>
               </Row>
               <Row>
-                <Col xs={3} className="modal-label">Duration</Col>
-                <Col xs={3}><Form.Control type="text" className="form-control" value={this.state.duration} onChange={e => this.setDuration(e.target.value)}/></Col>
-                <Col xs={6} className="modal-label"> (seconds)</Col>
+                <Col xs={3} className="modal-label">
+                  Duration
+                </Col>
+                <Col xs={3}>
+                  <Form.Control
+                    type="text"
+                    className="form-control"
+                    value={this.state.duration}
+                    onChange={(e) => this.setDuration(e.target.value)}
+                  />
+                </Col>
+                <Col xs={6} className="modal-label">
+                  {" "}
+                  (seconds)
+                </Col>
               </Row>
               <Row>
-                <Col xs={3} className="modal-label">Loop Delay</Col>
-                <Col xs={3}><Form.Control type="text" className="form-control" value={this.state.loopDelay} onChange={e => this.setLoopDelay(e.target.value)}/></Col>
-                <Col xs={6} className="modal-label"> (milliseconds)</Col>
+                <Col xs={3} className="modal-label">
+                  Loop Delay
+                </Col>
+                <Col xs={3}>
+                  <Form.Control
+                    type="text"
+                    className="form-control"
+                    value={this.state.loopDelay}
+                    onChange={(e) => this.setLoopDelay(e.target.value)}
+                  />
+                </Col>
+                <Col xs={6} className="modal-label">
+                  {" "}
+                  (milliseconds)
+                </Col>
               </Row>
               <Row>
-                <Col xs={3} className="modal-label">Hold Time</Col>
-                <Col xs={3}><Form.Control type="text" className="form-control" value={this.state.holdTime} onChange={e => this.setHoldTime(e.target.value)}/></Col>
-                <Col xs={6} className="modal-label"> (milliseconds)</Col>
+                <Col xs={3} className="modal-label">
+                  Hold Time
+                </Col>
+                <Col xs={3}>
+                  <Form.Control
+                    type="text"
+                    className="form-control"
+                    value={this.state.holdTime}
+                    onChange={(e) => this.setHoldTime(e.target.value)}
+                  />
+                </Col>
+                <Col xs={6} className="modal-label">
+                  {" "}
+                  (milliseconds)
+                </Col>
               </Row>
             </Container>
           </Modal.Body>
@@ -342,19 +230,39 @@ class PixelNode extends Component {
             <Button variant="secondary" onClick={this.handleClose}>
               Close
             </Button>
-            <Button variant="primary" onClick={this.handleSave} disabled={!(this.state.animation && this.state.color)}>
+            <Button
+              variant="primary"
+              onClick={this.handleSave}
+              disabled={!(this.state.animation && this.state.color)}
+            >
               Save Changes
             </Button>
           </Modal.Footer>
         </Modal>
-        <div className = "node-wrapper" style={{ width: nodeWidth + 'pt' }}>
-          <div className="removeNode"><Button variant="outline-danger" size="sm"><FontAwesomeIcon icon={faMinusCircle} onClick={() => { this.handleDelete() }} /></Button></div>
-          <div className = "node-inner-wrapper" onClick={this.handleShow}>
-            <p>{this.state.nodeText}</p>
+        <div
+          className="node-wrapper"
+          style={{ width: nodeWidth + "pt", backgroundColor: "orange" }}
+        >
+          <div className="removeNode">
+            <Button variant="outline-danger" size="sm">
+              <FontAwesomeIcon
+                icon={faMinusCircle}
+                onClick={() => {
+                  this.handleDelete();
+                }}
+              />
+            </Button>
+          </div>
+          <div
+            className="node-inner-wrapper"
+            onClick={this.handleShow}
+            style={{ backgroundColor: "green" }}
+          >
+            <p style={{ backgroundColor: "pink" }}>{this.state.nodeText}</p>
           </div>
         </div>
       </>
-    )
+    );
   }
 }
 
