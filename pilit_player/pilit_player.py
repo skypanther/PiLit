@@ -14,7 +14,7 @@ import json
 import os
 import paho.mqtt.publish as publish
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 from time import sleep
 
 mqtt_server = "northpole.local"  # my server is named northpole, change this
@@ -99,7 +99,7 @@ def get_show_times_for_today(start_time, stop_time):
     st = datetime.today().replace(hour=start_time[0], minute=start_time[1], second=0, microsecond=0)
     if stop_time[0] <= 12:
         # we're stopping after midnight
-        tomorrow = datetime.today() + datetime.timedelta(days=1)
+        tomorrow = datetime.today() + timedelta(days=1)
         et = tomorrow.replace(hour=stop_time[0], minute=stop_time[1], second=59, microsecond=999999)
     else:
         et = datetime.today().replace(hour=stop_time[0], minute=stop_time[1], second=59, microsecond=999999)
