@@ -8,7 +8,7 @@ Once installed, you'll need to run `npm install` to download and install the app
 
 Then, run `npm start` to start a development server running this app, which you can access at `http://localhost:1234`.
 
-## Nodes
+## Notes
 
 You can use the `-p` flag to specify a port for development. To do this, run `npm start` with an additional flag:
 

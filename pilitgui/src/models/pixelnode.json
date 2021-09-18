@@ -13,27 +13,27 @@
             {
                 "label": "Center-outwards",
                 "value": "center_out",
-            "description": "LEDs light up, one-by-one, from the center towards the end till the whole strip is on"
+                "description": "LEDs light up, one-by-one, from the center towards the end till the whole strip is on"
             },
             {
                 "label": "Edges-inward",
                 "value": "edges_in",
-            "description": "LEDs light up, one-by-one, from two ends towards the center till the whole strip is on"
+                "description": "LEDs light up, one-by-one, from two ends towards the center till the whole strip is on"
             },
             {
                 "label": "Slinky",
                 "value": "slinky",
-            "description": "LEDs light up, one-by-one, starting from end closest to the microcontroller towards the other end till the whole strip is on"
+                "description": "LEDs light up, one-by-one, starting from end closest to the microcontroller towards the other end till the whole strip is on"
             },
             {
                 "label": "Slinky backwards",
                 "value": "slinky_backwards",
-            "description": "LEDs light up, one-by-one, starting from end furthest from the microcontroller towards the other end till the whole strip is on"
+                "description": "LEDs light up, one-by-one, starting from end furthest from the microcontroller towards the other end till the whole strip is on"
             },
             {
                 "label": "Bounce",
                 "value": "bounce",
-            "description": "3 LEDs light up, then move as a group to the other end with the rest of the LEDs all off. Once they reach the far end, they move back towards the beginning."
+                "description": "3 LEDs light up, then move as a group to the other end with the rest of the LEDs all off. Once they reach the far end, they move back towards the beginning."
             }
         ],
         "default": "solid_color"
@@ -53,135 +53,135 @@
         "values": [
             {
                 "label": "Black / Off",
-                "value": "black",
+                "value": "black"
             },
             {
                 "label": "White",
-                "value": "white",
+                "value": "white"
             },
             {
                 "label": "Snow",
-                "value": "snow",
+                "value": "snow"
             },
             {
                 "label": "Silver",
-                "value": "silver",
+                "value": "silver"
             },
             {
                 "label": "Gray",
-                "value": "gray",
+                "value": "gray"
             },
             {
                 "label": "Dark Gray",
-                "value": "darkgray",
+                "value": "darkgray"
             },
             {
                 "label": "Red",
-                "value": "red",
+                "value": "red"
             },
             {
                 "label": "Crimson",
-                "value": "crimson",
+                "value": "crimson"
             },
             {
                 "label": "Dark Magenta",
-                "value": "darkmagenta",
+                "value": "darkmagenta"
             },
             {
                 "label": "Dark Red",
-                "value": "darkred",
+                "value": "darkred"
             },
             {
                 "label": "Magenta",
-                "value": "magenta",
+                "value": "magenta"
             },
             {
                 "label": "Maroon",
-                "value": "maroon",
+                "value": "maroon"
             },
             {
                 "label": "Orange",
-                "value": "orange",
+                "value": "orange"
             },
             {
                 "label": "Orange Red",
-                "value": "orangered",
+                "value": "orangered"
             },
             {
                 "label": "Dark Orange",
-                "value": "darkorange",
+                "value": "darkorange"
             },
             {
                 "label": "Yellow",
-                "value": "yellow",
+                "value": "yellow"
             },
             {
                 "label": "Gold",
-                "value": "gold",
+                "value": "gold"
             },
             {
                 "label": "Green",
-                "value": "green",
+                "value": "green"
             },
             {
                 "label": "Lime",
-                "value": "lime",
+                "value": "lime"
             },
             {
                 "label": "Dark Green",
-                "value": "darkgreen",
+                "value": "darkgreen"
             },
             {
                 "label": "Forest Green",
-                "value": "forestgreen",
+                "value": "forestgreen"
             },
             {
                 "label": "Cyan",
-                "value": "cyan",
+                "value": "cyan"
             },
             {
                 "label": "Dark Cyan",
-                "value": "darkcyan",
+                "value": "darkcyan"
             },
             {
                 "label": "Blue",
-                "value": "blue",
+                "value": "blue"
             },
             {
                 "label": "Deep Sky Blue",
-                "value": "deepskyblue",
+                "value": "deepskyblue"
             },
             {
                 "label": "Royal Blue",
-                "value": "royalblue",
+                "value": "royalblue"
             },
             {
                 "label": "Sky Blue",
-                "value": "skyblue",
+                "value": "skyblue"
             },
             {
                 "label": "Dark Blue",
-                "value": "darkblue",
+                "value": "darkblue"
             },
             {
                 "label": "Navy",
-                "value": "navy",
+                "value": "navy"
             },
             {
                 "label": "Blue Violet",
-                "value": "blueviolet",
+                "value": "blueviolet"
             },
             {
                 "label": "Purple",
-                "value": "purple",
+                "value": "purple"
             },
             {
                 "label": "Violet",
-                "value": "violet",
+                "value": "violet"
             },
             {
                 "label": "Indigo",
-                "value": "indigo",
+                "value": "indigo"
             },
             {
                 "label": "Dark Violet",

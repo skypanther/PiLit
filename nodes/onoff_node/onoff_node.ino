@@ -22,17 +22,17 @@
 
 
 // ------> CONFIGURE THESE VARIABLES TO MATCH YOUR SETUP  <------
-char *hostname = "spotlight1";              // The hostname of this device -- eg. thishost.local
+char *hostname = "relay3";                  // The hostname of this device -- eg. thishost.local
 String topics[] = {                         // Create an array of topics to subscribe to
   "all",                                    // add as many topics as necessary
   "onoffnodes",
-  "spotlight1"
+  "relay3"
 };
 char *brokerHostname = "northpole.local";  // or "192.168.1.6";  // Hostname/IP address of the MQTT broker
-char *net1_ssid = "poulsen";
+char *net1_ssid = "WIFI_NETWORK_SSID";
 char *net1_password = "PASSWORD";
-char *net2_ssid = "poulsen2";
-char *net2_password = "PASSWORD";
+//char *net2_ssid = "WIFI_NETWORK_SSID";
+//char *net2_password = "PASSWORD";
 
 uint16_t loopDelay = 10;     // Time (ms) between calls to loop(), probably best to leave as-is
 
@@ -158,11 +158,11 @@ void setup() {
   NetworkData net1, net2;
   net1.ssid = net1_ssid;
   net1.password = net1_password;
-  net2.ssid = net2_ssid;
-  net2.password = net2_password;
-  NetworkData networks[] = {net1, net2};
+//  net2.ssid = net2_ssid;
+//  net2.password = net2_password;
+  NetworkData networks[] = {net1};
   enableLogging();
-  connectToNetwork(wifiMulti, hostname, networks, 2);
+  connectToNetwork(wifiMulti, hostname, networks, 1);
   mqttClient.setServer(brokerHostname, 1883);
   mqttClient.setCallback(handleMqttMessage);
 }

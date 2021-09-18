@@ -7,13 +7,14 @@ MIT License
 */
 
 import React, { Component } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import {exportShow, getSavedShowList, getShowByName, saveShow } from './lib/storage';
 
 import TitleBar from './components/titlebar';
 import TimeLineBar from './components/timelinebar';
 import Row from './components/row';
 import EmptyShow from './components/emptyshow';
 import AddChannel from './components/addchannel';
+import { getShowByName } from './lib/storage';
 
 const showTemplate = {
   showName: "showName",
@@ -37,6 +38,10 @@ class App extends Component {
     }
   }
 
+  componentDidMount() {
+    this.checkAndLoadSavedShows();
+  }
+
   saveShowTimes = (showTimes) => {
     // passed to, and called from timlinebar.js to save the show times
     let newShow = this.state.show;
@@ -45,11 +50,14 @@ class App extends Component {
     this.setState({
       show: newShow
     });
+    this.handleSave();
   }
 
   handleAddAnimation = (animObj) => {
     // Save an animation to a channel's list of animations
     // Called from row.js
+    console.log(`animObj: ${JSON.stringify(animObj)}`)
+    console.log(`channels: ${JSON.stringify(this.state.show.channels)}`)
     let channelIndex = this.state.show.channels.findIndex(item => item.mqttName === animObj.mqttName);
     if (channelIndex === -1) {
       console.log('MQTT channel not found, bail out...');
@@ -68,6 +76,7 @@ class App extends Component {
       tmpShow.channels[channelIndex].animations[nodeIndex] = subset;
     }
     this.setState({show: tmpShow});
+    this.handleSave();
   }
 
   handleRemoveAnimation = (animObj) => {
@@ -83,6 +92,7 @@ class App extends Component {
     if (nodeIndex > -1) {
       tmpShow.channels[channelIndex].animations.splice(nodeIndex, 1);
       this.setState({show: tmpShow});
+      this.handleSave();
     }
   }
 
@@ -91,10 +101,12 @@ class App extends Component {
     // and used in the final exported show file
     return {
       channelIndex: channelIndex,
-      mqttName: newRow.channelName,
+      channelName: newRow.channelName,
+      mqttName: newRow.mqttName,
+      isGroup: newRow.isGroup,
       type: newRow.channelType,
       animations: [],
-    }
+    };
   }
 
   handleAddRow = (newRow) => {
@@ -113,6 +125,8 @@ class App extends Component {
       <Row key={"row"+index}
         type={newRow.channelType}
         channelName={newRow.channelName}
+        mqttName={newRow.mqttName}
+        isGroup={newRow.isGroup}
         handleAddAnimation={this.handleAddAnimation}
         handleRemoveAnimation={this.handleRemoveAnimation} />
     );
@@ -125,6 +139,16 @@ class App extends Component {
       show: newShow,
       showExport: true,
     });
+    this.handleSave();
+  }
+
+  handleSave = () => {
+    saveShow(this.state.show);
+  }
+
+  checkAndLoadSavedShows = () => {
+    const showToImport = this.state.show.showName;
+    this.handleImport(getShowByName(showToImport));
   }
 
   handleExport = () => {
@@ -134,31 +158,22 @@ class App extends Component {
       alert("You can't set start and stop times to the same value. Did you forget to set them?");
       return;
     }
-    let filename = this.state.showName + ".json";
-    let contentType = "application/json;charset=utf-8;";
-    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-       var blob = new Blob([decodeURIComponent(encodeURI(JSON.stringify(this.state.show)))], { type: contentType });
-       navigator.msSaveOrOpenBlob(blob, filename);
-     } else {
-       var a = document.createElement('a');
-       a.download = filename;
-       a.href = 'data:' + contentType + ',' + encodeURIComponent(JSON.stringify(this.state.show));
-       a.target = '_blank';
-       document.body.appendChild(a);
-       a.click();
-       document.body.removeChild(a);
-     }
+    exportShow(this.state.show);
   }
 
   makeRowForImport = (newRow, index, showName) => {
     // Creates a <Row> when importing a show file
     var rowToAdd = (
-      <Row key={"row"+index}
+      <Row
+        key={"row" + index}
         type={newRow.type}
-        channelName={newRow.mqttName}
+        channelName={newRow.channelName}
+        mqttName={newRow.mqttName}
+        isGroup={newRow.isGroup}
         handleAddAnimation={this.handleAddAnimation}
         handleRemoveAnimation={this.handleRemoveAnimation}
-        animationsFromImport={newRow.animations} />
+        animationsFromImport={newRow.animations}
+      />
     );
     return rowToAdd;
   }
