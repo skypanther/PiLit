@@ -7,13 +7,14 @@ MIT License
 */
 
 import React, { Component } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import {exportShow, getSavedShowList, getShowByName, saveShow } from './lib/storage';
 
 import TitleBar from './components/titlebar';
 import TimeLineBar from './components/timelinebar';
 import Row from './components/row';
 import EmptyShow from './components/emptyshow';
 import AddChannel from './components/addchannel';
+import { getShowByName } from './lib/storage';
 
 const showTemplate = {
   showName: "showName",
@@ -142,43 +143,12 @@ class App extends Component {
   }
 
   handleSave = () => {
-    /*
-    Sample saved show structure
-    "PiLitShows" : [
-      {
-        "showName": "foobar",
-        "show": JSON.stringify(this.state.show)
-      },
-      ...
-    ]
-    */
-    let showName = this.state.show.showName;
-    let savedShowsRaw = localStorage.getItem("PiLit");
-    let savedShows = [];
-    if (savedShowsRaw) {
-      savedShows = JSON.parse(savedShowsRaw);
-    }
-    let showToSave = savedShows.find(show => show.showName = showName);
-    if (showToSave) {
-      showToSave.show = this.state.show;
-    } else {
-      savedShows.push({
-        showName: showName,
-        show: this.state.show,
-      });
-    }
-    localStorage.setItem("PiLit", JSON.stringify(savedShows));
+    saveShow(this.state.show);
   }
 
   checkAndLoadSavedShows = () => {
-    let savedShowsRaw = localStorage.getItem("PiLit");
-    if (!savedShowsRaw) {
-      return;
-    }
-    let savedShows = JSON.parse(savedShowsRaw);
-    // TODO: Add means to select which show to load, for now, load the first
-    this.handleImport(JSON.stringify(savedShows[0].show));
-
+    const showToImport = this.state.show.showName;
+    this.handleImport(getShowByName(showToImport));
   }
 
   handleExport = () => {
@@ -188,20 +158,7 @@ class App extends Component {
       alert("You can't set start and stop times to the same value. Did you forget to set them?");
       return;
     }
-    let filename = this.state.showName + ".json";
-    let contentType = "application/json;charset=utf-8;";
-    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-       var blob = new Blob([decodeURIComponent(encodeURI(JSON.stringify(this.state.show)))], { type: contentType });
-       navigator.msSaveOrOpenBlob(blob, filename);
-     } else {
-       var a = document.createElement('a');
-       a.download = filename;
-       a.href = 'data:' + contentType + ',' + encodeURIComponent(JSON.stringify(this.state.show));
-       a.target = '_blank';
-       document.body.appendChild(a);
-       a.click();
-       document.body.removeChild(a);
-     }
+    exportShow(this.state.show);
   }
 
   makeRowForImport = (newRow, index, showName) => {
