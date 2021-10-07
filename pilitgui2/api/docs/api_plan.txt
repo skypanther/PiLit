@@ -1,0 +1,158 @@
+###############################
+# SHOWS
+###############################
+/shows GET
+    ↩︎ [<SHOW...>]
+/shows/<show_id> GET
+    ↩︎ <SHOW...>
+/shows POST
+    📄 same as <SHOW...>, name required; show_id, create_date, and edit_date not allowed
+    ↩︎ <SHOW...>
+/shows/<show_id> DELETE
+    ↩︎ show_id (of the deleted show)
+
+###############################
+# CHANNELS
+###############################
+/channels/<show_id> GET
+    ↩︎ [<CHANNEL...>]
+/channels/<channel_id> GET
+    ↩︎ <CHANNEL...>
+/channels POST
+    📄 same as <CHANNEL...>, name, show_id, channel_type_id, default_animation_type required
+    ↩︎ <CHANNEL...>
+/channels PUT
+    📄 [ channel_id, channel_id, ... ] (in new desired sequence)
+    ↩︎ 200
+/channels/<channel_id> DELETE
+    ↩︎ channel_id (of the deleted channel)
+
+###############################
+# CLIPS
+###############################
+/clips/<channel_id> GET
+    ↩︎ [<CLIP...>]
+/clips/<clip_id> GET
+    ↩︎ <CLIP...>
+/clips POST
+    📄 same as <CLIP...>, name, channel_id, sequence, animation_type_id, animation_params required
+    ↩︎ <CLIP...>
+/clips PUT
+    📄 [ clip_id, clip_id, ... ] (in new desired sequence)
+    ↩︎ 200
+/clips/<clip_id> DELETE
+    ↩︎ clip_id (of the deleted clip)
+
+###############################
+# CHANNEL TYPES
+###############################
+/channel_types GET
+    ↩︎ [<CHANNELS_TYPE...>]
+/channel_types/<channel_type_id> GET
+    ↩︎ <CHANNELS_TYPE...>
+/channel_types POST
+    📄 same as <CHANNELS_TYPE...>, name, channel_id, sequence, animation_type_id, animation_params required
+    ↩︎ <CHANNELS_TYPE...>
+/channel_types/<channel_type_id> DELETE
+    ↩︎ channel_type_id (of the deleted channel_type)
+
+###############################
+# ANIMATION TYPES
+###############################
+/animation_types GET
+    ↩︎ [<ANIMATION_TYPE...>]
+/animation_types/<animation_type_id> GET
+    ↩︎ <ANIMATION_TYPE...>
+/animation_types POST
+    📄 same as <ANIMATION_TYPE...>, name, animation_params required
+    ↩︎ <ANIMATION_TYPE...>
+/animation_types/<animation_type_id> DELETE
+    ↩︎ animation_type_id (of the deleted animation_type)
+
+###############################
+# SCHEDULES
+###############################
+/schedules GET
+    ↩︎ [<SCHEDULE_TYPE...>]
+/schedules/<schedule_id> GET
+    ↩︎ <SCHEDULE_TYPE...>
+/schedules POST
+    📄 same as <SCHEDULE_TYPE...>, all but the ID required
+    ↩︎ <SCHEDULE_TYPE...>
+/schedules/<schedule_id> DELETE
+    ↩︎ schedule_id (of the deleted animation_type)
+/schedules/{schedule_id}/activate
+    * adds a cron job on the server to kick off the show schedule at the start time
+/schedules/{schedule_id}/deactivate
+    * removes the cron entry so that the show is no longer run at the scheduled time
+
+--------------------------------
+- Schema
+--------------------------------
+
+SHOW
+    {
+        "show_id": integer,
+        "name": string,
+        "create_date": string,
+        "edit_date": string,
+        "description": string
+    }
+CHANNEL
+    {
+        "channel_id": integer,
+        "name": string,
+        "description": string
+        "show_id": integer, (FK)
+        "channel_type_id": integer, (FK)
+        "icon": string,
+        "sequence": integer,
+        "default_animation_type_id": integer (FK, animation_type_id)
+        "default_animation_params": <ANIMATION_PARAMS>,
+        "class_name": string
+
+    }
+CLIP
+    {
+        "clip_id": string,
+        "channel_id": integer, (FK)
+        "name": string,
+        "sequence": integer,
+        "animation_type_id": integer,
+        "animation_params": <ANIMATION_PARAMS>,
+        "duration": integer,
+        "class_name": string,
+    }
+ANIMATION_PARAMS
+    {
+        "required": [<ANIM_PARAM>],
+        "optional": [<ANIM_PARAM>],
+    }
+ANIM_PARAM
+    {
+        "name": string,
+        "data_type": VALID_JSON_VALUE_TYPE,
+        "value": VALID_VALUE,
+        "default_value": VALID_VALUE,
+    }
+CHANNELS_TYPE
+    {
+        "channel_type_id": integer,
+        "name": string,
+        "animation_type_id": integer,  (FK)
+    }
+ANIMATION_TYPE
+    {
+        "animation_type_id": integer,
+        "name": string,
+        "animation_params": <ANIMATION_PARAMS>,
+    }
+SCHEDULE_TYPE
+    {
+        "schedule_id": integer,
+        "name": string,
+        "days_of_week": ENUM(AMTWHFSU), // (all, monday, tues, wed, thu, fri, sat, sun)
+        "start_time": ut_timestamp,
+        "duration": integer, // seconds
+        "show_id": integer,  (FK)
+    }
