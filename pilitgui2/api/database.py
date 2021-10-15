@@ -25,5 +25,5 @@ def get_db() -> Generator:
 
 
 def init_db() -> None:
-    # Tables should be created with Alembic migrations
+    # Create all tables derived from the EntityBase object
     Base.metadata.create_all(bind=engine)

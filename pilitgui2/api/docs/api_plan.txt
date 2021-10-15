@@ -107,9 +107,6 @@ CHANNEL
         "channel_type_id": integer, (FK)
         "icon": string,
         "sequence": integer,
-        "default_animation_type_id": integer (FK, animation_type_id)
-        "default_animation_params": <ANIMATION_PARAMS>,
-        "class_name": string
 
     }
 CLIP
@@ -140,6 +137,9 @@ CHANNELS_TYPE
         "channel_type_id": integer,
         "name": string,
         "animation_type_id": integer,  (FK)
+        "default_animation_type_id": integer (FK, animation_type_id)
+        "default_animation_params": <ANIMATION_PARAMS>,
+        "class_name": string
     }
 ANIMATION_TYPE
     {
