@@ -14,18 +14,3 @@ class AnimParam(BaseModel):
 class AnimationParams(BaseModel):
     required: List[AnimParam]
     optional: Optional[List[AnimParam]]
-
-
-class DOTW(str, Enum):
-    all = "all"
-    mon = "mon"
-    tue = "tue"
-    wed = "wed"
-    thu = "thu"
-    fri = "fri"
-    sat = "sat"
-    sun = "sun"
-
-
-class DaysOfTheWeek(BaseModel):
-    dotw: List(DOTW) = []

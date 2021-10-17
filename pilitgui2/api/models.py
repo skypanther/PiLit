@@ -22,8 +22,23 @@ class Channel(Base):
     description = Column(String)
     show_id = Column(Integer)  # , ForeignKey("shows.show_id"), relationship()
     channel_type_id = Column(Integer)  # , ForeignKey("channel_types.channel_type_id")
+    default_animation_type_id = Column(
+        Integer
+    )  # , ForeignKey("animation_types.animation_type_id")
+    default_animation_params = Column(JSON, nullable=True)
     icon = Column(String)
     sort_index = Column(Integer)
+
+
+class ChannelType(Base):
+    __tablename__ = "channel_types"
+
+    channel_type_id = Column(Integer, primary_key=True, index=True)
+    name = Column(String)
+    animation_type_id = Column(
+        Integer
+    )  # , ForeignKey("animation_types.animation_type_id")
+    class_name = Column(String)
 
 
 class Clip(Base):
@@ -36,23 +51,8 @@ class Clip(Base):
     animation_type_id = Column(
         Integer
     )  # , ForeignKey("animation_types.animation_type_id")
-    animation_params = Column(JSON)
+    animation_params = Column(JSON, nullable=True)
     duration = Column(Integer)
-    class_name = Column(String)
-
-
-class ChannelType(Base):
-    __tablename__ = "channel_types"
-
-    channel_type_id = Column(Integer, primary_key=True, index=True)
-    name = Column(String)
-    animation_type_id = Column(
-        Integer
-    )  # , ForeignKey("animation_types.animation_type_id")
-    default_animation_type_id = Column(
-        Integer
-    )  # , ForeignKey("animation_types.animation_type_id")
-    default_animation_params = Column(JSON)
     class_name = Column(String)
 
 
@@ -61,7 +61,7 @@ class AnimationType(Base):
 
     animation_type_id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
-    animation_params = Column(JSON)
+    animation_params = Column(JSON, nullable=True)
 
 
 class Schedule(Base):

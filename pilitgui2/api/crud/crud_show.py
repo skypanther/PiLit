@@ -5,7 +5,8 @@ from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
 from .crud_base import CRUDBase
-from schemas.shows import Show, ShowCreate, ShowUpdate, ShowDelete
+from models import Show
+from schemas.shows import ShowCreate, ShowUpdate, ShowDelete
 
 
 class CRUDShow(CRUDBase[Show, ShowCreate, ShowUpdate, ShowDelete]):

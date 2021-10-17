@@ -3,7 +3,8 @@ from typing import Any, Dict, List, Union
 from sqlalchemy.orm import Session
 
 from .crud_base import CRUDBase
-from schemas.channels import Channel, ChannelCreate, ChannelUpdate, ChannelDelete
+from models import Channel
+from schemas.channels import ChannelCreate, ChannelUpdate, ChannelDelete
 
 
 class CRUDChannel(CRUDBase[Channel, ChannelCreate, ChannelUpdate, ChannelDelete]):
@@ -13,7 +14,9 @@ class CRUDChannel(CRUDBase[Channel, ChannelCreate, ChannelUpdate, ChannelDelete]
     def get_channel_by_id(self, db: Session, *, channel_id: int) -> List[Channel]:
         return super().get(db, id=channel_id)
 
-    def create(self, db: Session, *, channel_to_create: ChannelCreate) -> Channel:
+    def create_channel(
+        self, db: Session, *, channel_to_create: ChannelCreate
+    ) -> Channel:
         return super().create(db, channel_to_create)
 
     def update_channel(

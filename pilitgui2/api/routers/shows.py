@@ -6,7 +6,7 @@ from typing import Any, List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from api.schemas.shows import ShowCreate, ShowUpdate
+from schemas.shows import ShowCreate, ShowUpdate
 
 from crud.crud_show import crud_show
 from database import get_db

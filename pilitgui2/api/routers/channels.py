@@ -6,12 +6,10 @@ from typing import Any, List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from api.schemas.channels import ChannelCreate, ChannelUpdate, ChannelDelete
+from schemas.channels import Channel, ChannelCreate, ChannelUpdate, ChannelDelete
 
 from crud.crud_channel import crud_channel
 from database import get_db
-from models import Channel
-from schemas.channels import Channel
 
 router = APIRouter()
 

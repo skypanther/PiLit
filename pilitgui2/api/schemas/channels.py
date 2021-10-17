@@ -1,14 +1,15 @@
 from typing import List, Optional
 
-from pydantic import BaseModel
-
-from .common import AnimParam
+from pydantic import BaseModel, Json
 
 # Properties to receive via API on creation
 class ChannelCreate(BaseModel):
     name: str
     description: Optional[str]
-    channel_id: int
+    show_id: int
+    channel_type_id: int
+    default_animation_type_id: int
+    default_animation_params: Optional[Json]
     icon: Optional[str]
     sort_index: int
 
@@ -18,7 +19,8 @@ class ChannelUpdate(BaseModel):
     channel_id: int
     name: Optional[str]
     description: Optional[str]
-    channel_id: Optional[int]
+    default_animation_type_id: Optional[int]
+    default_animation_params: Optional[Json]
     icon: Optional[str]
     sort_index: Optional[int]
 
@@ -33,8 +35,9 @@ class Channel(BaseModel):
     channel_id: int
     name: str
     description: str
-    channel_id: int
     show_id: int
     channel_type_id: int
+    default_animation_type_id: int
+    default_animation_params: Optional[Json]
     icon: str
     sort_index: int
