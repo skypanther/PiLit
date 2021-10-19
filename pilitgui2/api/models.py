@@ -19,6 +19,7 @@ class Channel(Base):
 
     channel_id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
+    mqtt_channel = Column(String, nullable=False)
     description = Column(String)
     show_id = Column(Integer)  # , ForeignKey("shows.show_id"), relationship()
     channel_type_id = Column(Integer)  # , ForeignKey("channel_types.channel_type_id")

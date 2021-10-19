@@ -5,6 +5,7 @@ from pydantic import BaseModel, Json
 # Properties to receive via API on creation
 class ChannelCreate(BaseModel):
     name: str
+    mqtt_channel: str
     description: Optional[str]
     show_id: int
     channel_type_id: int
@@ -18,6 +19,7 @@ class ChannelCreate(BaseModel):
 class ChannelUpdate(BaseModel):
     channel_id: int
     name: Optional[str]
+    mqtt_channel: Optional[str]
     description: Optional[str]
     default_animation_type_id: Optional[int]
     default_animation_params: Optional[Json]
@@ -34,7 +36,7 @@ class ChannelDelete(BaseModel):
 class Channel(BaseModel):
     channel_id: int
     name: str
-    description: str
+    mqtt_channel: str
     show_id: int
     channel_type_id: int
     default_animation_type_id: int
