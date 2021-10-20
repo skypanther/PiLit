@@ -19,11 +19,13 @@ module.exports = {
   plugins: [require("daisyui")],
   daisyui: {
     themes: [
-      "bumblebee", // first one will be the default theme
-      "emerald",
-      "dark",
-      "forest",
+      // See https://daisyui.com/core/colors to create custom theme
+      "pastel", // first one will be the default theme
+      "bumblebee",
       "synthwave",
+      "emerald",
+      "forest",
+      "dark",
     ],
   },
 };
