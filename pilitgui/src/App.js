@@ -115,7 +115,6 @@ class App extends Component {
       channelIndex: channelIndex,
       channelName: newRow.channelName,
       mqttName: newRow.mqttName,
-      isGroup: newRow.isGroup,
       type: newRow.channelType,
       animations: [],
     };
@@ -139,7 +138,6 @@ class App extends Component {
         type={newRow.channelType}
         channelName={newRow.channelName}
         mqttName={newRow.mqttName}
-        isGroup={newRow.isGroup}
         handleAddAnimation={this.handleAddAnimation}
         handleRemoveAnimation={this.handleRemoveAnimation}
       />
@@ -185,7 +183,6 @@ class App extends Component {
         type={newRow.type}
         channelName={newRow.channelName}
         mqttName={newRow.mqttName}
-        isGroup={newRow.isGroup}
         handleAddAnimation={this.handleAddAnimation}
         handleRemoveAnimation={this.handleRemoveAnimation}
         animationsFromImport={newRow.animations}
@@ -197,7 +194,7 @@ class App extends Component {
   handleImport = (showContents) => {
     // Process an imported show JSON file. Called from titlebar.js
     try {
-      let newShow = JSON.parse(showContents);
+      let newShow = showContents.show; // JSON.parse(showContents);
       let newRows = newShow.channels.map((chnnl, index) => {
         return this.makeRowForImport(chnnl, index, newShow.showName);
       });
@@ -211,6 +208,17 @@ class App extends Component {
     } catch (e) {
       console.log(e);
     }
+  };
+
+  handleClearShow = () => {
+    this.setState({
+      nextIndex: 0,
+      rows: [],
+      showName: "",
+      show: showTemplate,
+      showExport: false,
+      totalDuration: 0,
+    });
   };
 
   render() {
@@ -229,6 +237,7 @@ class App extends Component {
           showExportVisible={this.state.showExport}
           doExport={this.handleExport}
           doImport={this.handleImport}
+          doClearShow={this.handleClearShow}
         />
         <TimeLineBar
           show={this.state.show}

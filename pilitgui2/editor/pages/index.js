@@ -5,6 +5,11 @@ import Layout from "../components/layout";
 import { getShows } from "../common/api/shows";
 import { getSchedules } from "../common/api/schedules";
 
+const doCancelAddShow = (evt) => {
+  console.log("doCancelAddShow");
+  return false;
+};
+
 const Home = ({ showData, scheduleData }) => {
   const { shows, showErrors } = showData;
   const { schedules, scheduleErrors } = scheduleData;
@@ -75,17 +80,44 @@ const Home = ({ showData, scheduleData }) => {
 
         <div id="add-show-modal" className="modal">
           <div className="modal-box">
-            <h2>Add Show</h2>
-            <div className="flex justify-start">
-              <label>Name</label>
-              <input id="showNameField" className="input input-bordered ml-1" />
+            <div className="prose">
+              <h2>Add Show</h2>
+              <table className="table-fixed">
+                <tbody>
+                  <tr>
+                    <td className="w-1/3">
+                      <label htmlFor="showNameField">Show Name</label>
+                    </td>
+                    <td className="w-2/3">
+                      <input
+                        id="showNameField"
+                        className="input input-bordered input-sm ml-1"
+                        placeholder="(required)"
+                        ref="txtShowName"
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="w-1/3">
+                      <label htmlFor="showDescriptionField">Description</label>
+                    </td>
+                    <td className="w-2/3">
+                      <input
+                        id="showDescriptionField"
+                        className="input input-bordered input-sm ml-1"
+                        placeholder="(optional)"
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
             <div className="modal-action flex justify-between">
-              <a href="#" className="btn">
+              <a href="#" className="btn" onClick="return doCancelAddShow()">
                 Cancel
               </a>
               <a href="/editor" className="btn btn-primary">
-                Save
+                Add Show
               </a>
             </div>
           </div>
@@ -103,7 +135,7 @@ const Home = ({ showData, scheduleData }) => {
                 Cancel
               </a>
               <a href="/editor" className="btn btn-primary">
-                Save
+                Add Schedule
               </a>
             </div>
           </div>

@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import Select from 'react-select';
+import React, { Component } from "react";
+import Select from "react-select";
 
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal'
-import Container from 'react-bootstrap/Container'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 import BootstrapSwitchButton from "bootstrap-switch-button-react";
 
@@ -19,7 +19,7 @@ const nodeTypes = [
   { label: "RGB Pixel Tree", value: "PixelTree" },
   { label: "On / Off (spotlight) Node", value: "OnOffNode" },
   { label: "Mega Tree (multi-relay)", value: "MultiRelayNode" },
-]
+];
 
 class AddChannel extends Component {
   constructor(props) {
@@ -30,7 +30,6 @@ class AddChannel extends Component {
       channelType: "",
       channelName: "",
       mqttName: "",
-      isGroup: false,
       nodes: [],
     };
     this.handleShow = this.handleShow.bind(this);
@@ -41,7 +40,6 @@ class AddChannel extends Component {
     this.setChannelType = this.setChannelType.bind(this);
     this.setChannelName = this.setChannelName.bind(this);
     this.setMqttName = this.setMqttName.bind(this);
-    this.setIsGroup = this.setIsGroup.bind(this);
   }
 
   handleShow = () => {
@@ -57,7 +55,6 @@ class AddChannel extends Component {
       channelType: this.state.channelType,
       channelName: this.state.channelName,
       mqttName: this.state.mqttName,
-      isGroup: this.state.isGroup,
     });
   };
 
@@ -66,8 +63,8 @@ class AddChannel extends Component {
   };
 
   setShowName = (val) => {
-    this.setState({ 
-      showName: val
+    this.setState({
+      showName: val,
     });
   };
   setChannelType = (val) => {
@@ -85,11 +82,6 @@ class AddChannel extends Component {
       mqttName: val,
     });
   };
-  setIsGroup = (val) => {
-    this.setState({
-      isGroup: val
-    });
-  }
 
   render() {
     return (
@@ -114,22 +106,6 @@ class AddChannel extends Component {
                     className="form-control"
                     defaultValue=""
                     onChange={(e) => this.setChannelName(e.target.value)}
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col xs={4} className="modal-label">
-                  Node or Group?
-                </Col>
-                <Col xs={8}>
-                  <BootstrapSwitchButton
-                    checked={false}
-                    width={100}
-                    onlabel="Group"
-                    offlabel="Node"
-                    onstyle="outline-primary"
-                    offstyle="outline-success"
-                    onChange={(checked) => this.setIsGroup(checked)}
                   />
                 </Col>
               </Row>
