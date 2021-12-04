@@ -64,6 +64,9 @@ bool repeat = true;      // Repeat the animations. If false, they complete once 
 
 CRGB realleds[NUM_LEDS];
 CRGBArray<NUM_LEDS> leds;
+// Note, these could be defined with end before start so they interate backwards
+// see http://fastled.io/docs/3.1/class_c_pixel_view.html#ada24d4d93b849bc31aec124f682b836a
+// That would correct the spokes going backward currently.
 CRGBSet spoke0(leds(0, 49));
 CRGBSet spoke1(leds(50, 99));
 CRGBSet spoke2(leds(100, 149));

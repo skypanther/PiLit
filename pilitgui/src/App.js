@@ -59,8 +59,8 @@ class App extends Component {
   handleAddAnimation = (animObj) => {
     // Save an animation to a channel's list of animations
     // Called from row.js
-    console.log(`animObj: ${JSON.stringify(animObj)}`);
-    console.log(`channels: ${JSON.stringify(this.state.show.channels)}`);
+    // console.log(`animObj: ${JSON.stringify(animObj)}`);
+    // console.log(`channels: ${JSON.stringify(this.state.show.channels)}`);
     let channelIndex = this.state.show.channels.findIndex(
       (item) => item.mqttName === animObj.mqttName
     );
@@ -181,7 +181,7 @@ class App extends Component {
       <Row
         key={"row" + index}
         type={newRow.type}
-        channelName={newRow.channelName}
+        channelName={newRow.channelName || newRow.mqttName}
         mqttName={newRow.mqttName}
         handleAddAnimation={this.handleAddAnimation}
         handleRemoveAnimation={this.handleRemoveAnimation}
@@ -194,9 +194,9 @@ class App extends Component {
   handleImport = (showContents) => {
     // Process an imported show JSON file. Called from titlebar.js
     try {
-      let newShow = showContents.show; // JSON.parse(showContents);
+      let newShow = showContents; // JSON.parse(showContents);
       let newRows = newShow.channels.map((chnnl, index) => {
-        return this.makeRowForImport(chnnl, index, newShow.showName);
+        return this.makeRowForImport(chnnl, index);
       });
       this.setState({
         nextIndex: newShow.channels.length,

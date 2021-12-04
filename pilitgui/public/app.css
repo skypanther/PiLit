@@ -290,6 +290,13 @@ html {
   color: var(--medium-champagne);
   border-color: var(--medium-champagne-border);
 }
+.SpheroNode .row-title,
+.SpheroNode .node-inner-wrapper,
+.SpheroNode .node-inner-wrapper p {
+  background-color: var(--blue-sapphire);
+  color: var(--light-gray);
+  border-color: var(--gamboge-border);
+}
 
 .node-inner-wrapper p {
   font-size: 10pt;

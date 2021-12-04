@@ -19,6 +19,7 @@ const nodeTypes = [
   { label: "RGB Pixel Tree", value: "PixelTree" },
   { label: "On / Off (spotlight) Node", value: "OnOffNode" },
   { label: "Mega Tree (multi-relay)", value: "MultiRelayNode" },
+  { label: "Sphero Pixel Node", value: "SpheroNode" },
 ];
 
 class AddChannel extends Component {

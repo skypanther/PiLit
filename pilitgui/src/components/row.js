@@ -6,6 +6,7 @@ import PixelNode from "./nodes/pixelnode";
 import PixelTree from "./nodes/pixeltree";
 import OnOffNode from "./nodes/onoffnode";
 import MultiRelayNode from "./nodes/multirelaynode";
+import SpheroNode from "./nodes/sphero";
 
 // FontAwesome
 import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
@@ -17,12 +18,14 @@ import leaping_arch from "url:~/public/images/leaping_arch.jpg";
 import mega_tree from "url:../../public/images/mega_tree.jpg";
 import pixel_tree from "url:~/public/images/pixel_tree.gif";
 import spotlight from "url:../../public/images/spotlight.jpg";
+import sphero_img from "url:../../public/images/sphero_img.jpg";
 
 const nodeTypes = {
   PixelNode: leaping_arch,
   OnOffNode: spotlight,
   MultiRelayNode: mega_tree,
   PixelTree: pixel_tree,
+  SpheroNode: sphero_img,
 };
 
 class Row extends Component {
@@ -32,6 +35,7 @@ class Row extends Component {
       nextIndex: 0,
       nodes: [],
       totalDuration: "00:00",
+      animNodes: [],
     };
     if (
       this.props.animationsFromImport &&
@@ -44,7 +48,9 @@ class Row extends Component {
   createAnimationsFromImport = () => {
     // called as part of the import flow, this function creates the animation nodes
     // from the imported data
+    var totalDuration = 0;
     let animationsToImport = this.props.animationsFromImport.map((anim) => {
+      totalDuration += parseInt(anim.duration);
       var newNode;
       switch (this.props.type) {
         case "PixelNode":
@@ -99,11 +105,29 @@ class Row extends Component {
             />
           );
           break;
+        case "SpheroNode":
+          newNode = (
+            <SpheroNode
+              key={"node" + anim.nodeIndex}
+              mqttName={this.props.channelName}
+              type={this.props.type}
+              saveNodeConfig={this.saveNodeConfig}
+              removeNode={this.removeNode}
+              index={anim.nodeIndex}
+              initialProperties={anim}
+            />
+          );
+          break;
       }
+      this.state.animNodes.push({
+        nodeIndex: anim.nodeIndex,
+        duration: anim.duration,
+      });
       return newNode;
     });
     this.state.nodes = animationsToImport;
     this.state.nextIndex = animationsToImport.length + 1;
+    this.state.totalDuration = this.secondsToHms(totalDuration);
   };
 
   handleAddNode = () => {
@@ -163,9 +187,23 @@ class Row extends Component {
           />
         );
         break;
+      case "SpheroNode":
+        newNode = (
+          <SpheroNode
+            key={"node" + index}
+            mqttName={this.props.mqttName}
+            channelName={this.props.channelName}
+            type={this.props.type}
+            saveNodeConfig={this.saveNodeConfig}
+            removeNode={this.removeNode}
+            index={index}
+          />
+        );
+        break;
     }
     this.setState({
       nodes: [...this.state.nodes, newNode],
+      animNodes: [...this.state.animNodes, { nodeIndex: index, duration: 10 }],
       nextIndex: index + 1,
     });
   };
@@ -180,13 +218,39 @@ class Row extends Component {
       this.props.handleRemoveAnimation(nodeToRemove);
       this.setState({ nodes: currentNodes });
     }
+    let currentAnimNodes = this.state.animNodes;
+    let removedAnimNodes = currentAnimNodes.splice(index, 1);
+    if (removedAnimNodes.length === 1) {
+      this.setState({ animNodes: currentAnimNodes });
+      this.calcTotalDuration();
+    }
   };
 
   saveNodeConfig = (nodeToAddOrUpdate) => {
     // Called when adding or updating an animation node via the UI. Passed to the the child node components.
     // nodeToAddOrUpdate - a reference to the node being added/updated so that we can update it in state
     this.props.handleAddAnimation(nodeToAddOrUpdate);
-    this.updateTotalDuration(nodeToAddOrUpdate.duration);
+    let anIndex = this.state.animNodes.findIndex(
+      (an) => an.nodeIndex == nodeToAddOrUpdate.nodeIndex
+    );
+    if (anIndex > -1) {
+      let newAnimNodes = this.state.animNodes;
+      newAnimNodes[anIndex].duration = nodeToAddOrUpdate.duration;
+      this.setState({ animNodes: newAnimNodes });
+    }
+    this.calcTotalDuration();
+    // this.updateTotalDuration(nodeToAddOrUpdate.duration);
+  };
+
+  calcTotalDuration = () => {
+    // TODO: need to loop through all the animations
+    let totalDuration = 0;
+    this.state.animNodes.forEach((node) => {
+      totalDuration += node.duration;
+    });
+    this.setState({
+      totalDuration: this.secondsToHms(totalDuration),
+    });
   };
 
   updateTotalDuration = (duration) => {

@@ -2,3 +2,5 @@ node_modules/
 dist/
 .cache/
 .vscode/
+.next/
+.DS_Store

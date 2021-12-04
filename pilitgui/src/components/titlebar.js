@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import FormControl from "react-bootstrap/FormControl";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
@@ -32,7 +31,12 @@ class TitleBar extends Component {
     });
   };
   importFile = () => {
-    this.props.doImport(this.state.importFileContents);
+    try {
+      let parsedShowContents = JSON.parse(this.state.importFileContents);
+      this.props.doImport(parsedShowContents);
+    } catch (err) {
+      console.log(err);
+    }
     this.setState({
       show: false,
       importFileContents: "",
