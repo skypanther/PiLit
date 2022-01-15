@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
-import Select from 'react-select';
+import React, { Component } from "react";
+import Select from "react-select";
 
 // FontAwesome
 import { faPlusCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal'
-import Container from 'react-bootstrap/Container'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 import {
   animations,
@@ -18,7 +18,6 @@ import {
   colors,
   colorStyles,
 } from "/src/constants";
-
 
 class PixelNode extends Component {
   constructor(props) {
@@ -36,11 +35,22 @@ class PixelNode extends Component {
       repeatable: true,
       mqttName: this.props.mqttName,
       type: this.props.type,
-      nodeIndex: this.props.index
+      nodeIndex: this.props.index,
     };
     if (this.props.initialProperties) {
-      let animationIndex = animations.findIndex(item => item.value === this.props.initialProperties.animation);
-      let nodeText = this.props.initialProperties.animation + "\n" + this.props.initialProperties.color + "\nD: " + this.props.initialProperties.duration + "\nLD: " + this.props.initialProperties.loopDelay + ", HT: " + this.props.initialProperties.holdTime
+      let animationIndex = animations.findIndex(
+        (item) => item.value === this.props.initialProperties.animation
+      );
+      let nodeText =
+        this.props.initialProperties.animation +
+        "\n" +
+        this.props.initialProperties.color +
+        "\nD: " +
+        this.props.initialProperties.duration +
+        "\nLD: " +
+        this.props.initialProperties.loopDelay +
+        ", HT: " +
+        this.props.initialProperties.holdTime;
       this.state = {
         show: false,
         nodeText: nodeText,
@@ -54,7 +64,7 @@ class PixelNode extends Component {
         repeatable: this.props.initialProperties.repeatable,
         mqttName: this.props.mqttName,
         type: this.props.type,
-        nodeIndex: this.props.index
+        nodeIndex: this.props.index,
       };
     }
     this.handleShow = this.handleShow.bind(this);
@@ -63,58 +73,69 @@ class PixelNode extends Component {
   }
 
   handleShow = () => {
-    this.setState({show:true});
-  }
+    this.setState({ show: true });
+  };
   handleClose = () => {
-    this.setState({show:false});
-  }
+    this.setState({ show: false });
+  };
   handleSave = () => {
-    let nodeText = this.state.animation + "\n" + this.state.color + "\nD: " + this.state.duration + "\nLD: " + this.state.loopDelay + ", HT:" + this.state.holdTime
+    let nodeText =
+      this.state.animation +
+      "\n" +
+      this.state.color +
+      "\nD: " +
+      this.state.duration +
+      "\nLD: " +
+      this.state.loopDelay +
+      ", HT:" +
+      this.state.holdTime;
     this.setState({
       show: false,
-      nodeText: nodeText
+      nodeText: nodeText,
     });
     this.props.saveNodeConfig(this.state);
-  }
+  };
   handleDelete = () => {
     this.props.removeNode(this.props.index, this.state);
-  }
+  };
 
   setAnimationType(animObj) {
-    let animationIndex = animations.findIndex(item => item.value === animObj.value);
+    let animationIndex = animations.findIndex(
+      (item) => item.value === animObj.value
+    );
     this.setState({
       animation: animObj.value,
-      animationIndex: animationIndex
+      animationIndex: animationIndex,
     });
   }
   isRepeatable(isChecked) {
-    this.setState({repeatable: isChecked});
+    this.setState({ repeatable: isChecked });
   }
   setColor(colorObj) {
-    let colorIndex = colors.findIndex(item => item.value === colorObj.value);
+    let colorIndex = colors.findIndex((item) => item.value === colorObj.value);
     this.setState({
       color: colorObj.value,
-      colorIndex: colorIndex
+      colorIndex: colorIndex,
     });
   }
   setDuration(newValue) {
     if (newValue) {
-      this.setState({duration: parseInt(newValue)});
+      this.setState({ duration: parseInt(newValue) });
     }
   }
   setLoopDelay(newValue) {
     if (newValue) {
-      this.setState({loopDelay: parseInt(newValue)});      
+      this.setState({ loopDelay: parseInt(newValue) });
     }
   }
   setHoldTime(newValue) {
     if (newValue) {
-      this.setState({holdTime: parseInt(newValue)});
+      this.setState({ holdTime: parseInt(newValue) });
     }
   }
 
   render() {
-    let nodeWidth = this.state.duration > 0 ? this.state.duration * 10 : 100;
+    let nodeWidth = Math.max(this.state.duration * 10, 100);
     return (
       <>
         <Modal
@@ -239,10 +260,7 @@ class PixelNode extends Component {
             </Button>
           </Modal.Footer>
         </Modal>
-        <div
-          className="node-wrapper"
-          style={{ width: nodeWidth + "pt", backgroundColor: "orange" }}
-        >
+        <div className="node-wrapper" style={{ width: nodeWidth + "px" }}>
           <div className="removeNode">
             <Button variant="outline-danger" size="sm">
               <FontAwesomeIcon
@@ -253,12 +271,8 @@ class PixelNode extends Component {
               />
             </Button>
           </div>
-          <div
-            className="node-inner-wrapper"
-            onClick={this.handleShow}
-            style={{ backgroundColor: "green" }}
-          >
-            <p style={{ backgroundColor: "pink" }}>{this.state.nodeText}</p>
+          <div className="node-inner-wrapper" onClick={this.handleShow}>
+            <p>{this.state.nodeText}</p>
           </div>
         </div>
       </>

@@ -2,12 +2,13 @@
 
 Nodes are the lighting controllers. Currently, PiLit supplies 3 types of nodes:
 
-* pixel_node -- (Arduino / ESP8266) used to control "neopixel" strips
-* onoff_node -- (Arduino / ESP8266) used to control simple on/off relays
-* multi_relay -- (Python / Raspberry Pi) used to control multi-relay boards
+- pixel_node -- (Arduino / ESP8266) used to control "neopixel" strips
+- onoff_node -- (Arduino / ESP8266) used to control simple on/off relays
+- multi_relay -- (Python / Raspberry Pi) used to control multi-relay boards
+- sphero -- (Arduino / ESP8266) used to control "neopixel" strips arranged in a globe of N spokes
+- drop_in_node -- (Arduino / ESP8266) 4-channel on/off relays w/some ganged (used for my "Santa Drop In" sign)
 
-In general, for all three types of nodes, you will need to customize a few variables in each script before loading it onto your microcontroller/Pi.
-
+In general, for all types of nodes, you will need to customize a few variables in each script before loading it onto your microcontroller/Pi.
 
 ## pixel_node
 
@@ -51,16 +52,16 @@ These node types listen for MQTT messages in this form:
 
 Where:
 
-* `color` is one of the valid color names below.
-* `animation_type` is one of the valid animations below.
-* `loop_delay` is a number of milliseconds, default is 10. Increasing this has the effect of slowing the animation.
-* `hold_time` is a number of milliseconds, default is 50. Some animations, such as bounce, pause briefly when the moving light reaches the end of the strip. Changing `hold_time` changes this pause. Don't set it much above 300-500 ms though, or the animation gets all funky.
-* `repeat` is either true (to repeat the animation until the next one is received) or false (to run it once)
+- `color` is one of the valid color names below.
+- `animation_type` is one of the valid animations below.
+- `loop_delay` is a number of milliseconds, default is 10. Increasing this has the effect of slowing the animation.
+- `hold_time` is a number of milliseconds, default is 50. Some animations, such as bounce, pause briefly when the moving light reaches the end of the strip. Changing `hold_time` changes this pause. Don't set it much above 300-500 ms though, or the animation gets all funky.
+- `repeat` is either true (to repeat the animation until the next one is received) or false (to run it once)
 
 For example:
 
 ```
-red:bounce:5:50:true 
+red:bounce:5:50:true
 ```
 
 There are wo special forms of the command
@@ -70,27 +71,27 @@ topic off
 topic reset
 ```
 
- Using `off` is the same as setting all LEDs to black and running the solid_color animation -- in other words the strip goes off. Using `reset` keeps whatever animation was running going, but resets the loop delay and hold times to their default values.
+Using `off` is the same as setting all LEDs to black and running the solid_color animation -- in other words the strip goes off. Using `reset` keeps whatever animation was running going, but resets the loop delay and hold times to their default values.
 
 **Valid color names:** white, snow, silver, gray, grey, darkgray, darkgrey, black, red, crimson, darkmagenta, darkred, magenta, maroon, orange, orangered, darkorange, yellow, gold, green, lime, darkgreen, forestgreen, cyan, darkcyan, blue, deepskyblue, royalblue, skyblue, darkblue, navy, blueviolet, purple, violet, indigo, darkviolet
 
-**Valid animation names:** 
+**Valid animation names:**
 
-* solid_color -- turn all LEDs to a single color
-* center_out -- LEDs light up, one-by-one, from the center towards the end till the whole strip is on
-* edges_in -- LEDs light up, one-by-one, from two ends towards the center till the whole strip is on
-* slinky -- LEDs light up, one-by-one, starting from end closest to the microcontroller towards the other end till the whole strip is on
-* slinky_backwards -- LEDs light up, one-by-one, starting from end furthest from the microcontroller towards the other end till the whole strip is on
-* bounce -- 3 LEDs light up, then move as a group to the other end with the rest of the LEDs all off. Once they reach the far end, they move back towards the beginning.
-* bounce_backwards -- Same as bounce, starting from opposite end
-* circle -- 3 LEDs light up, then move as a group to the other end with the rest of the LEDs all off. Once they reach the far end, they start over from the original end
-* circle_backwards -- Same as circle, starting from the opposite end
-* flash -- Whole strip lights up at full brightness, then fades to black
-* rainbow -- A moving, blended (continuous) rainbow pattern fills the entire strip (*see note*)
-* rainbow_stripes -- Like rainbow, but with discrete stripes of rainbow colors separated by black (*see note*)
-* ocean -- A moving, blended (continuous) pattern of blues, greens, and white fills the entire strip (*see note*)
-* stripes -- Multiple discrete stripes of a single color travel down the strip with black between
-* stripes_white -- Multiple discrete stripes of a single color travel down the strip with white between
+- solid_color -- turn all LEDs to a single color
+- center_out -- LEDs light up, one-by-one, from the center towards the end till the whole strip is on
+- edges_in -- LEDs light up, one-by-one, from two ends towards the center till the whole strip is on
+- slinky -- LEDs light up, one-by-one, starting from end closest to the microcontroller towards the other end till the whole strip is on
+- slinky_backwards -- LEDs light up, one-by-one, starting from end furthest from the microcontroller towards the other end till the whole strip is on
+- bounce -- 3 LEDs light up, then move as a group to the other end with the rest of the LEDs all off. Once they reach the far end, they move back towards the beginning.
+- bounce_backwards -- Same as bounce, starting from opposite end
+- circle -- 3 LEDs light up, then move as a group to the other end with the rest of the LEDs all off. Once they reach the far end, they start over from the original end
+- circle_backwards -- Same as circle, starting from the opposite end
+- flash -- Whole strip lights up at full brightness, then fades to black
+- rainbow -- A moving, blended (continuous) rainbow pattern fills the entire strip (_see note_)
+- rainbow_stripes -- Like rainbow, but with discrete stripes of rainbow colors separated by black (_see note_)
+- ocean -- A moving, blended (continuous) pattern of blues, greens, and white fills the entire strip (_see note_)
+- stripes -- Multiple discrete stripes of a single color travel down the strip with black between
+- stripes_white -- Multiple discrete stripes of a single color travel down the strip with white between
 
 NOTE: You must supply a color parameter when using the rainbow, rainbow_stripes, and ocean animations even though that color will be ignored. Also note that the animations will move quite slowly at the default loop_delay time. Best effect will be achieved with a loop_delay between 1 - 10.
 
@@ -106,6 +107,19 @@ mosquitto_pub -h 192.168.1.10 -i publisher -t arches -m 'reset'
 mosquitto_pub -h 192.168.1.10 -i publisher -t arches -m 'off'
 
 ```
+
+## sphero
+
+This is a modified version of the pixel_node script. It has all the same features but includes a few extra animation types. I took a single 5 meter pixel strip and wrapped it to a globe shape, giving 6 "spokes." The extra animation sequences are to light up those spokes individually.
+
+- spin_1 -- light up one spoke in sequence
+- spin_1_backwards -- same, but goes in the opposite direction
+- spin_2 -- light up two opposite spokes in sequence
+- spin_2_backwards -- same, but goes in the opposite direction
+- hemi_spin -- lights half the sphere (3 spokes) in sequence
+- hemi_spin_backwards -- same, but goes in the opposite direction
+
+(Note that "backwards" has the "s" on the end.)
 
 ## onoff_node
 
@@ -138,8 +152,8 @@ topic command
 
 Where:
 
-* `topic` is the MQTT topic, such as all, spotlight1, etc.
-* `command` is one of `on`, `off`, or `toggle`
+- `topic` is the MQTT topic, such as all, spotlight1, etc.
+- `command` is one of `on`, `off`, or `toggle`
 
 **Examples (using command-line mosquitto tool)**
 

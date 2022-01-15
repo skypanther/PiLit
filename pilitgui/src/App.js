@@ -6,15 +6,19 @@ MIT License
 
 */
 
-import React, { Component } from 'react';
-import {exportShow, getSavedShowList, getShowByName, saveShow } from './lib/storage';
+import React, { Component } from "react";
+import {
+  exportShow,
+  getSavedShowList,
+  getShowByName,
+  saveShow,
+} from "./lib/storage";
 
-import TitleBar from './components/titlebar';
-import TimeLineBar from './components/timelinebar';
-import Row from './components/row';
-import EmptyShow from './components/emptyshow';
-import AddChannel from './components/addchannel';
-import { getShowByName } from './lib/storage';
+import TitleBar from "./components/titlebar";
+import TimeLineBar from "./components/timelinebar";
+import Row from "./components/row";
+import EmptyShow from "./components/emptyshow";
+import AddChannel from "./components/addchannel";
 
 const showTemplate = {
   showName: "showName",
@@ -22,8 +26,7 @@ const showTemplate = {
   startTime: "00:00",
   stopTime: "00:00",
   channels: [],
-}
-
+};
 
 class App extends Component {
   constructor(props) {
@@ -34,8 +37,8 @@ class App extends Component {
       showName: "",
       show: showTemplate,
       showExport: false,
-      totalDuration: 0
-    }
+      totalDuration: 0,
+    };
   }
 
   componentDidMount() {
@@ -48,26 +51,31 @@ class App extends Component {
     newShow.startTime = showTimes.startTime;
     newShow.stopTime = showTimes.stopTime;
     this.setState({
-      show: newShow
+      show: newShow,
     });
     this.handleSave();
-  }
+  };
 
   handleAddAnimation = (animObj) => {
     // Save an animation to a channel's list of animations
     // Called from row.js
-    console.log(`animObj: ${JSON.stringify(animObj)}`)
-    console.log(`channels: ${JSON.stringify(this.state.show.channels)}`)
-    let channelIndex = this.state.show.channels.findIndex(item => item.mqttName === animObj.mqttName);
+    // console.log(`animObj: ${JSON.stringify(animObj)}`);
+    // console.log(`channels: ${JSON.stringify(this.state.show.channels)}`);
+    let channelIndex = this.state.show.channels.findIndex(
+      (item) => item.mqttName === animObj.mqttName
+    );
     if (channelIndex === -1) {
-      console.log('MQTT channel not found, bail out...');
+      console.log("MQTT channel not found, bail out...");
       return;
     }
     // Remove various fields from original object with destructuring & spread operator
-    const {show, nodeText, animationIndex, mqttName, type, ...subset} = animObj;
+    const { show, nodeText, animationIndex, mqttName, type, ...subset } =
+      animObj;
     let tmpShow = this.state.show;
     // check to see if the anim already exists in the array
-    let nodeIndex = tmpShow.channels[channelIndex].animations.findIndex(item => item.nodeIndex == subset.nodeIndex);
+    let nodeIndex = tmpShow.channels[channelIndex].animations.findIndex(
+      (item) => item.nodeIndex == subset.nodeIndex
+    );
     if (nodeIndex === -1) {
       // not found, so add it
       tmpShow.channels[channelIndex].animations.push(subset);
@@ -75,26 +83,30 @@ class App extends Component {
       // found, replace it to update it
       tmpShow.channels[channelIndex].animations[nodeIndex] = subset;
     }
-    this.setState({show: tmpShow});
+    this.setState({ show: tmpShow });
     this.handleSave();
-  }
+  };
 
   handleRemoveAnimation = (animObj) => {
     // Remove an animation to a channel's list of animations
     // Called from row.js
-    let channelIndex = this.state.show.channels.findIndex(item => item.mqttName === animObj.mqttName);
+    let channelIndex = this.state.show.channels.findIndex(
+      (item) => item.mqttName === animObj.mqttName
+    );
     if (channelIndex === -1) {
-      console.log('MQTT channel not found, bail out...');
+      console.log("MQTT channel not found, bail out...");
       return;
     }
     let tmpShow = this.state.show;
-    let nodeIndex = tmpShow.channels[channelIndex].animations.findIndex(item => item.nodeIndex == animObj.nodeIndex);
+    let nodeIndex = tmpShow.channels[channelIndex].animations.findIndex(
+      (item) => item.nodeIndex == animObj.nodeIndex
+    );
     if (nodeIndex > -1) {
       tmpShow.channels[channelIndex].animations.splice(nodeIndex, 1);
-      this.setState({show: tmpShow});
+      this.setState({ show: tmpShow });
       this.handleSave();
     }
-  }
+  };
 
   createShowChannel = (channelIndex, newRow) => {
     // Create a JavaScript object version of a <Row> which is stored in `show`
@@ -103,11 +115,10 @@ class App extends Component {
       channelIndex: channelIndex,
       channelName: newRow.channelName,
       mqttName: newRow.mqttName,
-      isGroup: newRow.isGroup,
       type: newRow.channelType,
       animations: [],
     };
-  }
+  };
 
   handleAddRow = (newRow) => {
     // Adds a <Row> (aka a channel) which gets rendered to the page. This function
@@ -120,19 +131,20 @@ class App extends Component {
       newShow.showName = newRow.showName;
     }
     let index = this.state.nextIndex;
-    newRow.channelName = newRow.channelName.replace(/\s+/g, "")
+    newRow.channelName = newRow.channelName.replace(/\s+/g, "");
     var rowToAdd = (
-      <Row key={"row"+index}
+      <Row
+        key={"row" + index}
         type={newRow.channelType}
         channelName={newRow.channelName}
         mqttName={newRow.mqttName}
-        isGroup={newRow.isGroup}
         handleAddAnimation={this.handleAddAnimation}
-        handleRemoveAnimation={this.handleRemoveAnimation} />
+        handleRemoveAnimation={this.handleRemoveAnimation}
+      />
     );
     let newChannel = this.createShowChannel(index, newRow);
     newShow.channels.push(newChannel);
-    this.setState({ 
+    this.setState({
       nextIndex: index + 1,
       showName: showName,
       rows: [...this.state.rows, rowToAdd],
@@ -140,26 +152,28 @@ class App extends Component {
       showExport: true,
     });
     this.handleSave();
-  }
+  };
 
   handleSave = () => {
     saveShow(this.state.show);
-  }
+  };
 
   checkAndLoadSavedShows = () => {
     const showToImport = this.state.show.showName;
     this.handleImport(getShowByName(showToImport));
-  }
+  };
 
   handleExport = () => {
     // Export the show to a JSON file to be used by the accompanying player
     // Called from titlebar.js
     if (this.state.show.startTime === this.state.show.stopTime) {
-      alert("You can't set start and stop times to the same value. Did you forget to set them?");
+      alert(
+        "You can't set start and stop times to the same value. Did you forget to set them?"
+      );
       return;
     }
     exportShow(this.state.show);
-  }
+  };
 
   makeRowForImport = (newRow, index, showName) => {
     // Creates a <Row> when importing a show file
@@ -167,58 +181,74 @@ class App extends Component {
       <Row
         key={"row" + index}
         type={newRow.type}
-        channelName={newRow.channelName}
+        channelName={newRow.channelName || newRow.mqttName}
         mqttName={newRow.mqttName}
-        isGroup={newRow.isGroup}
         handleAddAnimation={this.handleAddAnimation}
         handleRemoveAnimation={this.handleRemoveAnimation}
         animationsFromImport={newRow.animations}
       />
     );
     return rowToAdd;
-  }
+  };
 
   handleImport = (showContents) => {
     // Process an imported show JSON file. Called from titlebar.js
     try {
-      let newShow = JSON.parse(showContents);
+      let newShow = showContents; // JSON.parse(showContents);
       let newRows = newShow.channels.map((chnnl, index) => {
-        return this.makeRowForImport(chnnl, index, newShow.showName)
-      })
+        return this.makeRowForImport(chnnl, index);
+      });
       this.setState({
         nextIndex: newShow.channels.length,
         rows: newRows,
         showName: newShow.showName,
         show: newShow,
         showExport: true,
-      })
+      });
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
-  }
+  };
 
+  handleClearShow = () => {
+    this.setState({
+      nextIndex: 0,
+      rows: [],
+      showName: "",
+      show: showTemplate,
+      showExport: false,
+      totalDuration: 0,
+    });
+  };
 
   render() {
     var contents;
     var addNewRow = null;
     if (this.state.rows.length > 0) {
       contents = this.state.rows;
-      addNewRow = (<AddChannel handleAddNewRow={this.handleAddRow} />);
+      addNewRow = <AddChannel handleAddNewRow={this.handleAddRow} />;
     } else {
-      contents = (<EmptyShow handleAddNewRow={this.handleAddRow} />);
+      contents = <EmptyShow handleAddNewRow={this.handleAddRow} />;
     }
 
-
     return (
-        <div className="App">
-          <TitleBar showExportVisible={this.state.showExport} doExport={this.handleExport} doImport={this.handleImport} />
-          <TimeLineBar show={this.state.show} saveShowTimes={this.saveShowTimes} />
-          <div id="contents-wrapper">
-            { contents }
-            { addNewRow }
-          </div>
+      <div className="App">
+        <TitleBar
+          showExportVisible={this.state.showExport}
+          doExport={this.handleExport}
+          doImport={this.handleImport}
+          doClearShow={this.handleClearShow}
+        />
+        <TimeLineBar
+          show={this.state.show}
+          saveShowTimes={this.saveShowTimes}
+        />
+        <div id="contents-wrapper">
+          {contents}
+          {addNewRow}
         </div>
-    )
+      </div>
+    );
   }
 }
 

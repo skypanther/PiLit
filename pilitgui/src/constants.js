@@ -189,3 +189,37 @@ export const animations = [
       "Multiple discrete stripes of a single color travel down the strip with white between.",
   },
 ];
+
+export const spheroAnimations = [
+  {
+    label: "Spin 1 spoke",
+    value: "spin_1",
+    description: "Light up one spoke in sequence",
+  },
+  {
+    label: "Spin 1 spoke backwards",
+    value: "spin_1_backwards",
+    description: "Like spin 1, but backwards",
+  },
+  {
+    label: "Spin 2 spoke",
+    value: "spin_2",
+    description: "Light up two opposite in sequence",
+  },
+  {
+    label: "Spin 2 spoke backwards",
+    value: "spin_2_backwards",
+    description: "Like spin 2, but backwards",
+  },
+  {
+    label: "Hemisphere spin",
+    value: "hemi_spin",
+    description: "Lights half the sphere (3 spokes) in sequence",
+  },
+  {
+    label: "Hemisphere spin backwards",
+    value: "hemi_spin_backwards",
+    description: "Like hemi spin, but backwards",
+  },
+  ...animations,
+];
