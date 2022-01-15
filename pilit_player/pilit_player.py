@@ -67,10 +67,16 @@ def preprocess_file(show_file):
         sum_of_durations = 0
         channel_commands = []
         for animation in channel["animations"]:
-            sum_of_durations = sum_of_durations + int(animation["duration"])
+            this_duration = int(animation["duration"])
+            sum_of_durations += this_duration
             animation_command = make_animation_command(channel["type"], animation)
             channel_commands.append(
-                (channel["mqttName"], animation_command, sum_of_durations)
+                (
+                    channel["mqttName"],
+                    animation_command,
+                    sum_of_durations,
+                    this_duration,
+                )
             )
         channels.append(channel_commands)
     show = {"start_time": start_time, "end_time": end_time, "channels": channels}
@@ -78,8 +84,7 @@ def preprocess_file(show_file):
 
 
 def make_animation_command(type, animation):
-    # types: PixelNode, OnOffNode, MegaTree
-    if type == "PixelNode" or type == "PixelTree" or type == "SpheroNode":
+    if type in ["PixelNode", "PixelTree", "SpheroNode"]:
         anim = animation["animation"] if animation["animation"] != "" else "off"
         color = animation["color"] if animation["color"] != "" else "black"
         loopDelay = animation["loopDelay"] if animation["loopDelay"] != "" else "10"
@@ -127,9 +132,10 @@ def log(msg):
         print(msg)
 
 
-def send_command(topic, payload, sum_of_durations):
+def send_command(topic, payload, sum_of_durations, this_duration):
     # paho mqtt send command here
-    log(f"{topic} ({sum_of_durations} secs) --> {payload}")
+    dur_string = f"{this_duration} of {sum_of_durations} sec".ljust(16, " ")
+    log(f"{topic.ljust(16, ' ')} {dur_string} --> {payload}")
     publish.single(topic, payload=payload, hostname=mqtt_server)
 
 
@@ -177,8 +183,10 @@ def run_show(show):
                 log("***** Starting Show *****")
                 for index, channel in enumerate(show["channels"]):
                     current_animation_index = animation_indexes[index]
-                    mqtt_name, anim, sum_of_durations = channel[current_animation_index]
-                    send_command(mqtt_name, anim, sum_of_durations)
+                    mqtt_name, anim, sum_of_durations, this_duration = channel[
+                        current_animation_index
+                    ]
+                    send_command(mqtt_name, anim, sum_of_durations, this_duration)
                     current_animation_index += 1
                     if current_animation_index >= len(channel):
                         current_animation_index = 0
@@ -186,10 +194,12 @@ def run_show(show):
                 continue
             for index, channel in enumerate(show["channels"]):
                 current_animation_index = animation_indexes[index]
-                mqtt_name, anim, sum_of_durations = channel[current_animation_index]
+                mqtt_name, anim, sum_of_durations, this_duration = channel[
+                    current_animation_index
+                ]
                 # print(mqtt_name, sum_of_durations, duration_counter, current_animation_index, len(channel))
                 if duration_counter >= sum_of_durations:
-                    send_command(mqtt_name, anim, sum_of_durations)
+                    send_command(mqtt_name, anim, sum_of_durations, this_duration)
                     current_animation_index += 1
                     if current_animation_index >= len(channel):
                         current_animation_index = 0
@@ -202,7 +212,7 @@ def run_show(show):
             if times_shutoff_cmd_sent < 5:
                 times_shutoff_cmd_sent += 1
                 for mqtt_name in mqtt_names:
-                    send_command(mqtt_name, "off", 0)
+                    send_command(mqtt_name, "off", 0, 0)
             sleep(show_loop_interval * 10)
         sleep(show_loop_interval)
 
