@@ -11,6 +11,8 @@
 #define COLOR_ORDER GRB
 #define BRIGHTNESS 100
 
+// #define MAX_MILLIAMPS 5000  // 5 amps, uncomment if you want to set a max current draw
+
 // CHANGE THESE TO MATCH YOUR NETWORK
 char *hostname = "teststrip";  // The hostname of this device
 String topics[] = {            // Create an array of topics to subscribe to

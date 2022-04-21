@@ -5,6 +5,10 @@
     - MQTT subscriber code
     - FastLED based pixel control code
   License: MIT
+
+Test with:
+mosquitto_pub -h BROKER_ADDR -i publisher -t NODE_NAME -m 'blue:solid_color'
+
 */
 
 // XXXXXXXXXXXXXXXXXXXX
@@ -699,12 +703,12 @@ void setup() {
   Serial.begin(115200);
   delay(3000);  // Startup delay
   pinMode(DATA_PIN, OUTPUT);
+#if defined(MAX_MILLIAMPS)
+  // limit power draw and voltage
+  FastLED.setMaxPowerInVoltsAndMilliamps(5, MAX_MILLIAMPS);
+#endif
 #if defined(CLOCK_PIN)
   pinMode(CLOCK_PIN, OUTPUT);
-#endif
-// limit power draw and voltage
-// FastLED.setMaxPowerInVoltsAndMilliamps(5, MAX_MILLIAMPS);
-#if defined(CLOCK_PIN)
   FastLED.addLeds<LED_TYPE, DATA_PIN, CLOCK_PIN, COLOR_ORDER>(leds, NUM_LEDS);
 #else
   FastLED.addLeds<LED_TYPE, DATA_PIN, COLOR_ORDER>(leds, NUM_LEDS);
