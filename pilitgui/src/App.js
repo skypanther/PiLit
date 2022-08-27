@@ -7,6 +7,10 @@ MIT License
 */
 
 import React, { Component } from "react";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+
 import {
   exportShow,
   getSavedShowList,
@@ -16,12 +20,14 @@ import {
 
 import TitleBar from "./components/titlebar";
 import TimeLineBar from "./components/timelinebar";
-import Row from "./components/row";
+import Channel from "./components/channel";
 import EmptyShow from "./components/emptyshow";
 import AddChannel from "./components/addchannel";
+import Stage from "./components/stage";
+import ShowDetails from "./components/showdetails";
 
 const showTemplate = {
-  showName: "showName",
+  showName: "",
   version: 1,
   startTime: "00:00",
   stopTime: "00:00",
@@ -33,7 +39,7 @@ class App extends Component {
     super(props);
     this.state = {
       nextIndex: 0,
-      rows: [],
+      channels: [],
       showName: "",
       show: showTemplate,
       showExport: false,
@@ -48,6 +54,7 @@ class App extends Component {
   saveShowTimes = (showTimes) => {
     // passed to, and called from timlinebar.js to save the show times
     let newShow = this.state.show;
+    if (!newShow) return;
     newShow.startTime = showTimes.startTime;
     newShow.stopTime = showTimes.stopTime;
     this.setState({
@@ -58,7 +65,7 @@ class App extends Component {
 
   handleAddAnimation = (animObj) => {
     // Save an animation to a channel's list of animations
-    // Called from row.js
+    // Called from channel.js
     // console.log(`animObj: ${JSON.stringify(animObj)}`);
     // console.log(`channels: ${JSON.stringify(this.state.show.channels)}`);
     let channelIndex = this.state.show.channels.findIndex(
@@ -89,7 +96,7 @@ class App extends Component {
 
   handleRemoveAnimation = (animObj) => {
     // Remove an animation to a channel's list of animations
-    // Called from row.js
+    // Called from channel.js
     let channelIndex = this.state.show.channels.findIndex(
       (item) => item.mqttName === animObj.mqttName
     );
@@ -108,46 +115,46 @@ class App extends Component {
     }
   };
 
-  createShowChannel = (channelIndex, newRow) => {
+  createShowChannel = (channelIndex, newChannel) => {
     // Create a JavaScript object version of a <Row> which is stored in `show`
     // and used in the final exported show file
     return {
       channelIndex: channelIndex,
-      channelName: newRow.channelName,
-      mqttName: newRow.mqttName,
-      type: newRow.channelType,
+      channelName: newChannel.channelName,
+      mqttName: newChannel.mqttName,
+      type: newChannel.channelType,
       animations: [],
     };
   };
 
-  handleAddRow = (newRow) => {
+  handleAddChannel = (newChannel) => {
     // Adds a <Row> (aka a channel) which gets rendered to the page. This function
     // also updates the `show` object which is used in the final exported show
     var showName = this.state.showName;
     let newShow = this.state.show;
-    if (newRow.showName) {
+    if (newChannel.showName) {
       // creating a brand new show and adding our first channel
-      showName = newRow.showName;
-      newShow.showName = newRow.showName;
+      showName = newChannel.showName;
+      newShow.showName = newChannel.showName;
     }
     let index = this.state.nextIndex;
-    newRow.channelName = newRow.channelName.replace(/\s+/g, "");
-    var rowToAdd = (
-      <Row
-        key={"row" + index}
-        type={newRow.channelType}
-        channelName={newRow.channelName}
-        mqttName={newRow.mqttName}
+    newChannel.channelName = newChannel.channelName.replace(/\s+/g, "");
+    var channelToAdd = (
+      <Channel
+        key={"channel" + index}
+        type={newChannel.channelType}
+        channelName={newChannel.channelName}
+        mqttName={newChannel.mqttName}
         handleAddAnimation={this.handleAddAnimation}
         handleRemoveAnimation={this.handleRemoveAnimation}
       />
     );
-    let newChannel = this.createShowChannel(index, newRow);
-    newShow.channels.push(newChannel);
+    let channelToCreate = this.createShowChannel(index, newChannel);
+    newShow.channels.push(channelToCreate);
     this.setState({
       nextIndex: index + 1,
       showName: showName,
-      rows: [...this.state.rows, rowToAdd],
+      channels: [...this.state.channels, channelToAdd],
       show: newShow,
       showExport: true,
     });
@@ -175,24 +182,25 @@ class App extends Component {
     exportShow(this.state.show);
   };
 
-  makeRowForImport = (newRow, index, showName) => {
+  makeRowForImport = (newChannel, index, showName) => {
     // Creates a <Row> when importing a show file
-    var rowToAdd = (
-      <Row
-        key={"row" + index}
-        type={newRow.type}
-        channelName={newRow.channelName || newRow.mqttName}
-        mqttName={newRow.mqttName}
+    var channelToAdd = (
+      <Channel
+        key={"channel" + index}
+        type={newChannel.type}
+        channelName={newChannel.channelName || newChannel.mqttName}
+        mqttName={newChannel.mqttName}
         handleAddAnimation={this.handleAddAnimation}
         handleRemoveAnimation={this.handleRemoveAnimation}
-        animationsFromImport={newRow.animations}
+        animationsFromImport={newChannel.animations}
       />
     );
-    return rowToAdd;
+    return channelToAdd;
   };
 
   handleImport = (showContents) => {
     // Process an imported show JSON file. Called from titlebar.js
+    if (!showContents) return;
     try {
       let newShow = showContents; // JSON.parse(showContents);
       let newRows = newShow.channels.map((chnnl, index) => {
@@ -200,7 +208,7 @@ class App extends Component {
       });
       this.setState({
         nextIndex: newShow.channels.length,
-        rows: newRows,
+        channels: newRows,
         showName: newShow.showName,
         show: newShow,
         showExport: true,
@@ -213,7 +221,7 @@ class App extends Component {
   handleClearShow = () => {
     this.setState({
       nextIndex: 0,
-      rows: [],
+      channels: [],
       showName: "",
       show: showTemplate,
       showExport: false,
@@ -222,31 +230,73 @@ class App extends Component {
   };
 
   render() {
-    var contents;
-    var addNewRow = null;
-    if (this.state.rows.length > 0) {
-      contents = this.state.rows;
-      addNewRow = <AddChannel handleAddNewRow={this.handleAddRow} />;
+    var channels;
+    var addNewChannel = null;
+    if (this.state.channels.length > 0) {
+      channels = this.state.channels;
+      addNewChannel = (
+        <AddChannel handleAddNewChannel={this.handleAddChannel} />
+      );
     } else {
-      contents = <EmptyShow handleAddNewRow={this.handleAddRow} />;
+      channels = <EmptyShow handleAddNewChannel={this.handleAddChannel} />;
     }
 
     return (
       <div className="App">
-        <TitleBar
-          showExportVisible={this.state.showExport}
-          doExport={this.handleExport}
-          doImport={this.handleImport}
-          doClearShow={this.handleClearShow}
-        />
-        <TimeLineBar
-          show={this.state.show}
-          saveShowTimes={this.saveShowTimes}
-        />
-        <div id="contents-wrapper">
-          {contents}
-          {addNewRow}
-        </div>
+        <Container
+          fluid="true"
+          style={{
+            width: "100%",
+            marginTop: "35pt",
+            marginLeft: "0",
+          }}
+        >
+          <Row>
+            <Col>
+              <TitleBar
+                showExportVisible={this.state.showExport}
+                doExport={this.handleExport}
+                doImport={this.handleImport}
+                doClearShow={this.handleClearShow}
+              />
+            </Col>
+          </Row>
+          <Row id="show-stage-wrapper">
+            <Col xs={2}>
+              <ShowDetails show={this.state.show}></ShowDetails>
+            </Col>
+            <Col>
+              <Stage show={this.state.show} />
+            </Col>
+          </Row>
+        </Container>
+        <Container
+          fluid="true"
+          style={{
+            backgroundColor: "pink",
+            height: "100%",
+            width: "100%",
+            position: "absolute",
+            top: "135pt",
+          }}
+        >
+          <Row>
+            <Col>
+              <TimeLineBar
+                show={this.state.show}
+                saveShowTimes={this.saveShowTimes}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <div id="contents-wrapper">
+                {channels}
+                {addNewChannel}
+              </div>
+            </Col>
+          </Row>
+        </Container>
       </div>
     );
   }

@@ -18,23 +18,26 @@
   --medium-gray: rgba(85, 85, 85, 1);
   --light-blue-gray: rgba(138, 147, 162, 1);
   --light-gray: rgba(238, 238, 238, 1);
+
+  --title-bar-height: 35pt;
 }
 
 body,
 html {
   background-color: var(--rich-black-fogra-29);
+  /* background-color: #999; */
 }
 
 #contents-wrapper {
-  margin-top: 0pt;
-  background-color: var(--rich-black-fogra-29);
+  /* margin-top: 0; */
+  /* background-color: var(--rich-black-fogra-29); */
 }
 
 #app-title-bar {
   margin: 0 0 10pt 0;
   padding: 5pt 10pt;
-  background: var(--rich-black-fogra-29);
-  height: 30pt;
+  background-color: var(--rich-black-fogra-29);
+  height: var(--title-bar-height);
   border-bottom: 2px solid var(--rich-black-fogra-29);
   position: fixed;
   top: 0;
@@ -57,28 +60,42 @@ html {
 }
 
 #show-timeline-wrapper {
-  margin: 30pt 0 0 0;
-  height: 65pt;
+  margin: 0;
+  /* height: 25pt; */
   width: 10000px;
   left: 0;
   border-bottom: 1px solid var(--medium-gray);
-  background: var(--blue-but-not-as-dark);
+  background: var(--rich-black-fogra-29);
 }
-.show-info-wrapper {
-  margin-top: 10pt;
-  margin-bottom: 10pt;
-  width: 300pt;
-  color: var(--medium-champagne);
+
+#show-stage-wrapper {
+  /* background-color: var(--rich-black-fogra-29); */
+  position: fixed;
+  width: 100%;
+  height: 100pt;
+
 }
+
+#show-info-wrapper {
+  color: var(--light-gray);
+  background-color: var(--rich-black-fogra-29);
+}
+
+#stage-wrapper {
+  min-height: 100pt;
+  background-color: var(--rich-black-fogra-29);
+  color: var(--light-gray);
+}
+
 .col1 {
-  width: 115;
+  width: 65pt;
   display: inline-block;
   font-size: 10pt;
   padding-left: 3pt;
 }
 .col2 {
-  width: 185pt;
-  display: inline-block;
+  /* width: 125pt; */
+  /* display: inline-block; */
   font-size: 10pt;
 }
 
@@ -136,7 +153,7 @@ html {
 }
 
 /* ----------------------------------------------
-    STYLES FOR THE ADD NEW ROW/CHANNEL COMPONENT
+    STYLES FOR THE ADD NEW CHANNEL COMPONENT
    ---------------------------------------------- */
 .addchannel-wrapper {
   width: 200pt;
@@ -166,15 +183,15 @@ html {
     ROW / CHANNEL STYLES
    ---------------------------------------------- */
 
-.row-outer-wrapper {
+.channel-outer-wrapper {
   margin: 0;
   padding: 0;
-  width: 10000px;
+  /* width: 10000px; */
   height: 60pt;
   background-color: var(--rich-black-fogra-29);
   border-bottom: 1px solid var(--medium-gray);
 }
-.row-wrapper {
+.channel-wrapper {
   margin: 0;
   padding: 0;
   min-width: 100%;
@@ -183,19 +200,19 @@ html {
   justify-content: flex-start;
 }
 
-.row-inner-wrapper {
+.channel-inner-wrapper {
   display: flex;
   justify-content: flex-start;
   margin-left: 0;
 }
 
-.row-title {
+.channel-title {
   width: 30pt;
   height: 60pt;
   text-align: center;
   border-bottom: 1px solid var(--medium-gray) !important;
 }
-.row-title-text {
+.channel-title-text {
   transform: rotate(-90deg) translateX(-60pt);
   transform-origin: top left;
   height: 30pt;
@@ -204,7 +221,7 @@ html {
   font-size: 9pt;
 }
 
-.row-image {
+.channel-image {
   height: 60pt;
   width: 60pt;
   background-color: var(--light-gray);
@@ -224,17 +241,17 @@ html {
   text-align: center;
 }
 
-.row-button-wrapper {
+.channel-button-wrapper {
   height: 30pt;
   margin: auto 1px;
 }
-.row-button-wrapper .btn {
+.channel-button-wrapper .btn {
   background: var(--medium-champagne) !important;
 }
 /* ----------------------------------------------
   MODAL STYLES
 ---------------------------------------------- */
-.row {
+.channel {
   margin-top: 4pt;
 }
 .modal-label {
@@ -262,35 +279,35 @@ html {
   top: -9pt;
 }
 
-.PixelNode .row-title,
+.PixelNode .channel-title,
 .PixelNode .node-inner-wrapper,
 .PixelNode .node-inner-wrapper p {
   background-color: var(--medium-champagne);
   color: var(--rich-black-fogra-29);
   border-color: var(--rich-black-fogra-29);
 }
-.PixelTree .row-title,
+.PixelTree .channel-title,
 .PixelTree .node-inner-wrapper,
 .PixelTree .node-inner-wrapper p {
   background-color: var(--alloy-orange);
   color: var(--light-gray);
   border-color: var(--gamboge-border);
 }
-.OnOffNode .row-title,
+.OnOffNode .channel-title,
 .OnOffNode .node-inner-wrapper,
 .OnOffNode .node-inner-wrapper p {
   background-color: var(--viridian-green);
   color: var(--medium-champagne);
   border-color: var(--medium-champagne-border);
 }
-.MultiRelayNode .row-title,
+.MultiRelayNode .channel-title,
 .MultiRelayNode .node-inner-wrapper,
 .MultiRelayNode .node-inner-wrapper p {
   background-color: var(--ruby-red);
   color: var(--medium-champagne);
   border-color: var(--medium-champagne-border);
 }
-.SpheroNode .row-title,
+.SpheroNode .channel-title,
 .SpheroNode .node-inner-wrapper,
 .SpheroNode .node-inner-wrapper p {
   background-color: var(--blue-sapphire);

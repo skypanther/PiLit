@@ -36,7 +36,7 @@ class AddChannel extends Component {
     this.handleShow = this.handleShow.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.handleClose = this.handleClose.bind(this);
-    this.handleAddRow = this.handleAddRow.bind(this);
+    this.handleAddChannel = this.handleAddChannel.bind(this);
     this.setShowName = this.setShowName.bind(this);
     this.setChannelType = this.setChannelType.bind(this);
     this.setChannelName = this.setChannelName.bind(this);
@@ -51,7 +51,7 @@ class AddChannel extends Component {
   };
   handleSave = () => {
     this.setState({ show: false });
-    this.props.handleAddNewRow({
+    this.props.handleAddNewChannel({
       showName: this.state.showName,
       channelType: this.state.channelType,
       channelName: this.state.channelName,
@@ -59,7 +59,7 @@ class AddChannel extends Component {
     });
   };
 
-  handleAddRow = () => {
+  handleAddChannel = () => {
     this.setState({ show: true });
   };
 
@@ -161,7 +161,7 @@ class AddChannel extends Component {
               <FontAwesomeIcon
                 icon={faPlusCircle}
                 onClick={() => {
-                  this.handleAddRow();
+                  this.handleAddChannel();
                 }}
               />
             </Button>

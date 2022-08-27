@@ -1,5 +1,5 @@
 /*
-  Creates a row (aka an animation channel)
+  Creates a channel (aka a row in the timeline)
 */
 import React, { Component } from "react";
 import PixelNode from "./nodes/pixelnode";
@@ -28,7 +28,7 @@ const nodeTypes = {
   SpheroNode: sphero_img,
 };
 
-class Row extends Component {
+class Channel extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -290,21 +290,21 @@ class Row extends Component {
   };
 
   render() {
-    let class_name = `row-outer-wrapper ${this.props.type}`;
+    let class_name = `channel-outer-wrapper ${this.props.type}`;
     return (
       <div className={class_name}>
-        <div className="row-wrapper">
-          <div className="row-title">
-            <div className="row-title-text">{this.props.channelName}</div>
+        <div className="channel-wrapper">
+          <div className="channel-title">
+            <div className="channel-title-text">{this.props.channelName}</div>
           </div>
-          <div className="row-image-wrapper" id="rowImage">
-            <img src={nodeTypes[this.props.type]} className="row-image" />
+          <div className="channel-image-wrapper" id="rowImage">
+            <img src={nodeTypes[this.props.type]} className="channel-image" />
             <span className="duration">{this.state.totalDuration}</span>
           </div>
-          <div id="rowWrapper" className="row-inner-wrapper">
+          <div id="rowWrapper" className="channel-inner-wrapper">
             {this.state.nodes}
           </div>
-          <div className="row-button-wrapper">
+          <div className="channel-button-wrapper">
             <Button variant="light">
               <FontAwesomeIcon
                 icon={faPlusCircle}
@@ -320,4 +320,4 @@ class Row extends Component {
   }
 }
 
-export default Row;
+export default Channel;

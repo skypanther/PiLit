@@ -1,3 +1,15 @@
+2022-07-18 Notes:
+
+* Revisit models and crud files. I'm missing foreign keys or look up methods to do things like "get channels for a show with show_id = 123" and so forth
+* Will also need to add those to the routers
+* Need to decide on approach for retrieving all clips, for all channels, for a given show, for a given time-slice
+    * Could do sparse + fill_in approach of the v1 player (a "compile" process, for example could create a temp table filled with 1/2-second by 1/2-second clip entries)
+    * Could do sparse entries, that note the start_time of a clip, then use a "time between A and B" type query" to retrieve the clips (See https://stackoverflow.com/a/65431354/292947 for a couple of performant ways to do "time between A and B" type queries)
+
+
+
+-----------------------------------------------------------------
+
 ###############################
 # SHOWS
 ###############################
