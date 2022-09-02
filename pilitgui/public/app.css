@@ -28,9 +28,19 @@ html {
   /* background-color: #999; */
 }
 
+.App {
+  position: fixed;
+  /* height: 100vw; */
+  width: 100vw;
+}
+
 #contents-wrapper {
-  /* margin-top: 0; */
-  /* background-color: var(--rich-black-fogra-29); */
+  /* This is totally stupid to calculate this way but I can't get it to scroll vertically without doing so */
+  max-height: 55%; /* calc(40% + 130pt) */
+  overflow-x: scroll;
+  overflow-y: auto;
+  position: relative;
+  top: 100pt;
 }
 
 #app-title-bar {
@@ -62,7 +72,7 @@ html {
 #show-timeline-wrapper {
   margin: 0;
   /* height: 25pt; */
-  width: 10000px;
+  min-width: 10000pt;
   left: 0;
   border-bottom: 1px solid var(--medium-gray);
   background: var(--rich-black-fogra-29);
@@ -82,7 +92,7 @@ html {
 }
 
 #stage-wrapper {
-  min-height: 100pt;
+  height: 100pt;
   background-color: var(--rich-black-fogra-29);
   color: var(--light-gray);
 }
@@ -112,7 +122,7 @@ html {
   font-size: 8pt;
 }
 .timelinebar-right-col {
-  width: 100%;
+  /* width: 100%; */
   height: 10px;
   margin-left: 90pt;
   padding: 0;
@@ -134,10 +144,8 @@ html {
   vertical-align: middle;
   justify-content: center;
   position: absolute;
-  top: 50%;
   left: 50%;
-  margin-right: -50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, 50%);
 }
 .emptyshow-wrapper p {
   margin-top: 75pt;
@@ -186,7 +194,7 @@ html {
 .channel-outer-wrapper {
   margin: 0;
   padding: 0;
-  /* width: 10000px; */
+  width: 10000px;
   height: 60pt;
   background-color: var(--rich-black-fogra-29);
   border-bottom: 1px solid var(--medium-gray);

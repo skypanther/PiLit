@@ -230,15 +230,16 @@ class App extends Component {
   };
 
   render() {
-    var channels;
+    var channels = null;
     var addNewChannel = null;
+    var emptyShow = null;
     if (this.state.channels.length > 0) {
       channels = this.state.channels;
       addNewChannel = (
         <AddChannel handleAddNewChannel={this.handleAddChannel} />
       );
     } else {
-      channels = <EmptyShow handleAddNewChannel={this.handleAddChannel} />;
+      emptyShow = <EmptyShow handleAddNewChannel={this.handleAddChannel} />;
     }
 
     return (
@@ -269,31 +270,17 @@ class App extends Component {
               <Stage show={this.state.show} />
             </Col>
           </Row>
-        </Container>
-        <Container
-          fluid="true"
-          style={{
-            backgroundColor: "pink",
-            height: "100%",
-            width: "100%",
-            position: "absolute",
-            top: "135pt",
-          }}
-        >
-          <Row>
-            <Col>
-              <TimeLineBar
-                show={this.state.show}
-                saveShowTimes={this.saveShowTimes}
-              />
-            </Col>
-          </Row>
           <Row>
             <Col>
               <div id="contents-wrapper">
+                <TimeLineBar
+                  show={this.state.show}
+                  saveShowTimes={this.saveShowTimes}
+                />
                 {channels}
                 {addNewChannel}
               </div>
+              {emptyShow}
             </Col>
           </Row>
         </Container>
