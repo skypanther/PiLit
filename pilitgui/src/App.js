@@ -30,7 +30,7 @@ const showTemplate = {
   showName: "",
   version: 1,
   startTime: "00:00",
-  stopTime: "00:00",
+  stopTime: "01:00",
   channels: [],
 };
 
@@ -128,16 +128,24 @@ class App extends Component {
   };
 
   handleAddChannel = (newChannel) => {
-    // Adds a <Row> (aka a channel) which gets rendered to the page. This function
+    // First check if we're adding an audio channel when there's already
+    // one in the show (only single audio track supported)
+    let showHasAudioChannel = this.hasAudioChannel();
+    if (showHasAudioChannel && newChannel.channelType === "AudioChannel") {
+      alert("You cannot have multiple audio tracks in a show. Sorry.");
+      return;
+    }
+    // Adds a <Channel> which gets rendered to the page. This function
     // also updates the `show` object which is used in the final exported show
     var showName = this.state.showName;
     let newShow = this.state.show;
     if (newChannel.showName) {
+      // If the `newChannel` has a showName value, then we are
       // creating a brand new show and adding our first channel
       showName = newChannel.showName;
       newShow.showName = newChannel.showName;
     }
-    let index = this.state.nextIndex;
+    let index = showHasAudioChannel ? this.state.nextIndex : 0; // audio always first
     newChannel.channelName = newChannel.channelName.replace(/\s+/g, "");
     var channelToAdd = (
       <Channel
@@ -150,9 +158,16 @@ class App extends Component {
       />
     );
     let channelToCreate = this.createShowChannel(index, newChannel);
-    newShow.channels.push(channelToCreate);
+    let nextIndex = index + 1;
+    // now add it to the channels array, audio channel goes first
+    if (showHasAudioChannel) {
+      newShow.channels.unshift(channelToCreate);
+      newShow.channels = this.renumberChannels(newShow.channels);
+    } else {
+      newShow.channels.push(channelToCreate);
+    }
     this.setState({
-      nextIndex: index + 1,
+      nextIndex: nextIndex,
       showName: showName,
       channels: [...this.state.channels, channelToAdd],
       show: newShow,
@@ -163,6 +178,16 @@ class App extends Component {
 
   handleSave = () => {
     saveShow(this.state.show);
+  };
+
+  hasAudioChannel = () => {
+    const isAudioChannel = (channel) => channel.type === "AudioChannel";
+    return this.state.show.channels.some(isAudioChannel);
+  };
+
+  renumberChannels = (channels) => {
+    const renumber = (channel, idx) => (channel.channelIndex = "channel" + idx);
+    channels.forEach(renumber);
   };
 
   checkAndLoadSavedShows = () => {
@@ -200,9 +225,18 @@ class App extends Component {
 
   handleImport = (showContents) => {
     // Process an imported show JSON file. Called from titlebar.js
+    console.log(showContents);
     if (!showContents) return;
+    let newShow = {};
+    if (!showContents.show) {
+      newShow = showContents;
+    } else {
+      newShow = showContents.show;
+    }
     try {
-      let newShow = showContents; // JSON.parse(showContents);
+      if (!newShow.channels) {
+        newShow.channels = [];
+      }
       let newRows = newShow.channels.map((chnnl, index) => {
         return this.makeRowForImport(chnnl, index);
       });
@@ -236,10 +270,18 @@ class App extends Component {
     if (this.state.channels.length > 0) {
       channels = this.state.channels;
       addNewChannel = (
-        <AddChannel handleAddNewChannel={this.handleAddChannel} />
+        <AddChannel
+          handleAddNewChannel={this.handleAddChannel}
+          hasAudioChannel={this.hasAudioChannel}
+        />
       );
     } else {
-      emptyShow = <EmptyShow handleAddNewChannel={this.handleAddChannel} />;
+      emptyShow = (
+        <EmptyShow
+          handleAddNewChannel={this.handleAddChannel}
+          hasAudioChannel={this.hasAudioChannel}
+        />
+      );
     }
 
     return (

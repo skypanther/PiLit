@@ -19,8 +19,10 @@ import mega_tree from "url:../../public/images/mega_tree.jpg";
 import pixel_tree from "url:~/public/images/pixel_tree.gif";
 import spotlight from "url:../../public/images/spotlight.jpg";
 import sphero_img from "url:../../public/images/sphero_img.jpg";
+import music_note from "url:../../public/images/music_note2.png";
 
 const nodeTypes = {
+  AudioChannel: music_note,
   PixelNode: leaping_arch,
   OnOffNode: spotlight,
   MultiRelayNode: mega_tree,

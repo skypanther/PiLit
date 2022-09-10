@@ -8,19 +8,11 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-import BootstrapSwitchButton from "bootstrap-switch-button-react";
-
 // FontAwesome
 import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const nodeTypes = [
-  { label: "RGB Pixel Node", value: "PixelNode" },
-  { label: "RGB Pixel Tree", value: "PixelTree" },
-  { label: "On / Off (spotlight) Node", value: "OnOffNode" },
-  { label: "Mega Tree (multi-relay)", value: "MultiRelayNode" },
-  { label: "Sphero Pixel Node", value: "SpheroNode" },
-];
+import { nodeTypes } from "../constants";
 
 class AddChannel extends Component {
   constructor(props) {
@@ -85,6 +77,10 @@ class AddChannel extends Component {
   };
 
   render() {
+    console.log(this.props.hasAudioChannel());
+    let validNodeTypes = this.props.hasAudioChannel()
+      ? nodeTypes.slice(1)
+      : nodeTypes;
     return (
       <>
         <Modal
@@ -119,7 +115,7 @@ class AddChannel extends Component {
                     className="react-select-container"
                     classNamePrefix="react-select"
                     placeholder="Channel Type"
-                    options={nodeTypes}
+                    options={validNodeTypes}
                     onChange={(e) => this.setChannelType(e.value)}
                   />
                 </Col>

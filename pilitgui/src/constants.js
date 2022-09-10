@@ -1,5 +1,14 @@
 import chroma from "chroma-js";
 
+export const nodeTypes = [
+  { label: "Audio Channel", value: "AudioChannel" },
+  { label: "RGB Pixel Node", value: "PixelNode" },
+  { label: "RGB Pixel Tree", value: "PixelTree" },
+  { label: "On / Off (spotlight) Node", value: "OnOffNode" },
+  { label: "Mega Tree (multi-relay)", value: "MultiRelayNode" },
+  { label: "Sphero Pixel Node", value: "SpheroNode" },
+];
+
 export const colors = [
   { label: "Black / Off", value: "black" },
   { label: "White", value: "white" },

@@ -36,9 +36,9 @@ html {
 
 #contents-wrapper {
   /* This is totally stupid to calculate this way but I can't get it to scroll vertically without doing so */
-  max-height: 55%; /* calc(40% + 130pt) */
-  overflow-x: scroll;
-  overflow-y: auto;
+  height: 62%;
+  overflow-x: auto;
+  overflow-y: scroll;
   position: relative;
   top: 100pt;
 }
@@ -321,6 +321,21 @@ html {
   background-color: var(--blue-sapphire);
   color: var(--light-gray);
   border-color: var(--gamboge-border);
+}
+.AudioChannel .channel-title,
+.AudioChannel .node-inner-wrapper,
+.AudioChannel .node-inner-wrapper p {
+  background-color: var(--blue-sapphire);
+  color: var(--light-gray);
+  border-color: var(--gamboge-border);
+}
+.AudioChannel .channel-wrapper .channel-image-wrapper {
+  background-color: var(--rich-black-fogra-29);
+}
+.AudioChannel .channel-wrapper .channel-image-wrapper img.channel-image {
+  transform: scale(25%, 40%) translateY(-15pt);
+  filter: invert();
+  border-bottom: none;
 }
 
 .node-inner-wrapper p {
