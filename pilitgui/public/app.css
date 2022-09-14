@@ -25,22 +25,37 @@
 body,
 html {
   background-color: var(--rich-black-fogra-29);
-  /* background-color: #999; */
+  margin: 0;
+  padding: 0;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
+  box-sizing: border-box;
+}
 .App {
   position: fixed;
-  /* height: 100vw; */
+  height: 100vw;
   width: 100vw;
+  background-color: var(--rich-black-fogra-29);
+}
+
+body nav{
+  position: sticky;
+  top: 0;
+  background-color: var(--rich-black-fogra-29);
 }
 
 #contents-wrapper {
-  /* This is totally stupid to calculate this way but I can't get it to scroll vertically without doing so */
-  height: 62%;
+  max-height: 80vh;
   overflow-x: auto;
   overflow-y: scroll;
-  position: relative;
-  top: 100pt;
+  background-color: var(--rich-black-fogra-29);
 }
 
 #app-title-bar {
@@ -71,7 +86,6 @@ html {
 
 #show-timeline-wrapper {
   margin: 0;
-  /* height: 25pt; */
   min-width: 10000pt;
   left: 0;
   border-bottom: 1px solid var(--medium-gray);
@@ -345,6 +359,17 @@ html {
   line-height: 10pt;
   margin: 3px;
 }
+
+.removeChannel {
+  position: relative;
+  margin-right: 8pt;
+  /* margin-top: 1pt; */
+  top: -70pt;
+  height: 8pt;
+  width: 8pt;
+  float: right;
+  z-index: 2;
+}
 .removeNode {
   position: relative;
   margin-right: 7pt;
@@ -354,14 +379,14 @@ html {
   float: right;
   z-index: 2;
 }
-.removeNode .btn {
+.removeNode .btn, .removeChannel .btn {
   border: 0;
   padding: 2pt;
   color: var(--gamboge);
 }
-.removeNode .btn:hover {
-  background-color: var(--gamboge);
-  padding: 2pt;
+.removeNode .btn:hover, .removeChannel .btn:hover {
+  background-color: transparent;
+  color: red;
 }
 
 .react-select-container {

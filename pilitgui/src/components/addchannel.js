@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import ReactDOM from "react-dom";
 import Select from "react-select";
 
 import Form from "react-bootstrap/Form";
@@ -64,6 +65,14 @@ class AddChannel extends Component {
     this.setState({
       channelType: val,
     });
+    let mqttNameFormControl = ReactDOM.findDOMNode(this.mqttNameRef);
+    if (val == "AudioChannel") {
+      mqttNameFormControl.value = "music";
+      mqttNameFormControl.disabled = true;
+    } else {
+      mqttNameFormControl.value = "";
+      mqttNameFormControl.disabled = null;
+    }
   };
   setChannelName = (val) => {
     this.setState({
@@ -77,7 +86,6 @@ class AddChannel extends Component {
   };
 
   render() {
-    console.log(this.props.hasAudioChannel());
     let validNodeTypes = this.props.hasAudioChannel()
       ? nodeTypes.slice(1)
       : nodeTypes;
@@ -126,6 +134,7 @@ class AddChannel extends Component {
                 </Col>
                 <Col xs={8}>
                   <Form.Control
+                    ref={(c) => (this.mqttNameRef = c)}
                     type="text"
                     className="form-control"
                     defaultValue=""

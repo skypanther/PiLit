@@ -9,7 +9,7 @@ import MultiRelayNode from "./nodes/multirelaynode";
 import SpheroNode from "./nodes/sphero";
 
 // FontAwesome
-import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
+import { faPlusCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import Button from "react-bootstrap/Button";
@@ -302,6 +302,16 @@ class Channel extends Component {
           <div className="channel-image-wrapper" id="rowImage">
             <img src={nodeTypes[this.props.type]} className="channel-image" />
             <span className="duration">{this.state.totalDuration}</span>
+            <div className="removeChannel">
+              <Button variant="outline-danger" size="sm">
+                <FontAwesomeIcon
+                  icon={faMinusCircle}
+                  onClick={() => {
+                    alert(this.props.index);
+                  }}
+                />
+              </Button>
+            </div>
           </div>
           <div id="rowWrapper" className="channel-inner-wrapper">
             {this.state.nodes}
