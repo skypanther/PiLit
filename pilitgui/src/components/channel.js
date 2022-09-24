@@ -15,11 +15,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Button from "react-bootstrap/Button";
 
 import leaping_arch from "url:~/public/images/leaping_arch.jpg";
-import mega_tree from "url:../../public/images/mega_tree.jpg";
+import mega_tree from "url:~/public/images/mega_tree.jpg";
 import pixel_tree from "url:~/public/images/pixel_tree.gif";
-import spotlight from "url:../../public/images/spotlight.jpg";
-import sphero_img from "url:../../public/images/sphero_img.jpg";
-import music_note from "url:../../public/images/music_note2.png";
+import spotlight from "url:~/public/images/spotlight.jpg";
+import sphero_img from "url:~/public/images/sphero_img.jpg";
+import music_note from "url:~/public/images/music_note2.png";
 
 const nodeTypes = {
   AudioChannel: music_note,
@@ -34,7 +34,6 @@ class Channel extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      nextIndex: 0,
       nodes: [],
       totalDuration: "00:00",
       animNodes: [],
@@ -60,6 +59,7 @@ class Channel extends Component {
             <PixelNode
               key={"node" + anim.nodeIndex}
               mqttName={this.props.channelName}
+              channelIndex={this.props.channelIndex}
               type={this.props.type}
               saveNodeConfig={this.saveNodeConfig}
               removeNode={this.removeNode}
@@ -73,6 +73,7 @@ class Channel extends Component {
             <PixelTree
               key={"node" + anim.nodeIndex}
               mqttName={this.props.channelName}
+              channelIndex={this.props.channelIndex}
               type={this.props.type}
               saveNodeConfig={this.saveNodeConfig}
               removeNode={this.removeNode}
@@ -86,6 +87,7 @@ class Channel extends Component {
             <OnOffNode
               key={"node" + anim.nodeIndex}
               mqttName={this.props.channelName}
+              channelIndex={this.props.channelIndex}
               type={this.props.type}
               saveNodeConfig={this.saveNodeConfig}
               removeNode={this.removeNode}
@@ -99,6 +101,7 @@ class Channel extends Component {
             <MultiRelayNode
               key={"node" + anim.nodeIndex}
               mqttName={this.props.channelName}
+              channelIndex={this.props.channelIndex}
               type={this.props.type}
               saveNodeConfig={this.saveNodeConfig}
               removeNode={this.removeNode}
@@ -112,6 +115,7 @@ class Channel extends Component {
             <SpheroNode
               key={"node" + anim.nodeIndex}
               mqttName={this.props.channelName}
+              channelIndex={this.props.channelIndex}
               type={this.props.type}
               saveNodeConfig={this.saveNodeConfig}
               removeNode={this.removeNode}
@@ -124,17 +128,17 @@ class Channel extends Component {
       this.state.animNodes.push({
         nodeIndex: anim.nodeIndex,
         duration: anim.duration,
+        channelIndex: this.props.channelIndex,
       });
       return newNode;
     });
     this.state.nodes = animationsToImport;
-    this.state.nextIndex = animationsToImport.length + 1;
     this.state.totalDuration = this.secondsToHms(totalDuration);
   };
 
   handleAddNode = () => {
     // Called when adding a new animation node via the UI.
-    let index = this.state.nextIndex;
+    let index = this.state.animNodes.length;
     var newNode;
     switch (this.props.type) {
       case "PixelNode":
@@ -142,6 +146,7 @@ class Channel extends Component {
           <PixelNode
             key={"node" + index}
             mqttName={this.props.mqttName}
+            channelIndex={this.props.channelIndex}
             channelName={this.props.channelName}
             type={this.props.type}
             saveNodeConfig={this.saveNodeConfig}
@@ -155,6 +160,7 @@ class Channel extends Component {
           <PixelTree
             key={"node" + index}
             mqttName={this.props.mqttName}
+            channelIndex={this.props.channelIndex}
             channelName={this.props.channelName}
             type={this.props.type}
             saveNodeConfig={this.saveNodeConfig}
@@ -168,6 +174,7 @@ class Channel extends Component {
           <OnOffNode
             key={"node" + index}
             mqttName={this.props.mqttName}
+            channelIndex={this.props.channelIndex}
             channelName={this.props.channelName}
             type={this.props.type}
             saveNodeConfig={this.saveNodeConfig}
@@ -181,6 +188,7 @@ class Channel extends Component {
           <MultiRelayNode
             key={"node" + index}
             mqttName={this.props.mqttName}
+            channelIndex={this.props.channelIndex}
             channelName={this.props.channelName}
             type={this.props.type}
             saveNodeConfig={this.saveNodeConfig}
@@ -194,6 +202,7 @@ class Channel extends Component {
           <SpheroNode
             key={"node" + index}
             mqttName={this.props.mqttName}
+            channelIndex={this.props.channelIndex}
             channelName={this.props.channelName}
             type={this.props.type}
             saveNodeConfig={this.saveNodeConfig}
@@ -205,23 +214,29 @@ class Channel extends Component {
     }
     this.setState({
       nodes: [...this.state.nodes, newNode],
-      animNodes: [...this.state.animNodes, { nodeIndex: index, duration: 10 }],
-      nextIndex: index + 1,
+      animNodes: [
+        ...this.state.animNodes,
+        {
+          nodeIndex: index,
+          duration: 10,
+          channelIndex: this.props.channelIndex,
+        },
+      ],
     });
   };
 
-  removeNode = (index, nodeToRemove) => {
+  removeNode = (nodeToRemove, channelIndex) => {
     // Called when removing an animation node via the UI. Passed to the the child node components.
     // index - the nodes index within the array of nodes
     // nodeToRemove - a reference to the node being removed so that we can remove it from state
     var currentNodes = this.state.nodes;
-    let removedNodes = currentNodes.splice(index, 1);
+    let removedNodes = currentNodes.splice(nodeToRemove.nodeIndex, 1);
     if (removedNodes.length === 1) {
-      this.props.handleRemoveAnimation(nodeToRemove);
+      this.props.handleRemoveAnimation(nodeToRemove, channelIndex);
       this.setState({ nodes: currentNodes });
     }
     let currentAnimNodes = this.state.animNodes;
-    let removedAnimNodes = currentAnimNodes.splice(index, 1);
+    let removedAnimNodes = currentAnimNodes.splice(nodeToRemove.nodeIndex, 1);
     if (removedAnimNodes.length === 1) {
       this.setState({ animNodes: currentAnimNodes });
       this.calcTotalDuration();
@@ -257,10 +272,6 @@ class Channel extends Component {
 
   updateTotalDuration = (duration) => {
     let currentTotalDuration = this.hmsToSeconds(this.state.totalDuration);
-    console.log(
-      currentTotalDuration,
-      this.secondsToHms(currentTotalDuration + duration)
-    );
     this.setState({
       totalDuration: this.secondsToHms(currentTotalDuration + duration),
     });

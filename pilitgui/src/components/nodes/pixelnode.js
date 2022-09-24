@@ -36,6 +36,7 @@ class PixelNode extends Component {
       mqttName: this.props.mqttName,
       type: this.props.type,
       nodeIndex: this.props.index,
+      channelIndex: this.props.channelIndex,
     };
     if (this.props.initialProperties) {
       let animationIndex = animations.findIndex(
@@ -65,6 +66,7 @@ class PixelNode extends Component {
         mqttName: this.props.mqttName,
         type: this.props.type,
         nodeIndex: this.props.index,
+        channelIndex: this.props.channelIndex,
       };
     }
     this.handleShow = this.handleShow.bind(this);
@@ -96,7 +98,7 @@ class PixelNode extends Component {
     this.props.saveNodeConfig(this.state);
   };
   handleDelete = () => {
-    this.props.removeNode(this.props.index, this.state);
+    this.props.removeNode(this.state, this.props.channelIndex);
   };
 
   setAnimationType(animObj) {

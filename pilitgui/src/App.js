@@ -68,48 +68,33 @@ class App extends Component {
   handleAddAnimation = (animObj) => {
     // Save an animation to a channel's list of animations
     // Called from channel.js
-    let channelIndex = this.state.show.channels.findIndex(
-      (item) => item.mqttName === animObj.mqttName
-    );
-    if (channelIndex === -1) {
-      console.log("MQTT channel not found, bail out...");
-      return;
-    }
     // Remove various fields from original object with destructuring & spread operator
     const { show, nodeText, animationIndex, mqttName, type, ...subset } =
       animObj;
     let tmpShow = this.state.show;
     // check to see if the anim already exists in the array
-    let nodeIndex = tmpShow.channels[channelIndex].animations.findIndex(
+    let nodeIndex = tmpShow.channels[animObj.channelIndex].animations.findIndex(
       (item) => item.nodeIndex == subset.nodeIndex
     );
     if (nodeIndex === -1) {
       // not found, so add it
-      tmpShow.channels[channelIndex].animations.push(subset);
+      tmpShow.channels[animObj.channelIndex].animations.push(subset);
     } else {
       // found, replace it to update it
-      tmpShow.channels[channelIndex].animations[nodeIndex] = subset;
+      tmpShow.channels[animObj.channelIndex].animations[nodeIndex] = subset;
     }
     this.setState({ show: tmpShow });
     this.handleSave();
   };
 
-  handleRemoveAnimation = (animObj) => {
+  handleRemoveAnimation = (animObj, channelIndex) => {
+    // Called from the nodes with:
+    //     this.props.removeNode(this.state, this.props.channelIndex);
     // Remove an animation to a channel's list of animations
     // Called from channel.js
-    let channelIndex = this.state.show.channels.findIndex(
-      (item) => item.mqttName === animObj.mqttName
-    );
-    if (channelIndex === -1) {
-      console.log("MQTT channel not found, bail out...");
-      return;
-    }
     let tmpShow = this.state.show;
-    let nodeIndex = tmpShow.channels[channelIndex].animations.findIndex(
-      (item) => item.nodeIndex == animObj.nodeIndex
-    );
-    if (nodeIndex > -1) {
-      tmpShow.channels[channelIndex].animations.splice(nodeIndex, 1);
+    if (animObj.nodeIndex > -1) {
+      tmpShow.channels[channelIndex].animations.splice(animObj.nodeIndex, 1);
       this.setState({ show: tmpShow });
       this.handleSave();
     }
@@ -156,6 +141,7 @@ class App extends Component {
         mqttName={newChannel.mqttName}
         handleAddAnimation={this.handleAddAnimation}
         handleRemoveAnimation={this.handleRemoveAnimation}
+        channelIndex={index}
       />
     );
     let channelToCreate = this.createShowChannel(index, newChannel);
@@ -190,8 +176,12 @@ class App extends Component {
   };
 
   renumberChannels = (channels) => {
-    const renumber = (channel, idx) => (channel.channelIndex = idx + 1);
-    channels.forEach(renumber);
+    const renumberChannel = (channel, idx) => {
+      channel.channelIndex = idx + 1;
+      channel.nodes.forEach((node) => (node.channelIndex = idx));
+      return channel;
+    };
+    channels.forEach(renumberChannel);
     return channels;
   };
 
@@ -223,6 +213,7 @@ class App extends Component {
         handleAddAnimation={this.handleAddAnimation}
         handleRemoveAnimation={this.handleRemoveAnimation}
         animationsFromImport={newChannel.animations}
+        channelIndex={index}
       />
     );
     return channelToAdd;
@@ -241,8 +232,14 @@ class App extends Component {
       if (!newShow.channels) {
         newShow.channels = [];
       }
-      let newRows = newShow.channels.map((chnnl, index) => {
-        return this.makeRowForImport(chnnl, index);
+      let newRows = newShow.channels.map((channel, index) => {
+        return this.makeRowForImport(channel, index);
+      });
+      newShow.channels.forEach((channel, index) => {
+        channel.channelIndex = index;
+        channel.animations.forEach((anim) => {
+          anim.channelIndex = index;
+        });
       });
       this.setState({
         nextIndex: newShow.channels.length,
@@ -251,6 +248,7 @@ class App extends Component {
         show: newShow,
         showExport: true,
       });
+      this.handleSave();
     } catch (e) {
       console.log(e);
     }
@@ -265,6 +263,7 @@ class App extends Component {
       showExport: false,
       totalDuration: 0,
     });
+    this.handleSave();
   };
 
   render() {
@@ -287,6 +286,7 @@ class App extends Component {
         />
       );
     }
+    // console.log(this.state);
 
     return (
       <div className="App">
