@@ -7,6 +7,7 @@ export const nodeTypes = [
   { label: "On / Off (spotlight) Node", value: "OnOffNode" },
   { label: "Mega Tree (multi-relay)", value: "MultiRelayNode" },
   { label: "Sphero Pixel Node", value: "SpheroNode" },
+  { label: "Movin Max", value: "MovinMax" },
 ];
 
 export const colors = [

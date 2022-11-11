@@ -351,6 +351,13 @@ body nav{
   filter: invert();
   border-bottom: none;
 }
+.MovinMax .channel-title,
+.MovinMax .node-inner-wrapper,
+.MovinMax .node-inner-wrapper p {
+  background-color: var(--ruby-red);
+  color: var(--medium-champagne);
+  border-color: var(--medium-champagne-border);
+}
 
 .node-inner-wrapper p {
   font-size: 10pt;

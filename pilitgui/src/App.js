@@ -178,7 +178,7 @@ class App extends Component {
   renumberChannels = (channels) => {
     const renumberChannel = (channel, idx) => {
       channel.channelIndex = idx + 1;
-      channel.nodes.forEach((node) => (node.channelIndex = idx));
+      channel.animations.forEach((animation) => (animation.channelIndex = idx));
       return channel;
     };
     channels.forEach(renumberChannel);
