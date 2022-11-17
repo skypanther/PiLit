@@ -27,6 +27,8 @@ mosquitto_pub -h BROKER_ADDR -i publisher -t NODE_NAME -m 'on'
 #include <WiFiServer.h>
 #include <WiFiServerSecure.h>
 #include <WiFiUdp.h>
+// https://github.com/ronbentley1/eazy-switch-library
+#include <ez_switch_lib.h>
 
 #include <string>
 #include <unordered_map>
@@ -36,7 +38,11 @@ mosquitto_pub -h BROKER_ADDR -i publisher -t NODE_NAME -m 'on'
 
 #define MAX_MESSAGE_LENGTH 128
 
-// XXXXXXXXXX  DON'T CHANGE ANYTHING BELOW THIS IN THIS FILE  XXXXXXXXXX
+#define num_switches 1  // only a single switch in this sketch example
+// Declare/define the switch instance of given size
+Switches my_switches(num_switches);
+int switch_id;
+int switch_state = !on;
 
 WiFiClient wifiClient;
 PubSubClient mqttClient(wifiClient);
@@ -50,6 +56,7 @@ WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org", utcOffsetInSeconds,
                      NTP_UPDATE_THROTTLE_MILLLISECONDS);
 std::function<void(void)> currentAnimation;
+char *current_function = "turn_off";
 
 void turn_off() {
   log("turning off...");
@@ -58,7 +65,8 @@ void turn_off() {
   digitalWrite(relay2GpioPin, LOW);
   digitalWrite(relay3GpioPin, LOW);
   digitalWrite(relay4GpioPin, LOW);
-  digitalWrite(motorRelayGpioPin, LOW);
+  analogWrite(motorControllerIn1, 0);
+  analogWrite(motorControllerIn2, 0);
 }
 void turn_on() {
   log("turning on...");
@@ -67,7 +75,33 @@ void turn_on() {
   digitalWrite(relay2GpioPin, HIGH);
   digitalWrite(relay3GpioPin, HIGH);
   digitalWrite(relay4GpioPin, HIGH);
-  digitalWrite(motorRelayGpioPin, LOW);
+  // loop() calls maybeChangeMotorDirection() which will drive the motor
+}
+
+void maybeChangeMotorDirection() {
+  static int prev_switch_state;
+  if (current_function == "turn_off") {
+    // turn off motor and return
+    analogWrite(motorControllerIn1, 0);
+    analogWrite(motorControllerIn2, 0);
+    return;
+  }
+  // read the switch and decide if we need to reverse direction
+  switch_state = my_switches.read_switch(switch_id);
+  if (switch_state != prev_switch_state) {
+    prev_switch_state = switch_state;
+    if (switch_state == on) {
+      // forward
+      log("going forward");
+      analogWrite(motorControllerIn1, motor_speed);
+      analogWrite(motorControllerIn2, 0);
+    } else {
+      // reverse
+      log("going in reverse");
+      analogWrite(motorControllerIn1, 0);
+      analogWrite(motorControllerIn2, motor_speed);
+    }
+  }
 }
 
 void animate() {
@@ -78,13 +112,12 @@ void animate() {
     - Relay 2 controls the highest set of bags
     - Relay 3 controls the middle set of bags
     - Relay 4 controls the lowest set of bags
-    - motorRelayGpioPin controls the 12v line to Max's motor; it is always on
 
     Relays 2, 3, and 4 are on sequentially, otherwise off
+    loop() calls maybeChangeMotorDirection() which will drive the motor
   */
   log("animating...", false);
   digitalWrite(relay1GpioPin, HIGH);
-  digitalWrite(motorRelayGpioPin, HIGH);
   if (startIndex == 0) {
     // sequence start, turn on highest set of bags
     log("highest");
@@ -110,9 +143,10 @@ void animate() {
 }
 
 void saveCurrentAnimation(char *theFunction) {
+  current_function = theFunction;
   if (strcmp(theFunction, "turn_off") == 0) {
     currentAnimation = turn_off;
-  } else if (strcmp(theFunction, "turn_on") == 0) {
+  } else if (strcmp(theFunction, "animate") == 0) {
     currentAnimation = animate;
   } else if (strcmp(theFunction, "debug") == 0) {
     currentAnimation = turn_on;
@@ -131,11 +165,14 @@ void handleMqttMessage(char *topic, byte *payload, unsigned int length) {
   message[length] = '\0';
   log("message: ", false);
   log(message);
-  if (strcmp(message, (char *)"off") == 0) {
+  if (strcmp(message, (char *)"off") == 0 ||
+      strcmp(message, (char *)"turn_off") == 0) {
     saveCurrentAnimation("turn_off");
     return;
   }
-  if (strcmp(message, (char *)"on") == 0) {
+  if (strcmp(message, (char *)"on") == 0 ||
+      strcmp(message, (char *)"turn_on") == 0 ||
+      strcmp(message, (char *)"animate") == 0) {
     saveCurrentAnimation("animate");
     return;
   }
@@ -238,13 +275,27 @@ void monitorWiFi() {
   // https://github.com/arduino-libraries/NTPClient/blob/master/NTPClient.h
 }
 
+void setUpSwitch() {
+  switch_id = my_switches.add_switch(toggle_switch, toggleGpioPin, circuit_C2);
+  if (switch_id < 0) {
+    // error setting up the switch, make sure motors stay off
+    saveCurrentAnimation("turn_off");
+    turn_off();
+    log("error setting up switch lib connection");
+  }
+}
+
 void setup() {
   Serial.begin(115200);
   pinMode(relay1GpioPin, OUTPUT);
   pinMode(relay2GpioPin, OUTPUT);
   pinMode(relay3GpioPin, OUTPUT);
   pinMode(relay4GpioPin, OUTPUT);
-  pinMode(motorRelayGpioPin, OUTPUT);
+  pinMode(motorControllerIn1, OUTPUT);
+  pinMode(motorControllerIn2, OUTPUT);
+  pinMode(toggleGpioPin, INPUT_PULLUP);
+
+  setUpSwitch();
   currentAnimation = turn_off;
   enableLogging();
   connectToNetwork();
@@ -254,6 +305,10 @@ void loop() {
   EVERY_N_SECONDS(1) { monitorWiFi(); }
   mqttClient.loop();    // this is ESSENTIAL for MQTT messages to be received!
   ArduinoOTA.handle();  // check for & handle OTA update requests
+
+  // will read toggle switch state and change motor direction
+  // if the switch has been flipped since the last run
+  maybeChangeMotorDirection();
 
   EVERY_N_MILLISECONDS(loopDelay) { currentAnimation(); }
 }
