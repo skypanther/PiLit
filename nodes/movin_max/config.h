@@ -7,9 +7,9 @@
 #define relay2GpioPin 4        // D2
 #define relay3GpioPin 14       // D5
 #define relay4GpioPin 12       // D6
-#define motorControllerIn1 15  // D8
-#define motorControllerIn2 13  // D7
-#define toggleGpioPin 1        // D10
+//#define motorControllerIn1 15  // D8
+//#define motorControllerIn2 13  // D7
+//#define toggleGpioPin 0        // D3
 
 // ------> CONFIGURE THESE VARIABLES TO MATCH YOUR SETUP  <------
 char *hostname =
@@ -19,7 +19,7 @@ String topics[] = {  // Create an array of topics to subscribe to
     "movinmax"};
 char *brokerHostname = "northpole.local";  // or "192.168.1.6";  // Hostname/IP
                                            // address of the MQTT broker
-char *ssid = "NETWORK_SSID";
+char *ssid = "SSID_WIFI_NAME";
 char *password = "PASSWORD";
 char *ota_password = "PASSWORD";  // password for OTA updates
 

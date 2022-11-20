@@ -28,6 +28,15 @@ void log(String message="", bool withNewLine=true) {
   }
 }
 
+void log(int message=0, bool withNewLine=true) {
+  if (loggingEnabled) {
+        Serial.print(message);
+    if (withNewLine) {
+      Serial.print('\n');
+    }
+  }
+}
+
 void log(char message[]="", bool withNewLine=true) {
   String str = String(message);
   log(str, withNewLine);

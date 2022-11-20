@@ -7,6 +7,10 @@
     - Configuration is done in config.h
   License: MIT
 
+
+****** NOTE: MOTOR IS NOT WORKING IN THIS SKETCH WILL BE
+****** IMPLEMENTED SEPARATELY
+
 Test with:
 mosquitto_pub -h BROKER_ADDR -i publisher -t NODE_NAME -m 'on'
 
@@ -27,8 +31,6 @@ mosquitto_pub -h BROKER_ADDR -i publisher -t NODE_NAME -m 'on'
 #include <WiFiServer.h>
 #include <WiFiServerSecure.h>
 #include <WiFiUdp.h>
-// https://github.com/ronbentley1/eazy-switch-library
-#include <ez_switch_lib.h>
 
 #include <string>
 #include <unordered_map>
@@ -38,11 +40,8 @@ mosquitto_pub -h BROKER_ADDR -i publisher -t NODE_NAME -m 'on'
 
 #define MAX_MESSAGE_LENGTH 128
 
-#define num_switches 1  // only a single switch in this sketch example
-// Declare/define the switch instance of given size
-Switches my_switches(num_switches);
-int switch_id;
-int switch_state = !on;
+//int switch_state = 0;
+//int prev_switch_state = 0;
 
 WiFiClient wifiClient;
 PubSubClient mqttClient(wifiClient);
@@ -65,8 +64,8 @@ void turn_off() {
   digitalWrite(relay2GpioPin, LOW);
   digitalWrite(relay3GpioPin, LOW);
   digitalWrite(relay4GpioPin, LOW);
-  analogWrite(motorControllerIn1, 0);
-  analogWrite(motorControllerIn2, 0);
+//  analogWrite(motorControllerIn1, 0);
+//  analogWrite(motorControllerIn2, 0);
 }
 void turn_on() {
   log("turning on...");
@@ -78,31 +77,40 @@ void turn_on() {
   // loop() calls maybeChangeMotorDirection() which will drive the motor
 }
 
-void maybeChangeMotorDirection() {
-  static int prev_switch_state;
-  if (current_function == "turn_off") {
-    // turn off motor and return
-    analogWrite(motorControllerIn1, 0);
-    analogWrite(motorControllerIn2, 0);
-    return;
-  }
-  // read the switch and decide if we need to reverse direction
-  switch_state = my_switches.read_switch(switch_id);
-  if (switch_state != prev_switch_state) {
-    prev_switch_state = switch_state;
-    if (switch_state == on) {
-      // forward
-      log("going forward");
-      analogWrite(motorControllerIn1, motor_speed);
-      analogWrite(motorControllerIn2, 0);
-    } else {
-      // reverse
-      log("going in reverse");
-      analogWrite(motorControllerIn1, 0);
-      analogWrite(motorControllerIn2, motor_speed);
-    }
-  }
-}
+//void maybeChangeMotorDirection() {
+//  if (current_function == "turn_off") {
+//    // turn off motor and return
+//    analogWrite(motorControllerIn1, 0);
+//    analogWrite(motorControllerIn2, 0);
+//    return;
+//  }
+//  // read the switch and decide if we need to reverse direction
+//  switch_state = digitalRead(toggleGpioPin);
+//  if (switch_state == 1) {
+//    log(">>>>>>>>>>>>> switch is on");
+//  } else {
+//    log("switch is off");
+//  }
+//  if (prev_switch_state == 1) {
+//    log("prev_switch_state is on");
+//  } else {
+//    log("prev_switch_state is off");
+//  }
+//  if (switch_state != prev_switch_state) {
+//    if (switch_state == 1) {
+//      // forward
+//      log("going forward");
+//      analogWrite(motorControllerIn1, motor_speed);
+//      analogWrite(motorControllerIn2, 0);
+//    } else {
+//      // reverse
+//      log("going in reverse");
+//      analogWrite(motorControllerIn1, 0);
+//      analogWrite(motorControllerIn2, motor_speed);
+//    }
+//  }
+//  prev_switch_state = switch_state;
+//}
 
 void animate() {
   static uint8_t startIndex = 0;
@@ -165,14 +173,11 @@ void handleMqttMessage(char *topic, byte *payload, unsigned int length) {
   message[length] = '\0';
   log("message: ", false);
   log(message);
-  if (strcmp(message, (char *)"off") == 0 ||
-      strcmp(message, (char *)"turn_off") == 0) {
+  if (strcmp(message, (char *)"off") == 0 || strcmp(message, (char *)"turn_off") == 0) {
     saveCurrentAnimation("turn_off");
     return;
   }
-  if (strcmp(message, (char *)"on") == 0 ||
-      strcmp(message, (char *)"turn_on") == 0 ||
-      strcmp(message, (char *)"animate") == 0) {
+  if (strcmp(message, (char *)"on") == 0 || strcmp(message, (char *)"turn_on") == 0 || strcmp(message, (char *)"animate") == 0) {
     saveCurrentAnimation("animate");
     return;
   }
@@ -237,7 +242,9 @@ void connectToNetwork() {
     // NOTE: if updating FS this would be the place to unmount FS using FS.end()
     log("Start updating " + type);
   });
-  ArduinoOTA.onEnd([]() { log("End OTA update"); });
+  ArduinoOTA.onEnd([]() {
+    log("End OTA update");
+  });
   ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
     log("Progress: " + String(progress / (total / 100)));
   });
@@ -275,40 +282,39 @@ void monitorWiFi() {
   // https://github.com/arduino-libraries/NTPClient/blob/master/NTPClient.h
 }
 
-void setUpSwitch() {
-  switch_id = my_switches.add_switch(toggle_switch, toggleGpioPin, circuit_C2);
-  if (switch_id < 0) {
-    // error setting up the switch, make sure motors stay off
-    saveCurrentAnimation("turn_off");
-    turn_off();
-    log("error setting up switch lib connection");
-  }
-}
-
 void setup() {
   Serial.begin(115200);
   pinMode(relay1GpioPin, OUTPUT);
   pinMode(relay2GpioPin, OUTPUT);
   pinMode(relay3GpioPin, OUTPUT);
   pinMode(relay4GpioPin, OUTPUT);
-  pinMode(motorControllerIn1, OUTPUT);
-  pinMode(motorControllerIn2, OUTPUT);
-  pinMode(toggleGpioPin, INPUT_PULLUP);
+//  pinMode(motorControllerIn1, OUTPUT);
+//  pinMode(motorControllerIn2, OUTPUT);
+//  pinMode(toggleGpioPin, INPUT_PULLUP);
 
-  setUpSwitch();
+  saveCurrentAnimation("turn_off");
   currentAnimation = turn_off;
+  turn_off();
+//  analogWrite(motorControllerIn1, 0);
+//  analogWrite(motorControllerIn2, 0);
   enableLogging();
   connectToNetwork();
 }
 
 void loop() {
-  EVERY_N_SECONDS(1) { monitorWiFi(); }
+  EVERY_N_SECONDS(1) {
+    monitorWiFi();
+  }
   mqttClient.loop();    // this is ESSENTIAL for MQTT messages to be received!
   ArduinoOTA.handle();  // check for & handle OTA update requests
 
-  // will read toggle switch state and change motor direction
-  // if the switch has been flipped since the last run
-  maybeChangeMotorDirection();
+//  EVERY_N_MILLISECONDS(100) {
+//    // will read toggle switch state and change motor direction
+//    // if the switch has been flipped since the last run
+//    maybeChangeMotorDirection();
+//  }
 
-  EVERY_N_MILLISECONDS(loopDelay) { currentAnimation(); }
+  EVERY_N_MILLISECONDS(loopDelay) {
+    currentAnimation();
+  }
 }
