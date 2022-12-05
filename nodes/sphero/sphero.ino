@@ -620,6 +620,7 @@ void reset() {
 }
 
 void saveCurrentAnimation(char *theFunction) {
+  log(theFunction);
   if (strcmp(theFunction, "solid_color") == 0) {
     currentAnimation = solid_color;
     // log("currentAnimate = solid_color");
