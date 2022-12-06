@@ -12,16 +12,24 @@ sudo apt install mosquitto mosquitto-clients
 
 Doing so will add the mosquitto broker service to your system so that it is running automatically for you. It will also install the tools you need to send MQTT messages from the command line (to test your nodes).
 
-Using the show you created with PiLit GUI, then
+You will also need to install the Python MQTT library used by pilit_player.
+
+```
+pip install paho-mqtt
+```
+
+(I recommend you do that in a virtual environment rather than in your system's python environment.)
+
+You will need to edit the pilit_player.py file to update the name of your MQTT broker (server). Then, using the show you created with PiLit GUI, then
 
 ```shell
-pilit_player path/to/show.json
+python3 pilit_player path/to/show.json
 ```
 
 For example:
 
 ```shell
-pilit_player /home/pi/ChristmasShow.json
+python3 pilit_player /home/pi/ChristmasShow.json
 ```
 
 # Running on boot
@@ -35,14 +43,14 @@ To run the pilit script when your Pi boots:
 ```
 #!/bin/bash
 
-source /home/pi/py3env/bin/activate
+# if using a virtual environment, activate it
+# source /home/pi/py3env/bin/activate
 cd /home/pi/PiLit/pilit_player
 sleep 15
-python pilit_player.py /home/pi/ChristmasShow.json &
+python3 pilit_player.py /home/pi/ChristmasShow.json &
 ```
 
-The 15 sec sleep command is required to give your Pi time to connect to your network. You may need to adjust that time for your network. If you're not using a virtual environment, don't include the `source` line. 
-
+The 15 sec sleep command is required to give your Pi time to connect to your network. You may need to adjust that time for your network. If you're not using a virtual environment, don't include the `source` line.
 
 2. Mark the file as executable; at a terminal, enter:
 
@@ -51,7 +59,6 @@ chmod +x /home/pi/boot_script.sh
 ```
 
 3. Modify your rc.local file, which will run this script at boot time:
-
 
 ```
 sudo nano /etc/rc.local
