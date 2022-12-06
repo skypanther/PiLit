@@ -17,3 +17,20 @@ npm start -p 3000
 ```
 
 You can use `npm run build` to create a production build in the `dist` directory. It will have to be run from an HTTP/HTTPS hosted site. (You can't just open the index.html file that is generated.)
+
+## Adding a new node type
+
+You must add the new node type in a couple of place in PiLitGUI. You might need to update the pilit_player.py script as well.
+
+In PiLitGUI:
+
+- Add a new component in the src/components/nodes folder
+- Update the `nodeTypes` in the constants.js file
+- Add a new thumbnail graphic for the node type in the public/images folder
+- Update src/components/channel.js file:
+  - Import the graphic and update the nodeTypes const that references those graphics
+  - Update `createAnimationsFromImport()` and `handleAddNode()` to create the component
+
+The player script might need updating to handle any specific properties for your new node type.
+
+Of course, you'll need to create the C++ (or other) code for your node as well. See the /nodes folder for current implementations.

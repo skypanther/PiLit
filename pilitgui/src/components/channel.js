@@ -1,5 +1,5 @@
 /*
-  Creates a row (aka an animation channel)
+  Creates a channel (aka a row in the timeline)
 */
 import React, { Component } from "react";
 import PixelNode from "./nodes/pixelnode";
@@ -7,32 +7,36 @@ import PixelTree from "./nodes/pixeltree";
 import OnOffNode from "./nodes/onoffnode";
 import MultiRelayNode from "./nodes/multirelaynode";
 import SpheroNode from "./nodes/sphero";
+import MovinMax from "./nodes/movinmax";
 
 // FontAwesome
-import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
+import { faPlusCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import Button from "react-bootstrap/Button";
 
 import leaping_arch from "url:~/public/images/leaping_arch.jpg";
-import mega_tree from "url:../../public/images/mega_tree.jpg";
+import mega_tree from "url:~/public/images/mega_tree.jpg";
 import pixel_tree from "url:~/public/images/pixel_tree.gif";
-import spotlight from "url:../../public/images/spotlight.jpg";
-import sphero_img from "url:../../public/images/sphero_img.jpg";
+import spotlight from "url:~/public/images/spotlight.jpg";
+import sphero_img from "url:~/public/images/sphero_img.jpg";
+import music_note from "url:~/public/images/music_note2.png";
+import movin_max from "url:~/public/images/movin_max.jpg";
 
 const nodeTypes = {
+  AudioChannel: music_note,
   PixelNode: leaping_arch,
   OnOffNode: spotlight,
   MultiRelayNode: mega_tree,
   PixelTree: pixel_tree,
   SpheroNode: sphero_img,
+  MovinMax: movin_max,
 };
 
-class Row extends Component {
+class Channel extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      nextIndex: 0,
       nodes: [],
       totalDuration: "00:00",
       animNodes: [],
@@ -58,6 +62,7 @@ class Row extends Component {
             <PixelNode
               key={"node" + anim.nodeIndex}
               mqttName={this.props.channelName}
+              channelIndex={this.props.channelIndex}
               type={this.props.type}
               saveNodeConfig={this.saveNodeConfig}
               removeNode={this.removeNode}
@@ -71,6 +76,7 @@ class Row extends Component {
             <PixelTree
               key={"node" + anim.nodeIndex}
               mqttName={this.props.channelName}
+              channelIndex={this.props.channelIndex}
               type={this.props.type}
               saveNodeConfig={this.saveNodeConfig}
               removeNode={this.removeNode}
@@ -84,6 +90,7 @@ class Row extends Component {
             <OnOffNode
               key={"node" + anim.nodeIndex}
               mqttName={this.props.channelName}
+              channelIndex={this.props.channelIndex}
               type={this.props.type}
               saveNodeConfig={this.saveNodeConfig}
               removeNode={this.removeNode}
@@ -97,6 +104,7 @@ class Row extends Component {
             <MultiRelayNode
               key={"node" + anim.nodeIndex}
               mqttName={this.props.channelName}
+              channelIndex={this.props.channelIndex}
               type={this.props.type}
               saveNodeConfig={this.saveNodeConfig}
               removeNode={this.removeNode}
@@ -110,6 +118,21 @@ class Row extends Component {
             <SpheroNode
               key={"node" + anim.nodeIndex}
               mqttName={this.props.channelName}
+              channelIndex={this.props.channelIndex}
+              type={this.props.type}
+              saveNodeConfig={this.saveNodeConfig}
+              removeNode={this.removeNode}
+              index={anim.nodeIndex}
+              initialProperties={anim}
+            />
+          );
+          break;
+        case "MovinMax":
+          newNode = (
+            <MovinMax
+              key={"node" + anim.nodeIndex}
+              mqttName={this.props.channelName}
+              channelIndex={this.props.channelIndex}
               type={this.props.type}
               saveNodeConfig={this.saveNodeConfig}
               removeNode={this.removeNode}
@@ -122,17 +145,17 @@ class Row extends Component {
       this.state.animNodes.push({
         nodeIndex: anim.nodeIndex,
         duration: anim.duration,
+        channelIndex: this.props.channelIndex,
       });
       return newNode;
     });
     this.state.nodes = animationsToImport;
-    this.state.nextIndex = animationsToImport.length + 1;
     this.state.totalDuration = this.secondsToHms(totalDuration);
   };
 
   handleAddNode = () => {
     // Called when adding a new animation node via the UI.
-    let index = this.state.nextIndex;
+    let index = this.state.animNodes.length;
     var newNode;
     switch (this.props.type) {
       case "PixelNode":
@@ -140,6 +163,7 @@ class Row extends Component {
           <PixelNode
             key={"node" + index}
             mqttName={this.props.mqttName}
+            channelIndex={this.props.channelIndex}
             channelName={this.props.channelName}
             type={this.props.type}
             saveNodeConfig={this.saveNodeConfig}
@@ -153,6 +177,7 @@ class Row extends Component {
           <PixelTree
             key={"node" + index}
             mqttName={this.props.mqttName}
+            channelIndex={this.props.channelIndex}
             channelName={this.props.channelName}
             type={this.props.type}
             saveNodeConfig={this.saveNodeConfig}
@@ -166,6 +191,7 @@ class Row extends Component {
           <OnOffNode
             key={"node" + index}
             mqttName={this.props.mqttName}
+            channelIndex={this.props.channelIndex}
             channelName={this.props.channelName}
             type={this.props.type}
             saveNodeConfig={this.saveNodeConfig}
@@ -179,6 +205,7 @@ class Row extends Component {
           <MultiRelayNode
             key={"node" + index}
             mqttName={this.props.mqttName}
+            channelIndex={this.props.channelIndex}
             channelName={this.props.channelName}
             type={this.props.type}
             saveNodeConfig={this.saveNodeConfig}
@@ -192,6 +219,21 @@ class Row extends Component {
           <SpheroNode
             key={"node" + index}
             mqttName={this.props.mqttName}
+            channelIndex={this.props.channelIndex}
+            channelName={this.props.channelName}
+            type={this.props.type}
+            saveNodeConfig={this.saveNodeConfig}
+            removeNode={this.removeNode}
+            index={index}
+          />
+        );
+        break;
+      case "MovinMax":
+        newNode = (
+          <MovinMax
+            key={"node" + index}
+            mqttName={this.props.mqttName}
+            channelIndex={this.props.channelIndex}
             channelName={this.props.channelName}
             type={this.props.type}
             saveNodeConfig={this.saveNodeConfig}
@@ -203,23 +245,29 @@ class Row extends Component {
     }
     this.setState({
       nodes: [...this.state.nodes, newNode],
-      animNodes: [...this.state.animNodes, { nodeIndex: index, duration: 10 }],
-      nextIndex: index + 1,
+      animNodes: [
+        ...this.state.animNodes,
+        {
+          nodeIndex: index,
+          duration: 10,
+          channelIndex: this.props.channelIndex,
+        },
+      ],
     });
   };
 
-  removeNode = (index, nodeToRemove) => {
+  removeNode = (nodeToRemove, channelIndex) => {
     // Called when removing an animation node via the UI. Passed to the the child node components.
     // index - the nodes index within the array of nodes
     // nodeToRemove - a reference to the node being removed so that we can remove it from state
     var currentNodes = this.state.nodes;
-    let removedNodes = currentNodes.splice(index, 1);
+    let removedNodes = currentNodes.splice(nodeToRemove.nodeIndex, 1);
     if (removedNodes.length === 1) {
-      this.props.handleRemoveAnimation(nodeToRemove);
+      this.props.handleRemoveAnimation(nodeToRemove, channelIndex);
       this.setState({ nodes: currentNodes });
     }
     let currentAnimNodes = this.state.animNodes;
-    let removedAnimNodes = currentAnimNodes.splice(index, 1);
+    let removedAnimNodes = currentAnimNodes.splice(nodeToRemove.nodeIndex, 1);
     if (removedAnimNodes.length === 1) {
       this.setState({ animNodes: currentAnimNodes });
       this.calcTotalDuration();
@@ -255,10 +303,6 @@ class Row extends Component {
 
   updateTotalDuration = (duration) => {
     let currentTotalDuration = this.hmsToSeconds(this.state.totalDuration);
-    console.log(
-      currentTotalDuration,
-      this.secondsToHms(currentTotalDuration + duration)
-    );
     this.setState({
       totalDuration: this.secondsToHms(currentTotalDuration + duration),
     });
@@ -290,21 +334,31 @@ class Row extends Component {
   };
 
   render() {
-    let class_name = `row-outer-wrapper ${this.props.type}`;
+    let class_name = `channel-outer-wrapper ${this.props.type}`;
     return (
       <div className={class_name}>
-        <div className="row-wrapper">
-          <div className="row-title">
-            <div className="row-title-text">{this.props.channelName}</div>
+        <div className="channel-wrapper">
+          <div className="channel-title">
+            <div className="channel-title-text">{this.props.channelName}</div>
           </div>
-          <div className="row-image-wrapper" id="rowImage">
-            <img src={nodeTypes[this.props.type]} className="row-image" />
+          <div className="channel-image-wrapper" id="rowImage">
+            <img src={nodeTypes[this.props.type]} className="channel-image" />
             <span className="duration">{this.state.totalDuration}</span>
+            <div className="removeChannel">
+              <Button variant="outline-danger" size="sm">
+                <FontAwesomeIcon
+                  icon={faMinusCircle}
+                  onClick={() => {
+                    alert(this.props.index);
+                  }}
+                />
+              </Button>
+            </div>
           </div>
-          <div id="rowWrapper" className="row-inner-wrapper">
+          <div id="rowWrapper" className="channel-inner-wrapper">
             {this.state.nodes}
           </div>
-          <div className="row-button-wrapper">
+          <div className="channel-button-wrapper">
             <Button variant="light">
               <FontAwesomeIcon
                 icon={faPlusCircle}
@@ -320,4 +374,4 @@ class Row extends Component {
   }
 }
 
-export default Row;
+export default Channel;

@@ -51,32 +51,31 @@ gpio_pins = [2, 3, 4, 7, 15, 17, 18, 27, 22, 23, 24, 10, 9, 25, 11, 8]
 
 
 # DON'T CHANGE THESE VARIABLES
-midnight = datetime.today().replace(
-    hour=23, minute=59, second=59, microsecond=999999)
+midnight = datetime.today().replace(hour=23, minute=59, second=59, microsecond=999999)
 args = sys.argv[1:]
 pins = []
 
 
 def main():
-    if (len(args) == 0):
+    if len(args) == 0:
         # prompt for show name, duration
-        show_name = input('Enter the show name: ')
-        the_time = input('When should the show end? (time as HH:MM):')
+        show_name = input("Enter the show name: ")
+        the_time = input("When should the show end? (time as HH:MM):")
         if "." not in show_name:
             show_name += ".json"
-        if the_time == '':
+        if the_time == "":
             end_time = midnight
         else:
             end_time = format_end_time(the_time)
-    elif (len(args) == 1 and args[0] == 'off'):
+    elif len(args) == 1 and args[0] == "off":
         # turn all lights off then exit
         all_off()
         exit()
-    elif (len(args) == 1 and args[0] == 'on'):
+    elif len(args) == 1 and args[0] == "on":
         # turn all lights on then exit
         all_on()
         exit()
-    elif (len(args) == 1):
+    elif len(args) == 1:
         show_name = args[0]
         end_time = midnight
         if "." not in show_name:
@@ -87,7 +86,7 @@ def main():
         if "." not in show_name:
             show_name += ".json"
     if not os.path.isfile(show_name):
-        print('No show file by that name')
+        print("No show file by that name")
         exit()
     run_show(show_name, end_time)
 
@@ -96,25 +95,26 @@ def run_show(show_name, end_time):
     # Runs the actual show
     with open(show_name) as json_file:
         show_file = json.load(json_file)
-    if 'show' not in show_file:
-        print('Bad show file')
+    if "show" not in show_file:
+        print("Bad show file")
         exit()
-    show = show_file['show']
-    delay = show_file['interval'] if 'interval' in show_file else 500
+    show = show_file["show"]
+    delay = show_file["interval"] if "interval" in show_file else 500
     delay = delay / 1000.0
     now = datetime.now()
     while now < end_time:
-        for row in show:
-            control_row(row)
+        for channel in show:
+            control_channel(channel)
             sleep(delay)
         now = datetime.now()
 
 
 def format_end_time(the_time):
     # Formats an HH:MM time string into an actual datetime
-    input_time = the_time.split(':')
+    input_time = the_time.split(":")
     end_time = datetime.today().replace(
-        hour=int(input_time[0]), minute=int(input_time[1]))
+        hour=int(input_time[0]), minute=int(input_time[1])
+    )
     return end_time
 
 
@@ -130,19 +130,19 @@ def all_off():
         pin.off()
 
 
-def control_row(row):
+def control_channel(channel):
     """
-    Turns on or off the relays for a specific row in the show file
+    Turns on or off the relays for a specific channel in the show file
     """
-    if len(row) != len(pins):
-        msg = '''
+    if len(channel) != len(pins):
+        msg = """
 Error:
 You must make sure the number of items in the gpio_pins
-list in runshow.py is the same as each row in the show
+list in runshow.py is the same as each channel in the show
 list defined in your show.json file
-'''
+"""
         sys.exit(msg)
-    for index, relay_state in enumerate(row):
+    for index, relay_state in enumerate(channel):
         if relay_state == 1:
             pins[index].off()
         else:
@@ -158,6 +158,6 @@ def setup_pins():
         pins.append(LED(pin_number))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     setup_pins()
     main()

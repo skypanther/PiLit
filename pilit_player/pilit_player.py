@@ -6,6 +6,8 @@ MIT License
 
 Usage:
 
+    Edit this file to specify the name of your mqtt_server (see line below)
+    pip install paho-mqtt
     python3 pilit_player.py <show_file_name.json>
 
 """
@@ -91,14 +93,14 @@ def make_animation_command(type, animation):
         holdTime = animation["holdTime"] if animation["holdTime"] != "" else "50"
         repeatable = animation["repeatable"] if animation["repeatable"] else True
         return f"{color}:{anim}:{loopDelay}:{holdTime}:{repeatable}"
-    if type == "OnOffNode":
-        anim = animation["animation"] if animation["animation"] != "" else "off"
-        return f"{anim}"
-    if type == "MultiRelayNode":
+    elif type == "MultiRelayNode":
         anim = animation["animation"] if animation["animation"] != "" else "off"
         loopDelay = animation["loopDelay"] if animation["loopDelay"] != "" else "10"
         return f"{anim}:{loopDelay}"
-    return "off"
+    else:
+        # elif type in ["OnOffNode", "MovinMax", "MotorinMax"]:
+        anim = animation["animation"] if animation["animation"] != "" else "off"
+        return f"{anim}"
 
 
 def get_show_times(show_file):

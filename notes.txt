@@ -66,10 +66,8 @@ String topics[] = {
 
 To Do:
 
-* Save show to local storage (or IndexedDB), repopulate on load/reload, add Clear Show button
-* Change verbiage to call them Channels and let you specify both the channel name (shows up in UI) and mqtt subscriber name separately
 * Edit / remove channel details
 * Select a color for channels when you create them -- used on left title bg as well as bgcolor of timeline boxes
-* Add groups with channels as members
 * Add a no-op action type to allow for gaps in a channel where a group-channel will take priority -- fill with an empty/transparent box?
 *
+http://127.0.0.1:8000/redoc

@@ -1,3 +1,6 @@
+# audio clips
+public/audio/
+
 # dependencies
 node_modules/
 .cache/
@@ -5,6 +8,7 @@ node_modules/
 
 # production
 /dist
+dist
 
 # misc
 .DS_Store

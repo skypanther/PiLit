@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import ReactDOM from "react-dom";
 import Select from "react-select";
 
 import Form from "react-bootstrap/Form";
@@ -8,19 +9,11 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-import BootstrapSwitchButton from "bootstrap-switch-button-react";
-
 // FontAwesome
 import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const nodeTypes = [
-  { label: "RGB Pixel Node", value: "PixelNode" },
-  { label: "RGB Pixel Tree", value: "PixelTree" },
-  { label: "On / Off (spotlight) Node", value: "OnOffNode" },
-  { label: "Mega Tree (multi-relay)", value: "MultiRelayNode" },
-  { label: "Sphero Pixel Node", value: "SpheroNode" },
-];
+import { nodeTypes } from "../constants";
 
 class AddChannel extends Component {
   constructor(props) {
@@ -36,7 +29,7 @@ class AddChannel extends Component {
     this.handleShow = this.handleShow.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.handleClose = this.handleClose.bind(this);
-    this.handleAddRow = this.handleAddRow.bind(this);
+    this.handleAddChannel = this.handleAddChannel.bind(this);
     this.setShowName = this.setShowName.bind(this);
     this.setChannelType = this.setChannelType.bind(this);
     this.setChannelName = this.setChannelName.bind(this);
@@ -51,7 +44,7 @@ class AddChannel extends Component {
   };
   handleSave = () => {
     this.setState({ show: false });
-    this.props.handleAddNewRow({
+    this.props.handleAddNewChannel({
       showName: this.state.showName,
       channelType: this.state.channelType,
       channelName: this.state.channelName,
@@ -59,7 +52,7 @@ class AddChannel extends Component {
     });
   };
 
-  handleAddRow = () => {
+  handleAddChannel = () => {
     this.setState({ show: true });
   };
 
@@ -72,6 +65,14 @@ class AddChannel extends Component {
     this.setState({
       channelType: val,
     });
+    let mqttNameFormControl = ReactDOM.findDOMNode(this.mqttNameRef);
+    if (val == "AudioChannel") {
+      mqttNameFormControl.value = "music";
+      mqttNameFormControl.disabled = true;
+    } else {
+      mqttNameFormControl.value = "";
+      mqttNameFormControl.disabled = null;
+    }
   };
   setChannelName = (val) => {
     this.setState({
@@ -85,6 +86,9 @@ class AddChannel extends Component {
   };
 
   render() {
+    let validNodeTypes = this.props.hasAudioChannel()
+      ? nodeTypes.slice(1)
+      : nodeTypes;
     return (
       <>
         <Modal
@@ -119,7 +123,7 @@ class AddChannel extends Component {
                     className="react-select-container"
                     classNamePrefix="react-select"
                     placeholder="Channel Type"
-                    options={nodeTypes}
+                    options={validNodeTypes}
                     onChange={(e) => this.setChannelType(e.value)}
                   />
                 </Col>
@@ -130,6 +134,7 @@ class AddChannel extends Component {
                 </Col>
                 <Col xs={8}>
                   <Form.Control
+                    ref={(c) => (this.mqttNameRef = c)}
                     type="text"
                     className="form-control"
                     defaultValue=""
@@ -161,7 +166,7 @@ class AddChannel extends Component {
               <FontAwesomeIcon
                 icon={faPlusCircle}
                 onClick={() => {
-                  this.handleAddRow();
+                  this.handleAddChannel();
                 }}
               />
             </Button>

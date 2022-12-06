@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import chroma from "chroma-js";
 import Select from "react-select";
 
 // FontAwesome
@@ -12,60 +13,117 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-import {
-  spheroAnimations,
-  animationStyles,
-  colors,
-  colorStyles,
-} from "/src/constants";
+const dot = (color = "#ccc") => ({
+  alignItems: "center",
+  display: "flex",
 
-class SpheroNode extends Component {
+  ":before": {
+    backgroundColor: color,
+    borderRadius: 10,
+    content: '" "',
+    display: "block",
+    marginRight: 8,
+    height: 10,
+    width: 10,
+  },
+});
+
+const colorStyles = {
+  control: (styles) => ({
+    ...styles,
+    backgroundColor: "white",
+    fontSize: "8pt",
+  }),
+  option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+    const color = chroma(data.value);
+    return {
+      ...styles,
+      fontSize: "8pt",
+      backgroundColor: isDisabled
+        ? null
+        : isSelected
+        ? data.value
+        : isFocused
+        ? chroma.contrast(color, "white") > 2
+          ? color.alpha(0.1).css()
+          : "#ccc"
+        : null,
+      color: isDisabled
+        ? "#ccc"
+        : isSelected
+        ? chroma.contrast(color, "white") > 2
+          ? "white"
+          : "black"
+        : chroma.contrast(color, "white") > 2
+        ? data.value
+        : "black",
+      cursor: isDisabled ? "not-allowed" : "default",
+
+      ":active": {
+        ...styles[":active"],
+        backgroundColor:
+          !isDisabled && (isSelected ? data.value : color.alpha(0.3).css()),
+      },
+    };
+  },
+  input: (styles) => ({ ...styles, ...dot() }),
+  placeholder: (styles) => ({ ...styles, ...dot() }),
+  singleValue: (styles, { data }) => ({ ...styles, ...dot(data.value) }),
+};
+const animationStyles = {
+  control: (styles) => ({ ...styles, fontSize: "8pt" }),
+  option: (styles) => ({ ...styles, fontSize: "8pt", padding: "4pt" }),
+};
+
+const animations = [
+  {
+    label: "On",
+    value: "on",
+    description: "Animate Max",
+  },
+  {
+    label: "Off",
+    value: "off",
+    description: "Turn Max off",
+  },
+  {
+    label: "Debug",
+    value: "debug",
+    description: "Debug mode: all relays on",
+  },
+];
+
+class MovinMax extends Component {
   constructor(props) {
     super(props);
     this.state = {
       show: false,
       nodeText: "",
       animation: "",
-      animationIndex: null,
-      color: "",
-      colorIndex: null,
+      animationIndex: this.props.index,
       duration: 10,
-      loopDelay: 10,
-      holdTime: 50,
-      repeatable: true,
       mqttName: this.props.mqttName,
       type: this.props.type,
       nodeIndex: this.props.index,
       channelIndex: this.props.channelIndex,
     };
     if (this.props.initialProperties) {
-      let animationIndex = spheroAnimations.findIndex(
+      let animationIndex = animations.findIndex(
         (item) => item.value === this.props.initialProperties.animation
       );
       let nodeText =
         this.props.initialProperties.animation +
-        "\n" +
-        this.props.initialProperties.color +
         "\nD: " +
-        this.props.initialProperties.duration +
-        "\nLD: " +
-        this.props.initialProperties.loopDelay +
-        ", HT: " +
-        this.props.initialProperties.holdTime;
+        this.props.initialProperties.duration;
       this.state = {
         show: false,
         nodeText: nodeText,
         animation: this.props.initialProperties.animation,
         animationIndex: animationIndex,
-        color: this.props.initialProperties.color,
-        colorIndex: this.props.initialProperties.colorIndex,
         duration: this.props.initialProperties.duration,
-        loopDelay: this.props.initialProperties.loopDelay,
-        holdTime: this.props.initialProperties.holdTime,
-        repeatable: this.props.initialProperties.repeatable,
         mqttName: this.props.mqttName,
         type: this.props.type,
-        nodeIndex: this.props.index,
+        nodeIndex: this.props.initialProperties.nodeIndex,
         channelIndex: this.props.channelIndex,
       };
     }
@@ -81,16 +139,7 @@ class SpheroNode extends Component {
     this.setState({ show: false });
   };
   handleSave = () => {
-    let nodeText =
-      this.state.animation +
-      "\n" +
-      this.state.color +
-      "\nD: " +
-      this.state.duration +
-      "\nLD: " +
-      this.state.loopDelay +
-      ", HT:" +
-      this.state.holdTime;
+    let nodeText = this.state.animation + "\nD: " + this.state.duration;
     this.setState({
       show: false,
       nodeText: nodeText,
@@ -102,7 +151,7 @@ class SpheroNode extends Component {
   };
 
   setAnimationType(animObj) {
-    let animationIndex = spheroAnimations.findIndex(
+    let animationIndex = animations.findIndex(
       (item) => item.value === animObj.value
     );
     this.setState({
@@ -110,30 +159,9 @@ class SpheroNode extends Component {
       animationIndex: animationIndex,
     });
   }
-  isRepeatable(isChecked) {
-    this.setState({ repeatable: isChecked });
-  }
-  setColor(colorObj) {
-    let colorIndex = colors.findIndex((item) => item.value === colorObj.value);
-    this.setState({
-      color: colorObj.value,
-      colorIndex: colorIndex,
-    });
-  }
   setDuration(newValue) {
     if (newValue) {
       this.setState({ duration: parseInt(newValue) });
-    }
-  }
-
-  setLoopDelay(newValue) {
-    if (newValue) {
-      this.setState({ loopDelay: parseInt(newValue) });
-    }
-  }
-  setHoldTime(newValue) {
-    if (newValue) {
-      this.setState({ holdTime: parseInt(newValue) });
     }
   }
 
@@ -157,45 +185,16 @@ class SpheroNode extends Component {
                     className="react-select-container"
                     classNamePrefix="react-select"
                     placeholder="Animation"
-                    options={spheroAnimations}
+                    options={animations}
                     styles={animationStyles}
                     value={
                       this.state.animationIndex !== null
-                        ? spheroAnimations[this.state.animationIndex]
+                        ? animations[this.state.animationIndex]
                         : null
                     }
                     onChange={(e) => this.setAnimationType(e)}
                   />
                 </Col>
-                <Col xs={4}>
-                  <Form.Check
-                    type="checkbox"
-                    label="Repeat?"
-                    className="node-checkbox"
-                    style={{ marginLeft: "10px", marginTop: "10pt" }}
-                    inline="true"
-                    checked={this.state.repeatable}
-                    onChange={(e) => this.isRepeatable(e.target.checked)}
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col xs={8}>
-                  <Select
-                    className="react-select-container"
-                    classNamePrefix="react-select"
-                    placeholder="Color"
-                    options={colors}
-                    styles={colorStyles}
-                    value={
-                      this.state.colorIndex !== null
-                        ? colors[this.state.colorIndex]
-                        : null
-                    }
-                    onChange={(e) => this.setColor(e)}
-                  />
-                </Col>
-                <Col xs={4}></Col>
               </Row>
               <Row>
                 <Col xs={3} className="modal-label">
@@ -214,40 +213,6 @@ class SpheroNode extends Component {
                   (seconds)
                 </Col>
               </Row>
-              <Row>
-                <Col xs={3} className="modal-label">
-                  Loop Delay
-                </Col>
-                <Col xs={3}>
-                  <Form.Control
-                    type="text"
-                    className="form-control"
-                    value={this.state.loopDelay}
-                    onChange={(e) => this.setLoopDelay(e.target.value)}
-                  />
-                </Col>
-                <Col xs={6} className="modal-label">
-                  {" "}
-                  (milliseconds)
-                </Col>
-              </Row>
-              <Row>
-                <Col xs={3} className="modal-label">
-                  Hold Time
-                </Col>
-                <Col xs={3}>
-                  <Form.Control
-                    type="text"
-                    className="form-control"
-                    value={this.state.holdTime}
-                    onChange={(e) => this.setHoldTime(e.target.value)}
-                  />
-                </Col>
-                <Col xs={6} className="modal-label">
-                  {" "}
-                  (milliseconds)
-                </Col>
-              </Row>
             </Container>
           </Modal.Body>
           <Modal.Footer>
@@ -257,7 +222,7 @@ class SpheroNode extends Component {
             <Button
               variant="primary"
               onClick={this.handleSave}
-              disabled={!(this.state.animation && this.state.color)}
+              disabled={!this.state.animation}
             >
               Save Changes
             </Button>
@@ -283,4 +248,4 @@ class SpheroNode extends Component {
   }
 }
 
-export default SpheroNode;
+export default MovinMax;
