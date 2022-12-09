@@ -3,7 +3,7 @@ aniso8601==7.0.0
 async-exit-stack==1.0.1
 async-generator==1.10
 black==21.9b0
-certifi==2021.5.30
+certifi==2022.12.7
 charset-normalizer==2.0.6
 click==7.1.2
 dnspython==2.1.0
