@@ -54,7 +54,7 @@ If you want to use this project for yourself, you will need some or all of the f
 You will need programming, electronics, and electrical skills to implement PiLit. This is a DIY system, not a pre-built, out-of-the-box solution. Timing is *not* precisely controlled, so you'll be unlikely to create a whole-yard, synchronized Neopixel extravaganza.
 
 ### Show creation
-s
+
 See the pilitgui folder for information on the show creation tool. While in theory, it should run on any platform, I've tested it only on my Mac.
 
 ### Running a show
@@ -69,4 +69,4 @@ See the nodes folder, and its children, for information on building, using, and 
 
 MIT License
 
-Copyright (c) 2016-2019 Tim Poulsen
+Copyright (c) 2016-2023 Tim Poulsen
