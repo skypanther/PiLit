@@ -9,9 +9,9 @@ from typing import Any, List, Optional
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from server.crud.crud_animation_type import crud_animation_type
-from server.database import get_db
-from server.schemas.animation_types import (
+from crud.crud_animation_type import crud_animation_type
+from database import get_db
+from schemas.animation_types import (
     AnimationType,
     AnimationTypeCreate,
     AnimationTypeUpdate,

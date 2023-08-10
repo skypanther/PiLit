@@ -28,4 +28,4 @@ class Show(BaseModel):
     name: str
     description: str
     created_at: datetime
-    updated_ad = datetime
+    updated_at: datetime

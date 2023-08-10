@@ -1,0 +1,18 @@
+version: "3"
+services:
+  pilit_server:
+    image: pilit_image:latest
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+  db:
+    image: postgres:12
+    volumes:
+      - db_volume:/var/lib/postgressql/data/pgdata
+    env_file:
+      - .env
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"

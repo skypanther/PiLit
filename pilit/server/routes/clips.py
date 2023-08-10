@@ -9,9 +9,9 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from server.crud.crud_clip import crud_clip
-from server.database import get_db
-from server.schemas.clips import Clip, ClipCreate, ClipUpdate
+from crud.crud_clip import crud_clip
+from database import get_db
+from schemas.clips import Clip, ClipCreate, ClipUpdate
 
 router = APIRouter()
 

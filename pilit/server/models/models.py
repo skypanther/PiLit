@@ -10,20 +10,20 @@ from sqlalchemy import (
 )
 
 
-from server.database import Base
+from database import Base
 
 
 # models are listed here roughly how they are logically nested
 # schedules manage shows, which contain channels, which contain clips
 # (the type classes for channels and clips are in-line)
-class Schedules(Base):
+class ScheduleModel(Base):
     # Ref = schedules.show_id > shows.id
     __tablename__ = "schedules"
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
     days_of_week = Column(String, default="a", nullable=False)
-    start_time = Column(Time, timezone=True, nullable=False)
+    start_time = Column(Time, nullable=False)
     duration = Column(
         Integer
     )  # this should probably not be nullable, value will be calculated by controller
@@ -33,7 +33,7 @@ class Schedules(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
 
-class Shows(Base):
+class ShowModel(Base):
     __tablename__ = "shows"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -43,7 +43,7 @@ class Shows(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
 
-class Channels(Base):
+class ChannelModel(Base):
     # Ref = channels.show_id > shows.id  // many-to-one
     __tablename__ = "channels"
 
@@ -57,7 +57,7 @@ class Channels(Base):
     sort_index = Column(Integer, default=0)
 
 
-class ChannelTypes(Base):
+class ChannelTypeModel(Base):
     # Ref = channel_types.id <> channels.channel_type_id
     __tablename__ = "channel_types"
 
@@ -68,7 +68,7 @@ class ChannelTypes(Base):
     class_name = Column(String, nullable=True)
 
 
-class Clips(Base):
+class ClipModel(Base):
     # Ref = clips.channel_id > channels.id  // many-to-one
     __tablename__ = "clips"
 
@@ -81,7 +81,7 @@ class Clips(Base):
     class_name = Column(String, nullable=True)
 
 
-class AnimationTypes(Base):
+class AnimationTypeModel(Base):
     # Ref = animation_types.id <> clips.animation_type_id
     __tablename__ = "animation_types"
 

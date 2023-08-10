@@ -2,8 +2,8 @@ from typing import Any, Dict, List, Union
 
 from sqlalchemy.orm import Session
 
-from server.crud.crud_base import CRUDBase
-from server.schemas.clips import Clip, ClipCreate, ClipUpdate, ClipDelete
+from crud.crud_base import CRUDBase
+from schemas.clips import Clip, ClipCreate, ClipUpdate, ClipDelete
 
 
 class CRUDClip(CRUDBase[Clip, ClipCreate, ClipUpdate, ClipDelete]):

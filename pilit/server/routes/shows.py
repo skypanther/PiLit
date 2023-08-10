@@ -8,11 +8,11 @@ from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from server.schemas.shows import ShowCreate, ShowUpdate
+from schemas.shows import ShowCreate, ShowUpdate
 
-from server.crud.crud_show import crud_show
-from server.database import get_db
-from server.schemas.shows import Show
+from crud.crud_show import crud_show
+from database import get_db
+from schemas.shows import Show
 
 router = APIRouter()
 
@@ -28,6 +28,8 @@ def get_shows(db: Session = Depends(get_db)) -> List[Optional[Show]]:
 def get_show(db: Session = Depends(get_db), *, show_id: int) -> Optional[Show]:
     # Retrieve the show with the given ID
     show = crud_show.get_show_by_id(db, show_id=show_id)
+    if not show:
+        raise HTTPException(status_code=404, detail="Show not found")
     return show
 
 

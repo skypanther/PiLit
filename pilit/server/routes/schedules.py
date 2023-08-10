@@ -10,8 +10,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from schemas.schedules import Schedule, ScheduleCreate, ScheduleUpdate
 
-from server.crud.crud_schedule import crud_schedule
-from server.database import get_db
+from crud.crud_schedule import crud_schedule
+from database import get_db
 
 router = APIRouter()
 

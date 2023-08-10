@@ -2,7 +2,7 @@ from datetime import datetime, time
 from typing import Optional
 
 from pydantic import BaseModel
-from server.models.enums import DaysOfWeek
+from models.enums import DaysOfWeek
 
 
 # Properties to receive via API on creation

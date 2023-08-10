@@ -1,4 +1,4 @@
-from server.utils.subclasses import EnumValueAliases
+from utils.subclasses import EnumValueAliases
 
 
 class DaysOfWeek(EnumValueAliases):

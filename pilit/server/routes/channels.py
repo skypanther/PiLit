@@ -9,17 +9,19 @@ from typing import Any, List, Optional
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from server.crud.crud_channel import crud_channel
-from server.database import get_db
-from server.schemas.channels import Channel, ChannelCreate, ChannelUpdate
+from crud.crud_channel import crud_channel
+from database import get_db
+from schemas.channels import Channel, ChannelCreate, ChannelUpdate
 
 router = APIRouter()
 
 
-@router.get("/", response_model=List[Channel])
-def get_channels(db: Session = Depends(get_db)) -> List[Optional[Channel]]:
+@router.get("/{show_id}", response_model=List[Channel])
+def get_channels(
+    show_id: int, db: Session = Depends(get_db)
+) -> List[Optional[Channel]]:
     # Retrieve all channels.
-    channels = crud_channel.get_channels(db)
+    channels = crud_channel.get_channels(db, show_id=show_id)
     return channels
 
 

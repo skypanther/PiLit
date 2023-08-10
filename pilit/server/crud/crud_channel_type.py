@@ -2,8 +2,8 @@ from typing import Any, Dict, List, Union
 
 from sqlalchemy.orm import Session
 
-from server.crud.crud_base import CRUDBase
-from server.schemas.channel_types import (
+from crud.crud_base import CRUDBase
+from schemas.channel_types import (
     ChannelType,
     ChannelTypeCreate,
     ChannelTypeUpdate,
