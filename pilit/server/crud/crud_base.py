@@ -60,7 +60,7 @@ class CRUDBase(
         else:
             update_data = obj_in.__dict__
         for field in obj_data:
-            if field in update_data:
+            if field in update_data and update_data[field] is not None:
                 print(field)
                 setattr(db_obj, field, update_data[field])
         db.add(db_obj)

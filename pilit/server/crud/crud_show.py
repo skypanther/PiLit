@@ -61,6 +61,7 @@ class CRUDShow(CRUDBase[ShowModel, ShowCreate, ShowUpdate, ShowDelete]):
 
     def remove_show(self, db: Session, *, show_id: int) -> ShowModel:
         show_model = super().remove(db, id=show_id)
+        # need to cascade at least to the channels and schedules tables
         show = Show(**show_model.__dict__)
         return show
 

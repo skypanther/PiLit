@@ -6,23 +6,23 @@ from pydantic import BaseModel, Json
 # Properties to receive via API on creation
 class ChannelCreate(BaseModel):
     name: str
-    description: Optional[str]
+    description: str | None = None
     mqtt_channel: str
     show_id: int
     channel_type_id: int
-    icon: Optional[str]
-    sort_index: int = 0
+    icon: str | None = ""
+    sort_index: int | None = 1
 
 
 # Properties to receive via API on update
 class ChannelUpdate(BaseModel):
     id: int
-    name: Optional[str]
-    description: Optional[str]
-    mqtt_channel: Optional[str]
-    description: Optional[str]
-    icon: Optional[str]
-    sort_index: Optional[int]
+    name: str | None = None
+    description: str | None = None
+    mqtt_channel: str | None = None
+    description: str | None = None
+    icon: str | None = ""
+    sort_index: int | None = None
 
 
 # Properties to receive via API on delete
@@ -38,5 +38,5 @@ class Channel(BaseModel):
     mqtt_channel: str
     show_id: int
     channel_type_id: int
-    icon: str
-    sort_index: int = 0
+    icon: str | None = ""
+    sort_index: int | None = 1
