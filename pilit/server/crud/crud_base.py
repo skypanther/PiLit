@@ -58,9 +58,10 @@ class CRUDBase(
         if isinstance(obj_in, dict):
             update_data = obj_in
         else:
-            update_data = obj_in.dict(exclude_unset=True)
+            update_data = obj_in.__dict__
         for field in obj_data:
             if field in update_data:
+                print(field)
                 setattr(db_obj, field, update_data[field])
         db.add(db_obj)
         db.commit()

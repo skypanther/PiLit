@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Union
 
 from fastapi.encoders import jsonable_encoder
@@ -9,53 +9,60 @@ from models.models import ShowModel
 from schemas.shows import Show, ShowCreate, ShowUpdate, ShowDelete
 
 
+# def show_model_to_schema(show_model: ShowModel) -> Optional[Show]:
+# Not used, would be useful when mapping a subset of fields to the schema)
+#     if show_model:
+#         show = Show(
+#             id=show_model.id,
+#             name=show_model.name,
+#             description=show_model.description,
+#             created_at=show_model.created_at,
+#             updated_at=show_model.updated_at,
+#         )
+#     return show
+
+
 class CRUDShow(CRUDBase[ShowModel, ShowCreate, ShowUpdate, ShowDelete]):
     def get_shows(self, db: Session) -> List[Show]:
         # return db.query(self.model).all()
         shows_result = super().get_multi(db, skip=0, limit=1000)
         shows = []
         for show_model in shows_result:
-            show = Show(
-                id=show_model.id,
-                name=show_model.name,
-                description=show_model.description,
-                created_at=show_model.created_at,
-                updated_at=show_model.updated_at,
-            )
+            show = Show(**show_model.__dict__)
             shows.append(show)
         return shows
 
-    def get_show_by_id(self, db: Session, *, show_id: int) -> Optional[Show]:
+    def get_show_by_id(
+        self, db: Session, *, show_id: int, as_model: bool = False
+    ) -> Optional[Show]:
         show_model = super().get(db, id=show_id)
         show = None
-        if show_model:
-            show = Show(
-                id=show_model.id,
-                name=show_model.name,
-                description=show_model.description,
-                created_at=show_model.created_at,
-                updated_at=show_model.updated_at,
-            )
+        if not as_model and show_model:
+            show = Show(**show_model.__dict__)
+        else:
+            show = show_model
         return show
 
-    def create_show(self, db: Session, *, show_to_create: ShowCreate) -> ShowModel:
-        return super().create(db, show_to_create)
+    def create_show(self, db: Session, *, show_to_create: ShowCreate) -> Optional[Show]:
+        show_model = super().create(db, obj_in=show_to_create)
+        show = Show(**show_model.__dict__)
+        return show
 
     def update_show(
         self,
         db: Session,
         *,
         show_obj: ShowModel,
-        updated_show_obj: Union[ShowUpdate, Dict[str, Any]]
+        updated_show_obj: Union[ShowUpdate, Dict[str, Any]],
     ) -> ShowModel:
-        if isinstance(updated_show_obj, ShowUpdate):
-            updated_show_obj.edit_date = datetime.utcnow()
-        else:
-            updated_show_obj["edit_date"] = datetime.utcnow()
-        return super().update(db, show_obj, updated_show_obj)
+        show_model = super().update(db, db_obj=show_obj, obj_in=updated_show_obj)
+        show = Show(**show_model.__dict__)
+        return show
 
-    def remove(self, db: Session, *, show_id: int) -> ShowModel:
-        return super().remove(db, id=show_id)
+    def remove_show(self, db: Session, *, show_id: int) -> ShowModel:
+        show_model = super().remove(db, id=show_id)
+        show = Show(**show_model.__dict__)
+        return show
 
 
 crud_show = CRUDShow(ShowModel)

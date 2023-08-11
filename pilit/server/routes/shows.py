@@ -38,14 +38,14 @@ def update_show(
     db: Session = Depends(get_db), *, show_id: int, updated_show: ShowUpdate
 ) -> Optional[Show]:
     # Update the show with the given ID
-    show = crud_show.get_show_by_id(db, show_id=show_id)
+    show = crud_show.get_show_by_id(db, show_id=show_id, as_model=True)
     if not show:
         raise HTTPException(status_code=404, detail="Show not found")
     show = crud_show.update_show(db, show_obj=show, updated_show_obj=updated_show)
     return show
 
 
-@router.post("/{show_id}", response_model=Show)
+@router.post("/", response_model=Show)
 def create_show(
     db: Session = Depends(get_db), *, new_show: ShowCreate
 ) -> Optional[Show]:

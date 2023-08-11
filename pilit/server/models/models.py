@@ -30,7 +30,9 @@ class ScheduleModel(Base):
     show_id = Column(Integer, nullable=False)
     is_enabled = Column(Boolean, default=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    updated_at = Column(
+        DateTime(timezone=True), onupdate=func.now(), server_default=func.now()
+    )
 
 
 class ShowModel(Base):
@@ -40,7 +42,9 @@ class ShowModel(Base):
     name = Column(String, unique=True, nullable=False)
     description = Column(String)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    updated_at = Column(
+        DateTime(timezone=True), onupdate=func.now(), server_default=func.now()
+    )
 
 
 class ChannelModel(Base):
