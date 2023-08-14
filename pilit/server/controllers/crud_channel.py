@@ -2,7 +2,7 @@ from typing import Any, Dict, List, Optional, Union
 
 from sqlalchemy.orm import Session
 
-from crud.crud_base import CRUDBase
+from controllers.crud_base import CRUDBase
 from models.models import ChannelModel
 from schemas.channels import Channel, ChannelCreate, ChannelUpdate, ChannelDelete
 

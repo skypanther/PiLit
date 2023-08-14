@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Optional, Union
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
-from crud.crud_base import CRUDBase
+from controllers.crud_base import CRUDBase
 from models.models import ShowModel
 from schemas.shows import Show, ShowCreate, ShowUpdate, ShowDelete
 

@@ -10,7 +10,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from schemas.schedules import Schedule, ScheduleCreate, ScheduleUpdate
 
-from crud.crud_schedule import crud_schedule
+from controllers.crud_schedule import crud_schedule
 from database import get_db
 
 router = APIRouter()
@@ -37,7 +37,9 @@ def update_schedule(
     db: Session = Depends(get_db), *, schedule_id: int, updated_schedule: ScheduleUpdate
 ) -> Optional[Schedule]:
     # Update the schedule with the given ID
-    schedule = crud_schedule.get_schedule_by_id(db, schedule_id=schedule_id)
+    schedule = crud_schedule.get_schedule_by_id(
+        db, schedule_id=schedule_id, as_model=True
+    )
     if not schedule:
         raise HTTPException(status_code=404, detail="Schedule not found")
     schedule = crud_schedule.update_schedule(
@@ -46,7 +48,7 @@ def update_schedule(
     return schedule
 
 
-@router.post("/{schedule_id}", response_model=Schedule)
+@router.post("/", response_model=Schedule)
 def create_schedule(
     db: Session = Depends(get_db), *, new_schedule: ScheduleCreate
 ) -> Optional[Schedule]:

@@ -1,4 +1,4 @@
-from datetime import datetime, time
+from datetime import datetime, time, timezone
 from typing import Optional
 
 from pydantic import BaseModel
@@ -8,11 +8,13 @@ from models.enums import DaysOfWeek
 # Properties to receive via API on creation
 class ScheduleCreate(BaseModel):
     name: str
-    days_of_week: Optional[DaysOfWeek] = "A"
+    days_of_week: str
     start_time: time
-    # duration: int  # This is a calculated value
+    duration: int | None = 0  # This is a calculated value
     show_id: int
-    is_enabled: Optional[bool] = True
+    is_enabled: bool | None = True
+    created_at: datetime | None = datetime.now(tz=timezone.utc)
+    updated_at: datetime | None = datetime.now(tz=timezone.utc)
 
 
 # Properties to receive via API on update
@@ -35,10 +37,10 @@ class ScheduleDelete(BaseModel):
 class Schedule(BaseModel):
     id: int
     name: str
-    days_of_week: DaysOfWeek
+    days_of_week: str
     start_time: time
     duration: int
     show_id: int
     is_enabled: bool
-    created_at: datetime
-    updated_at: datetime
+    created_at: datetime | None
+    updated_at: datetime | None

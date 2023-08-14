@@ -22,11 +22,9 @@ class ScheduleModel(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
-    days_of_week = Column(String, default="a", nullable=False)
+    days_of_week = Column(String, default="All", nullable=False)
     start_time = Column(Time, nullable=False)
-    duration = Column(
-        Integer
-    )  # this should probably not be nullable, value will be calculated by controller
+    duration = Column(Integer, default=0)
     show_id = Column(Integer, nullable=False)
     is_enabled = Column(Boolean, default=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())

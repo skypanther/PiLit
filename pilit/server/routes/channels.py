@@ -9,7 +9,7 @@ from typing import Any, List, Optional
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from crud.crud_channel import crud_channel
+from controllers.crud_channel import crud_channel
 from database import get_db
 from schemas.channels import Channel, ChannelCreate, ChannelUpdate
 

@@ -10,7 +10,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from schemas.shows import ShowCreate, ShowUpdate
 
-from crud.crud_show import crud_show
+from controllers.crud_show import crud_show
 from database import get_db
 from schemas.shows import Show
 

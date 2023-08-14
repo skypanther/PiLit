@@ -2,7 +2,7 @@ from typing import Any, Dict, List, Union
 
 from sqlalchemy.orm import Session
 
-from crud.crud_base import CRUDBase
+from controllers.crud_base import CRUDBase
 from schemas.animation_types import (
     AnimationType,
     AnimationTypeCreate,
