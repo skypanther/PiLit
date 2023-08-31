@@ -9,17 +9,17 @@ from .common import AnimParam
 class ChannelTypeCreate(BaseModel):
     name: str
     name_on_network: str
-    animation_type_id: Optional[int]
-    class_name: Optional[str]
+    animation_type_id: int | None = 1
+    class_name: str | None = ""
 
 
 # Properties to receive via API on update
 class ChannelTypeUpdate(BaseModel):
     id: int
-    name: Optional[str]
-    name_on_network: Optional[str]
-    animation_type_id: Optional[int]
-    class_name: Optional[str]
+    name: str | None = ""
+    name_on_network: str | None = ""
+    animation_type_id: int | None = 1
+    class_name: str | None = ""
 
 
 # Properties to receive via API on delete

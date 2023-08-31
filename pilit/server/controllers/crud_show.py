@@ -1,7 +1,10 @@
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Union
+from fastapi import HTTPException
 
 from fastapi.encoders import jsonable_encoder
+from psycopg2.errors import UniqueViolation
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from controllers.crud_base import CRUDBase
@@ -44,7 +47,15 @@ class CRUDShow(CRUDBase[ShowModel, ShowCreate, ShowUpdate, ShowDelete]):
         return show
 
     def create_show(self, db: Session, *, show_to_create: ShowCreate) -> Optional[Show]:
-        show_model = super().create(db, obj_in=show_to_create)
+        try:
+            show_model = super().create(db, obj_in=show_to_create)
+        except IntegrityError as err:
+            assert isinstance(err.orig, UniqueViolation)
+            raise HTTPException(
+                status_code=400,
+                detail="Malformed request, show name must be unique",
+            )
+
         show = Show(**show_model.__dict__)
         return show
 

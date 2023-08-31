@@ -1,21 +1,20 @@
-from typing import Optional
-
+import json
 from pydantic import BaseModel, Json
 
 
 # Properties to receive via API on creation
 class AnimationTypeCreate(BaseModel):
     name: str
-    default_params: Optional[Json]
-    payload_shape: Optional[Json]
+    default_params: Json | None = json.dumps({})
+    payload_shape: Json | None = json.dumps({})
 
 
 # Properties to receive via API on update
 class AnimationTypeUpdate(BaseModel):
     id: int
-    name: Optional[str]
-    default_params: Optional[Json]
-    payload_shape: Optional[Json]
+    name: str | None = ""
+    default_params: Json | None = json.dumps({})
+    payload_shape: Json | None = json.dumps({})
 
 
 # Properties to receive via API on delete

@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Optional
 
 from pydantic import BaseModel
 
@@ -7,14 +6,14 @@ from pydantic import BaseModel
 # Properties to receive via API on creation
 class ShowCreate(BaseModel):
     name: str
-    description: Optional[str]
+    description: str | None = ""
 
 
 # Properties to receive via API on update
 class ShowUpdate(BaseModel):
     id: int
-    name: Optional[str]
-    description: Optional[str]
+    name: str | None = ""
+    description: str | None = ""
 
 
 # Properties to receive via API on delete

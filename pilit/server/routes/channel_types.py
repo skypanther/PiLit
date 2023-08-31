@@ -11,6 +11,7 @@ from sqlalchemy.orm import Session
 
 from controllers.crud_channel_type import crud_channel_type
 from database import get_db
+from models.models import ChannelTypeModel
 from schemas.channel_types import (
     ChannelType,
     ChannelTypeCreate,
@@ -18,6 +19,7 @@ from schemas.channel_types import (
 )
 
 router = APIRouter()
+not_found_message = "Channel Type not found"
 
 
 @router.get("/", response_model=List[ChannelType])
@@ -35,6 +37,8 @@ def get_channel(
     channel_type = crud_channel_type.get_channel_type_by_id(
         db, channel_type_id=channel_type_id
     )
+    if not channel_type:
+        raise HTTPException(status_code=404, detail=not_found_message)
     return channel_type
 
 
@@ -46,24 +50,26 @@ def update_channel_type(
     updated_channel_type: ChannelTypeUpdate
 ) -> Optional[ChannelType]:
     # Update the channel with the given ID
-    channel_type = crud_channel_type.get_channel_type_by_id(
-        db, channel_type_id=channel_type_id
+    channel_type_model: ChannelTypeModel = crud_channel_type.get_channel_type_by_id(
+        db, channel_type_id=channel_type_id, as_model=True
     )
-    if not channel_type:
-        raise HTTPException(status_code=404, detail="Channel Type not found")
+    if not channel_type_model:
+        raise HTTPException(status_code=404, detail=not_found_message)
     channel_type = crud_channel_type.update_channel_type(
-        db, channel_type_obj=channel_type, updated_channel_type_obj=updated_channel_type
+        db,
+        channel_type_obj=channel_type_model,
+        updated_channel_type_obj=updated_channel_type,
     )
     return channel_type
 
 
-@router.post("/{channel_type_id}", response_model=ChannelType)
+@router.post("/", response_model=ChannelType)
 def create_channel_type(
     db: Session = Depends(get_db), *, new_channel_type: ChannelTypeCreate
 ) -> Optional[ChannelType]:
     # Create a channel_type
     channel_type = crud_channel_type.create_channel_type(
-        db, channel_to_create=new_channel_type
+        db, channel_type_to_create=new_channel_type
     )
     return channel_type
 
@@ -77,7 +83,7 @@ def delete_channel_type(
         db, channel_type_id=channel_type_id
     )
     if not channel_type:
-        raise HTTPException(status_code=404, detail="Channel Type not found")
+        raise HTTPException(status_code=404, detail=not_found_message)
     deleted_channel_type = crud_channel_type.remove_channel_type(
         db, channel_type_id=channel_type_id
     )

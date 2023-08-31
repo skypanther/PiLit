@@ -14,6 +14,7 @@ from database import get_db
 from schemas.channels import Channel, ChannelCreate, ChannelUpdate
 
 router = APIRouter()
+not_found_message = "Channel not found"
 
 
 @router.get("/{show_id}", response_model=List[Channel])
@@ -32,7 +33,7 @@ def get_channel(
     # Retrieve the channel with the given ID
     channel = crud_channel.get_channel_by_id(db, show_id=show_id, channel_id=channel_id)
     if not channel:
-        raise HTTPException(status_code=404, detail="Channel not found")
+        raise HTTPException(status_code=404, detail=not_found_message)
     return channel
 
 
@@ -49,7 +50,7 @@ def update_channel(
         db, show_id=show_id, channel_id=channel_id, as_model=True
     )
     if not channel:
-        raise HTTPException(status_code=404, detail="Channel not found")
+        raise HTTPException(status_code=404, detail=not_found_message)
     channel = crud_channel.update_channel(
         db, channel_obj=channel, updated_channel_obj=updated_channel
     )
@@ -72,6 +73,6 @@ def delete_channel(
     # Delete the channel with the given ID
     channel = crud_channel.get_channel_by_id(db, show_id=show_id, channel_id=channel_id)
     if not channel:
-        raise HTTPException(status_code=404, detail="Channel not found")
+        raise HTTPException(status_code=404, detail=not_found_message)
     deleted_channel = crud_channel.remove_channel(db, channel_id=channel_id)
     return deleted_channel
