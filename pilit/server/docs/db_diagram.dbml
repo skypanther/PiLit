@@ -1,0 +1,67 @@
+// paste into https://dbdiagram.io/d
+
+Table shows {
+    id integer [primary key]
+    name varchar [not null, unique]
+    description text
+    created_at timestamp
+    updated_at timestamp [default: `now()`]
+}
+
+Table channels {
+    id integer [primary key]
+    name varchar [not null]
+    mqtt_channel varchar [not null]
+    show_id integer [not null]
+    channel_type_id integer [not null]
+    icon varchar
+    sort_index integer    
+}
+
+Ref: channels.show_id > shows.id  // many-to-one
+
+Table clips {
+    id integer [primary key]
+    channel_id integer [not null]
+    name varchar [not null]
+    sort_index integer
+    animation_type_id integer [not null]
+    animation_params json
+    duration integer [not null]
+    class_name varchar    
+}
+
+Ref: clips.channel_id > channels.id  // many-to-one
+
+Table schedules {
+    id integer [primary key]
+    name varchar [not null]
+    days_of_week varchar  [not null, default: 'a']
+    start_time time [not null]
+    duration integer
+    show_id integer [not null]
+    deactivated_at timestamp
+    created_at timestamp
+    updated_at timestamp [default: `now()`]
+}
+
+Ref: schedules.show_id > shows.id
+
+Table animation_types {
+    id integer [primary key]
+    name varchar [not null]
+    payload_shape json [not null]
+    default_params json
+}
+
+Ref: animation_types.id <> clips.animation_type_id
+
+table channel_types {
+    id integer [primary key]
+    name varchar [not null]
+    node_type varchar [not null, unique]
+    animation_type_id integer [not null]
+    class_name varchar
+}
+
+Ref: channel_types.id <> channels.channel_type_id
