@@ -1,5 +1,7 @@
 MAKEFLAGS += --no-builtin-rules
 
+args = $(filter-out $@,$(MAKECMDGOALS))
+
 VENV := ${VIRTUAL_ENV}
 TARGET_VENV := ${PWD}/venv
 

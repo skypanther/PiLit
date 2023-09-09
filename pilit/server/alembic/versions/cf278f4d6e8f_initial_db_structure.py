@@ -61,7 +61,7 @@ def upgrade() -> None:
         sa.Column("channel_id", sa.Integer(), nullable=False),
         sa.Column("sort_index", sa.Integer(), nullable=False),
         sa.Column("animation_type_id", sa.Integer(), nullable=False),
-        sa.Column("animation_params", sa.JSON(), nullable=False),
+        sa.Column("animation_params", sa.JSON(), nullable=True),
         sa.Column("duration", sa.Integer(), nullable=False),
         sa.Column("class_name", sa.String(), nullable=True),
         sa.PrimaryKeyConstraint("id"),

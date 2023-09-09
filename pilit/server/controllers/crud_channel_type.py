@@ -43,7 +43,7 @@ class CRUDChannelType(
 
     def create_channel_type(
         self, db: Session, *, channel_type_to_create: ChannelTypeCreate
-    ) -> Optional[ChannelType]:
+    ) -> ChannelType:
         try:
             channel_type_model = super().create(db, obj_in=channel_type_to_create)
         except IntegrityError as err:

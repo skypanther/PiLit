@@ -1,20 +1,20 @@
 import json
 from pydantic import BaseModel, Json
 
+from schemas.common import AnimationParams
+
 
 # Properties to receive via API on creation
 class AnimationTypeCreate(BaseModel):
     name: str
-    default_params: Json | None = json.dumps({})
-    payload_shape: Json | None = json.dumps({})
+    animation_params: AnimationParams
 
 
 # Properties to receive via API on update
 class AnimationTypeUpdate(BaseModel):
     id: int
-    name: str | None = ""
-    default_params: Json | None = json.dumps({})
-    payload_shape: Json | None = json.dumps({})
+    name: str | None = None
+    animation_params: AnimationParams | None = None
 
 
 # Properties to receive via API on delete
@@ -26,5 +26,4 @@ class AnimationTypeDelete(BaseModel):
 class AnimationType(BaseModel):
     id: int
     name: str
-    default_params: Json
-    payload_shape: Json
+    animation_params: AnimationParams

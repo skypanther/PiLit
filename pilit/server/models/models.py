@@ -78,7 +78,7 @@ class ClipModel(Base):
     channel_id = Column(Integer, nullable=False)
     sort_index = Column(Integer, nullable=False)
     animation_type_id = Column(Integer, nullable=False)
-    animation_params = Column(JSON, nullable=False)
+    animation_params = Column(JSON, nullable=True)
     duration = Column(Integer, nullable=False)
     class_name = Column(String, nullable=True)
 
@@ -89,5 +89,4 @@ class AnimationTypeModel(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, unique=True)
-    payload_shape = Column(JSON, nullable=True)
-    default_params = Column(JSON, nullable=True)
+    animation_params = Column(JSON, nullable=True)
