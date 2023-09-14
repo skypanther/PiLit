@@ -1,9 +1,9 @@
 import React, { Component } from "react";
+import chroma from "chroma-js";
 import Select from "react-select";
 
 // FontAwesome
-import { faPlusCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+var FontAwesome = require("react-fontawesome");
 
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -12,14 +12,9 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-import {
-  spheroAnimations,
-  animationStyles,
-  colors,
-  colorStyles,
-} from "constants";
+import { animations, animationStyles, colors, colorStyles } from "constants";
 
-class SpheroNode extends Component {
+class PixelTree extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -39,7 +34,7 @@ class SpheroNode extends Component {
       channelIndex: this.props.channelIndex,
     };
     if (this.props.initialProperties) {
-      let animationIndex = spheroAnimations.findIndex(
+      let animationIndex = animations.findIndex(
         (item) => item.value === this.props.initialProperties.animation
       );
       let nodeText =
@@ -102,7 +97,7 @@ class SpheroNode extends Component {
   };
 
   setAnimationType(animObj) {
-    let animationIndex = spheroAnimations.findIndex(
+    let animationIndex = animations.findIndex(
       (item) => item.value === animObj.value
     );
     this.setState({
@@ -125,7 +120,6 @@ class SpheroNode extends Component {
       this.setState({ duration: parseInt(newValue) });
     }
   }
-
   setLoopDelay(newValue) {
     if (newValue) {
       this.setState({ loopDelay: parseInt(newValue) });
@@ -157,11 +151,11 @@ class SpheroNode extends Component {
                     className="react-select-container"
                     classNamePrefix="react-select"
                     placeholder="Animation"
-                    options={spheroAnimations}
+                    options={animations}
                     styles={animationStyles}
                     value={
                       this.state.animationIndex !== null
-                        ? spheroAnimations[this.state.animationIndex]
+                        ? animations[this.state.animationIndex]
                         : null
                     }
                     onChange={(e) => this.setAnimationType(e)}
@@ -266,8 +260,8 @@ class SpheroNode extends Component {
         <div className="node-wrapper" style={{ width: nodeWidth + "px" }}>
           <div className="removeNode">
             <Button variant="outline-danger" size="sm">
-              <FontAwesomeIcon
-                icon={faMinusCircle}
+              <FontAwesome
+                name="circle-minus"
                 onClick={() => {
                   this.handleDelete();
                 }}
@@ -283,4 +277,4 @@ class SpheroNode extends Component {
   }
 }
 
-export default SpheroNode;
+export default PixelTree;

@@ -2,6 +2,8 @@
   Creates a channel (aka a row in the timeline)
 */
 import React, { Component } from "react";
+import Button from "react-bootstrap/Button";
+
 import PixelNode from "./nodes/pixelnode";
 import PixelTree from "./nodes/pixeltree";
 import OnOffNode from "./nodes/onoffnode";
@@ -9,19 +11,16 @@ import MultiRelayNode from "./nodes/multirelaynode";
 import SpheroNode from "./nodes/sphero";
 import MovinMax from "./nodes/movinmax";
 
+import leaping_arch from "../images/leaping_arch.jpg";
+import mega_tree from "../images/mega_tree.jpg";
+import pixel_tree from "../images/pixel_tree.gif";
+import spotlight from "../images/spotlight.jpg";
+import sphero_img from "../images/sphero_img.jpg";
+import music_note from "../images/music_note2.png";
+import movin_max from "../images/movin_max.jpg";
+
 // FontAwesome
-import { faPlusCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
-import Button from "react-bootstrap/Button";
-
-import leaping_arch from "./images/leaping_arch.jpg";
-import mega_tree from "./images/mega_tree.jpg";
-import pixel_tree from "./images/pixel_tree.gif";
-import spotlight from "./images/spotlight.jpg";
-import sphero_img from "./images/sphero_img.jpg";
-import music_note from "./images/music_note2.png";
-import movin_max from "./images/movin_max.jpg";
+var FontAwesome = require("react-fontawesome");
 
 const nodeTypes = {
   AudioChannel: music_note,
@@ -346,9 +345,10 @@ class Channel extends Component {
             <span className="duration">{this.state.totalDuration}</span>
             <div className="removeChannel">
               <Button variant="outline-danger" size="sm">
-                <FontAwesomeIcon
-                  icon={faMinusCircle}
+                <FontAwesome
+                  name="circle-minus"
                   onClick={() => {
+                    // call this.removeNode()
                     alert(this.props.index);
                   }}
                 />
@@ -360,8 +360,8 @@ class Channel extends Component {
           </div>
           <div className="channel-button-wrapper">
             <Button variant="light">
-              <FontAwesomeIcon
-                icon={faPlusCircle}
+              <FontAwesome
+                name="circle-plus"
                 onClick={() => {
                   this.handleAddNode();
                 }}

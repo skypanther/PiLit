@@ -1,9 +1,9 @@
 import React, { Component } from "react";
+import chroma from "chroma-js";
 import Select from "react-select";
 
 // FontAwesome
-import { faPlusCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+var FontAwesome = require("react-fontawesome");
 
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -12,14 +12,60 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-import {
-  spheroAnimations,
-  animationStyles,
-  colors,
-  colorStyles,
-} from "constants";
+const animationStyles = {
+  control: (styles) => ({ ...styles, fontSize: "8pt" }),
+  option: (styles) => ({ ...styles, fontSize: "8pt", padding: "4pt" }),
+};
 
-class SpheroNode extends Component {
+const animations = [
+  {
+    label: "All on",
+    value: "on",
+    description: "All relays on",
+  },
+  {
+    label: "All off",
+    value: "off",
+    description: "All relays off",
+  },
+  {
+    label: "March - single",
+    value: "march_single",
+    description: "March a single 'on' relay around the set",
+  },
+  {
+    label: "March - single (inverted)",
+    value: "march_single_inverted",
+    description: "March a single 'off' relay around the set",
+  },
+  {
+    label: "March - two opposite",
+    value: "march_two_opposite",
+    description: "March two 'on' relays on opposite sides around the set",
+  },
+  {
+    label: "March - two opposite (inverted)",
+    value: "march_two_opposite_inverted",
+    description: "March two 'off' relays on opposite sides around the set",
+  },
+  {
+    label: "March - four",
+    value: "march_four",
+    description: "March four 'on' relays around the set",
+  },
+  {
+    label: "March - four (inverted)",
+    value: "march_four_inverted",
+    description: "March four 'off' relays around the set",
+  },
+  {
+    label: "Every other relay on",
+    value: "alternate",
+    description: "Alternate on/off relays",
+  },
+];
+
+class MultiRelayNode extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -27,45 +73,33 @@ class SpheroNode extends Component {
       nodeText: "",
       animation: "",
       animationIndex: null,
-      color: "",
-      colorIndex: null,
       duration: 10,
-      loopDelay: 10,
-      holdTime: 50,
-      repeatable: true,
+      loopDelay: 200,
       mqttName: this.props.mqttName,
       type: this.props.type,
       nodeIndex: this.props.index,
       channelIndex: this.props.channelIndex,
     };
     if (this.props.initialProperties) {
-      let animationIndex = spheroAnimations.findIndex(
+      let animationIndex = animations.findIndex(
         (item) => item.value === this.props.initialProperties.animation
       );
       let nodeText =
         this.props.initialProperties.animation +
-        "\n" +
-        this.props.initialProperties.color +
         "\nD: " +
         this.props.initialProperties.duration +
         "\nLD: " +
-        this.props.initialProperties.loopDelay +
-        ", HT: " +
-        this.props.initialProperties.holdTime;
+        this.props.initialProperties.loopDelay;
       this.state = {
         show: false,
         nodeText: nodeText,
         animation: this.props.initialProperties.animation,
         animationIndex: animationIndex,
-        color: this.props.initialProperties.color,
-        colorIndex: this.props.initialProperties.colorIndex,
         duration: this.props.initialProperties.duration,
         loopDelay: this.props.initialProperties.loopDelay,
-        holdTime: this.props.initialProperties.holdTime,
-        repeatable: this.props.initialProperties.repeatable,
         mqttName: this.props.mqttName,
         type: this.props.type,
-        nodeIndex: this.props.index,
+        nodeIndex: this.props.initialProperties.nodeIndex,
         channelIndex: this.props.channelIndex,
       };
     }
@@ -83,14 +117,10 @@ class SpheroNode extends Component {
   handleSave = () => {
     let nodeText =
       this.state.animation +
-      "\n" +
-      this.state.color +
       "\nD: " +
       this.state.duration +
       "\nLD: " +
-      this.state.loopDelay +
-      ", HT:" +
-      this.state.holdTime;
+      this.state.loopDelay;
     this.setState({
       show: false,
       nodeText: nodeText,
@@ -102,7 +132,7 @@ class SpheroNode extends Component {
   };
 
   setAnimationType(animObj) {
-    let animationIndex = spheroAnimations.findIndex(
+    let animationIndex = animations.findIndex(
       (item) => item.value === animObj.value
     );
     this.setState({
@@ -110,30 +140,17 @@ class SpheroNode extends Component {
       animationIndex: animationIndex,
     });
   }
-  isRepeatable(isChecked) {
-    this.setState({ repeatable: isChecked });
-  }
-  setColor(colorObj) {
-    let colorIndex = colors.findIndex((item) => item.value === colorObj.value);
-    this.setState({
-      color: colorObj.value,
-      colorIndex: colorIndex,
-    });
-  }
   setDuration(newValue) {
     if (newValue) {
       this.setState({ duration: parseInt(newValue) });
     }
   }
-
   setLoopDelay(newValue) {
     if (newValue) {
+      if (newValue < 200) {
+        newValue = 200;
+      }
       this.setState({ loopDelay: parseInt(newValue) });
-    }
-  }
-  setHoldTime(newValue) {
-    if (newValue) {
-      this.setState({ holdTime: parseInt(newValue) });
     }
   }
 
@@ -157,45 +174,16 @@ class SpheroNode extends Component {
                     className="react-select-container"
                     classNamePrefix="react-select"
                     placeholder="Animation"
-                    options={spheroAnimations}
+                    options={animations}
                     styles={animationStyles}
                     value={
                       this.state.animationIndex !== null
-                        ? spheroAnimations[this.state.animationIndex]
+                        ? animations[this.state.animationIndex]
                         : null
                     }
                     onChange={(e) => this.setAnimationType(e)}
                   />
                 </Col>
-                <Col xs={4}>
-                  <Form.Check
-                    type="checkbox"
-                    label="Repeat?"
-                    className="node-checkbox"
-                    style={{ marginLeft: "10px", marginTop: "10pt" }}
-                    inline="true"
-                    checked={this.state.repeatable}
-                    onChange={(e) => this.isRepeatable(e.target.checked)}
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col xs={8}>
-                  <Select
-                    className="react-select-container"
-                    classNamePrefix="react-select"
-                    placeholder="Color"
-                    options={colors}
-                    styles={colorStyles}
-                    value={
-                      this.state.colorIndex !== null
-                        ? colors[this.state.colorIndex]
-                        : null
-                    }
-                    onChange={(e) => this.setColor(e)}
-                  />
-                </Col>
-                <Col xs={4}></Col>
               </Row>
               <Row>
                 <Col xs={3} className="modal-label">
@@ -228,24 +216,7 @@ class SpheroNode extends Component {
                 </Col>
                 <Col xs={6} className="modal-label">
                   {" "}
-                  (milliseconds)
-                </Col>
-              </Row>
-              <Row>
-                <Col xs={3} className="modal-label">
-                  Hold Time
-                </Col>
-                <Col xs={3}>
-                  <Form.Control
-                    type="text"
-                    className="form-control"
-                    value={this.state.holdTime}
-                    onChange={(e) => this.setHoldTime(e.target.value)}
-                  />
-                </Col>
-                <Col xs={6} className="modal-label">
-                  {" "}
-                  (milliseconds)
+                  (milliseconds, 200 minimum)
                 </Col>
               </Row>
             </Container>
@@ -257,7 +228,7 @@ class SpheroNode extends Component {
             <Button
               variant="primary"
               onClick={this.handleSave}
-              disabled={!(this.state.animation && this.state.color)}
+              disabled={!this.state.animation}
             >
               Save Changes
             </Button>
@@ -266,8 +237,8 @@ class SpheroNode extends Component {
         <div className="node-wrapper" style={{ width: nodeWidth + "px" }}>
           <div className="removeNode">
             <Button variant="outline-danger" size="sm">
-              <FontAwesomeIcon
-                icon={faMinusCircle}
+              <FontAwesome
+                name="circle-minus"
                 onClick={() => {
                   this.handleDelete();
                 }}
@@ -283,4 +254,4 @@ class SpheroNode extends Component {
   }
 }
 
-export default SpheroNode;
+export default MultiRelayNode;

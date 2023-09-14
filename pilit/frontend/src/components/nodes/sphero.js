@@ -2,8 +2,7 @@ import React, { Component } from "react";
 import Select from "react-select";
 
 // FontAwesome
-import { faPlusCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+var FontAwesome = require("react-fontawesome");
 
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -266,8 +265,8 @@ class SpheroNode extends Component {
         <div className="node-wrapper" style={{ width: nodeWidth + "px" }}>
           <div className="removeNode">
             <Button variant="outline-danger" size="sm">
-              <FontAwesomeIcon
-                icon={faMinusCircle}
+              <FontAwesome
+                name="circle-minus"
                 onClick={() => {
                   this.handleDelete();
                 }}

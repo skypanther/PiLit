@@ -1,4 +1,15 @@
-Dev notes:
+# Dev notes:
+
+## Current status:
+
+- Base routes implemented
+- Base database structure defined
+
+### Next steps:
+
+- (Maybe) Add routes to pull a "joined" set of data representing a show (all channels, clips, etc.)
+- Update front-end to interact with API rather than LocalStorage data
+  - Add controls to handle specifying server address, add/edit shows, add/edit schedules
 
 ## dynamically create channel types
 

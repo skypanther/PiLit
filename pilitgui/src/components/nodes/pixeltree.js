@@ -13,12 +13,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-import {
-  animations,
-  animationStyles,
-  colors,
-  colorStyles,
-} from "/src/constants";
+import { animations, animationStyles, colors, colorStyles } from "constants";
 
 class PixelTree extends Component {
   constructor(props) {

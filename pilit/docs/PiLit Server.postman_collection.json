@@ -1,0 +1,697 @@
+{
+	"info": {
+		"_postman_id": "cb8f991c-266c-43f8-9127-77cf97575134",
+		"name": "PiLit Server",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8988987"
+	},
+	"item": [
+		{
+			"name": "Schedules",
+			"item": [
+				{
+					"name": "Get All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/schedules",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"schedules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get One",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/schedules/{{schedule_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"schedules",
+								"{{schedule_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Schedule",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/schedules/{{schedule_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"schedules",
+								"{{schedule_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Schedule",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Test Show 2\",\n    \"days_of_week\": \"All\",\n    \"start_time\": \"13:20:30.400\",\n    \"show_id\": {{show_id}},\n    \"is_enabled\": false,\n    \"duration\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/schedules",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"schedules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Schedule",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": {{schedule_id}},\n    \"name\": \"Edited test show\",\n    \"days_of_week\": \"All\",\n    \"start_time\": \"13:20:30.400\",\n    \"show_id\": {{show_id}},\n    \"is_enabled\": false,\n    \"duration\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/schedules/{{schedule_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"schedules",
+								"{{schedule_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Shows",
+			"item": [
+				{
+					"name": "Get All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/shows",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"shows"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get One",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/shows/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"shows",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Show",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Another New Test show\",\n    \"description\": \"Another Test show for testing and development\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/shows",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"shows"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Show",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"name\": \"This is a new title\",\n    \"description\": \"Lorem ipsum dolor floopie doo\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/shows/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"shows",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete show",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/shows/2",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"shows",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Channels",
+			"item": [
+				{
+					"name": "Get Single Channel",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/channels/{{show_id}}/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"channels",
+								"{{show_id}}",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Channels",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/channels",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"channels"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Channel",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Another test channel\",\n    \"description\": \"This is the description\",\n    \"mqtt_channel\": \"foobar\",\n    \"show_id\": {{show_id}},\n    \"channel_type_id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/channels/{{show_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"channels",
+								"{{show_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Channel",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": {{channel_id}},\n    \"name\": \"A test channel\",\n    \"description\": \"This is an updated description\",\n    \"mqtt_channel\": \"raboof\",\n    \"show_id\": {{show_id}},\n    \"channel_type_id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/channels/{{show_id}}/{{channel_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"channels",
+								"{{show_id}}",
+								"{{channel_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete channel",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/channels/{{show_id}}/{{channel_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"channels",
+								"{{show_id}}",
+								"{{channel_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Clips",
+			"item": [
+				{
+					"name": "Create Clip",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"channel_id\": {{channel_id}},\n    \"sort_index\": 1,\n    \"animation_type_id\": 1,\n    \"duration\": 10,\n    \"class_name\": \"\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/clips/{{channel_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"clips",
+								"{{channel_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/clips/{{channel_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"clips",
+								"{{channel_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get One",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/clips/{{channel_id}}/{{clip_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"clips",
+								"{{channel_id}}",
+								"{{clip_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Clip",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": {{clip_id}},\n    \"channel_id\": {{channel_id}},\n    \"sort_index\": 1,\n    \"animation_type_id\": 2,\n    \"animation_params\": null,\n    \"duration\": 50,\n    \"class_name\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/clips/{{channel_id}}/{{clip_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"clips",
+								"{{channel_id}}",
+								"{{clip_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Channels Types",
+			"item": [
+				{
+					"name": "Get Single Channel Type",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/channel_types/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"channel_types",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Channel Types",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/channel_types",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"channel_types"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Channel Type",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Test Channel Type 2\",\n    \"name_on_network\": \"must be unique\",\n    \"animation_type_id\": 1,\n    \"class_name\": \"foo\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/channel_types",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"channel_types"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Channel Type",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": {{channel_type_id}},\n    \"name\": \"This was edited\",\n    \"name_on_network\": \"flapjack\",\n    \"animation_type_id\": 1,\n    \"class_name\": \"foo\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/channel_types/{{channel_type_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"channel_types",
+								"{{channel_type_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Channel Type",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/channel_types/{{channel_type_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"channel_types",
+								"{{channel_type_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Animation Types",
+			"item": [
+				{
+					"name": "Get Single Animation Type",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/animation_types/{{animation_type_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"animation_types",
+								"{{animation_type_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Animation Types",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/animation_types",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"animation_types"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Animation Type",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"name_must_be_unique\",\n    \"animation_params\": {\n        \"required\": [{\n            \"name\": \"foo\",\n            \"data_type\": \"str\",\n            \"value\": \"bar\",\n            \"default_value\": \"bar\"\n        }],\n        \"optional\": [{\n            \"name\": \"pancake\",\n            \"data_type\": \"int\",\n            \"value\": \"0\",\n            \"default_value\": \"1\"\n        }]\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/animation_types",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"animation_types"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Animation Type",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": {{animation_type_id}},\n    \"name\": \"This was edited\",\n    \"animation_params\": {\n        \"required\": [{\n            \"name\": \"foo\",\n            \"data_type\": \"str\",\n            \"value\": \"bar\",\n            \"default_value\": \"bar\"\n        }],\n        \"optional\": [{\n            \"name\": \"pancake\",\n            \"data_type\": \"int\",\n            \"value\": \"0\",\n            \"default_value\": \"1\"\n        }]\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/animation_types/{{animation_type_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"animation_types",
+								"{{animation_type_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Animation Type",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/animation_types/{{animation_type_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"animation_types",
+								"{{animation_type_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
