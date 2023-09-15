@@ -20,7 +20,8 @@ import music_note from "../images/music_note2.png";
 import movin_max from "../images/movin_max.jpg";
 
 // FontAwesome
-var FontAwesome = require("react-fontawesome");
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleMinus, faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 
 const nodeTypes = {
   AudioChannel: music_note,
@@ -345,8 +346,8 @@ class Channel extends Component {
             <span className="duration">{this.state.totalDuration}</span>
             <div className="removeChannel">
               <Button variant="outline-danger" size="sm">
-                <FontAwesome
-                  name="circle-minus"
+                <FontAwesomeIcon
+                  icon={faCircleMinus}
                   onClick={() => {
                     // call this.removeNode()
                     alert(this.props.index);
@@ -360,10 +361,10 @@ class Channel extends Component {
           </div>
           <div className="channel-button-wrapper">
             <Button variant="light">
-              <FontAwesome
-                name="circle-plus"
+              <FontAwesomeIcon
+                icon={faCirclePlus}
                 onClick={() => {
-                  this.handleAddNode();
+                  this.handleAddChannel();
                 }}
               />
             </Button>

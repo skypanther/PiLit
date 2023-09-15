@@ -4,7 +4,7 @@
 import React, { Component } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import TimeKeeper from "react-timekeeper";
+import { TimePicker } from "react-ios-time-picker";
 
 const startTimeTitle = "Light Show Start Time";
 const stopTimeTitle = "Light Show Stop Time";
@@ -85,7 +85,7 @@ class ShowDetails extends Component {
             <Modal.Title>{this.state.modalTitle}</Modal.Title>
           </Modal.Header>
           <Modal.Body style={{ textAlign: "center" }}>
-            <TimeKeeper onChange={this.setTime} />
+            <TimePicker onChange={this.setTime} />
           </Modal.Body>
           <Modal.Footer>
             <Button variant="primary" onClick={this.hideModal}>

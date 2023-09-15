@@ -8,10 +8,11 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-import { nodeTypes } from "../constants";
-
 // FontAwesome
-var FontAwesome = require("react-fontawesome");
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
+
+import { nodeTypes } from "../constants";
 
 class EmptyShow extends Component {
   constructor(props) {
@@ -145,9 +146,8 @@ class EmptyShow extends Component {
           </div>
           <div className="emptyshow-button-wrapper">
             <Button variant="light" size="lg">
-              <FontAwesome
-                className="fa-solid"
-                name="circle-plus"
+              <FontAwesomeIcon
+                icon={faCirclePlus}
                 onClick={() => {
                   this.handleAddChannel();
                 }}

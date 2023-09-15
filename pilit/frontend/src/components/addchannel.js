@@ -10,7 +10,8 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
 // FontAwesome
-var FontAwesome = require("react-fontawesome");
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 
 import { nodeTypes } from "../constants";
 
@@ -162,8 +163,8 @@ class AddChannel extends Component {
           </div>
           <div className="addchannel-button-wrapper">
             <Button variant="light" size="lg">
-              <FontAwesome
-                name="circle-plus"
+              <FontAwesomeIcon
+                icon={faCirclePlus}
                 onClick={() => {
                   this.handleAddChannel();
                 }}

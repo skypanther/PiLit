@@ -13,7 +13,7 @@ import Col from "react-bootstrap/Col";
 
 import {
   exportShow,
-  getSavedShowList,
+  // getSavedShowList,
   getShowByName,
   saveShow,
 } from "lib/storage";
@@ -311,7 +311,10 @@ class App extends Component {
             </Row>
             <Row id="show-stage-wrapper">
               <Col xs={2}>
-                <ShowDetails show={this.state.show}></ShowDetails>
+                <ShowDetails
+                  show={this.state.show}
+                  saveShowTimes={this.saveShowTimes}
+                ></ShowDetails>
               </Col>
               <Col>
                 <Stage show={this.state.show} />
