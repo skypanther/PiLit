@@ -4,7 +4,10 @@
 import React, { Component } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import { TimePicker } from "react-ios-time-picker";
+import TimePicker from "react-time-picker";
+
+import "react-time-picker/dist/TimePicker.css";
+import "react-clock/dist/Clock.css";
 
 const startTimeTitle = "Light Show Start Time";
 const stopTimeTitle = "Light Show Stop Time";
@@ -16,6 +19,7 @@ class ShowDetails extends Component {
       modalVisible: false,
       modalTitle: startTimeTitle,
       showTitle: this.props.show.showName,
+      displayTime: null,
       startTime: {
         formatted24: "00:00",
         formatted12: "00:00 pm",
@@ -37,39 +41,24 @@ class ShowDetails extends Component {
     };
   }
 
-  showStartTimeModal = () => {
+  setStartTime = (timeValue) => {
     this.setState({
-      modalTitle: startTimeTitle,
-      modalVisible: true,
+      startTime: timeValue,
+    });
+    this.props.saveShowTimes({
+      startTime: timeValue,
+      stopTime: this.state.stopTime.formatted24,
     });
   };
-  showStopTimeModal = () => {
+
+  setStopTime = (timeValue) => {
     this.setState({
-      modalTitle: stopTimeTitle,
-      modalVisible: true,
+      stopTime: timeValue,
     });
-  };
-  hideModal = () => {
-    this.setState({ modalVisible: false });
-  };
-  setTime = (TimeOutput) => {
-    if (this.state.modalTitle === startTimeTitle) {
-      this.setState({
-        startTime: TimeOutput,
-      });
-      this.props.saveShowTimes({
-        startTime: TimeOutput.formatted24,
-        stopTime: this.state.stopTime.formatted24,
-      });
-    } else if (this.state.modalTitle === stopTimeTitle) {
-      this.setState({
-        stopTime: TimeOutput,
-      });
-      this.props.saveShowTimes({
-        startTime: this.state.startTime.formatted24,
-        stopTime: TimeOutput.formatted24,
-      });
-    }
+    this.props.saveShowTimes({
+      startTime: this.state.startTime.formatted24,
+      stopTime: timeValue,
+    });
   };
 
   render() {
@@ -84,9 +73,7 @@ class ShowDetails extends Component {
           <Modal.Header closeButton>
             <Modal.Title>{this.state.modalTitle}</Modal.Title>
           </Modal.Header>
-          <Modal.Body style={{ textAlign: "center" }}>
-            <TimePicker onChange={this.setTime} />
-          </Modal.Body>
+          <Modal.Body style={{ textAlign: "center" }}></Modal.Body>
           <Modal.Footer>
             <Button variant="primary" onClick={this.hideModal}>
               Save Changes
@@ -101,17 +88,42 @@ class ShowDetails extends Component {
               {this.props.show.showName || emptyTitle}
             </span>
           </div>
-          <div>
-            <span className="col1">Start Time:</span>
-            <span className="col2" onClick={this.showStartTimeModal}>
-              {this.props.show.startTime}
-            </span>
+          <div className="Timepicker__container">
+            <div className="Timepicker__container__content">
+              <span className="col1">Start Time:</span>
+              <TimePicker
+                amPmAriaLabel="Select AM/PM"
+                clearAriaLabel="Clear value"
+                clockAriaLabel="Toggle clock"
+                hourAriaLabel="Hour"
+                maxDetail="minute"
+                minuteAriaLabel="Minute"
+                nativeInputAriaLabel="Time"
+                onChange={this.setStartTime}
+                secondAriaLabel="Second"
+                value={this.props.show.startTime}
+              />
+            </div>
           </div>
+
           <div>
-            <span className="col1">Stop Time:</span>
-            <span className="col2" onClick={this.showStopTimeModal}>
-              {this.props.show.stopTime}
-            </span>
+            <div className="Timepicker__container">
+              <div className="Timepicker__container__content">
+                <span className="col1">Stop Time:</span>
+                <TimePicker
+                  amPmAriaLabel="Select AM/PM"
+                  clearAriaLabel="Clear value"
+                  clockAriaLabel="Toggle clock"
+                  hourAriaLabel="Hour"
+                  maxDetail="minute"
+                  minuteAriaLabel="Minute"
+                  nativeInputAriaLabel="Time"
+                  onChange={this.setStopTime}
+                  secondAriaLabel="Second"
+                  value={this.props.show.stopTime}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </>

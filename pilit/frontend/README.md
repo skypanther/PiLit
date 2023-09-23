@@ -1,70 +1,44 @@
-# Getting Started with Create React App
+# PiLit Frontend (formerly PiLit GUI)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is work-in-progress, and as such will require some web developer skills. PiLit GUI is a React app for generating light show sequences for the PiLit system.
 
-## Available Scripts
+This app relies on an apparently abandoned UI time picker component. For now, I'm using a fork from someone who submitted a PR to fix the dependency. It hasn't been merged into the upstream project yet. If this dev deletes their branch, `npm install` will fail. This is the command used to install the component; you may need to adjust.
 
-In the project directory, you can run:
+`npm install git@github.com:inshatan/react-timekeeper.git#react-18`
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Older notes, to be updated
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+You will need a working React development environment in order to use this app. (This [article](https://www.codecademy.com/articles/react-setup-i) might be as good as any to help you get a React environment set up.)
 
-### `npm test`
+Once installed, you'll need to run `npm install` to download and install the app's dependencies.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Then, run `npm start` to start a development server running this app, which you can access at `http://localhost:1234`.
 
-### `npm run build`
+## Notes
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+You can use the `-p` flag to specify a port for development. To do this, run `npm start` with an additional flag:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```
+npm start -p 3000
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+You can use `npm run build` to create a production build in the `dist` directory. It will have to be run from an HTTP/HTTPS hosted site. (You can't just open the index.html file that is generated.)
 
-### `npm run eject`
+## Adding a new node type
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+You must add the new node type in a couple of place in PiLitGUI. You might need to update the pilit_player.py script as well.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+In PiLitGUI:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- Add a new component in the src/components/nodes folder
+- Update the `nodeTypes` in the constants.js file
+- Add a new thumbnail graphic for the node type in the public/images folder
+- Update src/components/channel.js file:
+  - Import the graphic and update the nodeTypes const that references those graphics
+  - Update `createAnimationsFromImport()` and `handleAddNode()` to create the component
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+The player script might need updating to handle any specific properties for your new node type.
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Of course, you'll need to create the C++ (or other) code for your node as well. See the /nodes folder for current implementations.

@@ -149,8 +149,10 @@ class Channel extends Component {
       });
       return newNode;
     });
-    this.state.nodes = animationsToImport;
-    this.state.totalDuration = this.secondsToHms(totalDuration);
+    this.setState({
+      nodes: animationsToImport,
+      totalDuration: this.secondsToHms(totalDuration),
+    });
   };
 
   handleAddNode = () => {
@@ -279,7 +281,7 @@ class Channel extends Component {
     // nodeToAddOrUpdate - a reference to the node being added/updated so that we can update it in state
     this.props.handleAddAnimation(nodeToAddOrUpdate);
     let anIndex = this.state.animNodes.findIndex(
-      (an) => an.nodeIndex == nodeToAddOrUpdate.nodeIndex
+      (an) => an.nodeIndex === nodeToAddOrUpdate.nodeIndex
     );
     if (anIndex > -1) {
       let newAnimNodes = this.state.animNodes;
