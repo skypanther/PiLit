@@ -15,13 +15,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import Button from "react-bootstrap/Button";
 
-import leaping_arch from "./images/leaping_arch.jpg";
-import mega_tree from "./images/mega_tree.jpg";
-import pixel_tree from "./images/pixel_tree.gif";
-import spotlight from "./images/spotlight.jpg";
-import sphero_img from "./images/sphero_img.jpg";
-import music_note from "./images/music_note2.png";
-import movin_max from "./images/movin_max.jpg";
+import leaping_arch from "../../public/images/leaping_arch.jpg";
+import mega_tree from "../../public/images/mega_tree.jpg";
+import pixel_tree from "../../public/images/pixel_tree.gif";
+import spotlight from "../../public/images/spotlight.jpg";
+import sphero_img from "../../public/images/sphero_img.jpg";
+import music_note from "../../public/images/music_note2.png";
+import movin_max from "../../public/images/movin_max.jpg";
 
 const nodeTypes = {
   AudioChannel: music_note,

@@ -16,7 +16,7 @@ import {
   getSavedShowList,
   getShowByName,
   saveShow,
-} from "./images/lib/storage";
+} from "./lib/storage";
 
 import TitleBar from "./components/titlebar";
 import TimeLineBar from "./components/timelinebar";

@@ -428,13 +428,3 @@ body nav{
   background-color: var(--alloy-orange) !important;
   border-color: var(--alloy-orange) !important;
 }
-
-.react-time-picker__button:enabled {
-	cursor: pointer;
-}
-
-.react-time-picker__button {
-	background: white !important;
-  border-radius: 4px;
-  display: none;
-}

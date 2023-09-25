@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import Select from "react-select";
 
+// FontAwesome
+import { faPlusCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
@@ -8,11 +12,12 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-// FontAwesome
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleMinus } from "@fortawesome/free-solid-svg-icons";
-
-import { animations, animationStyles, colors, colorStyles } from "constants";
+import {
+  animations,
+  animationStyles,
+  colors,
+  colorStyles,
+} from "../../constants";
 
 class PixelNode extends Component {
   constructor(props) {
@@ -261,7 +266,7 @@ class PixelNode extends Component {
           <div className="removeNode">
             <Button variant="outline-danger" size="sm">
               <FontAwesomeIcon
-                icon={faCircleMinus}
+                icon={faMinusCircle}
                 onClick={() => {
                   this.handleDelete();
                 }}

@@ -17,7 +17,7 @@ import {
   animationStyles,
   colors,
   colorStyles,
-} from "constants";
+} from "../../constants";
 
 class SpheroNode extends Component {
   constructor(props) {

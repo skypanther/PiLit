@@ -5,8 +5,8 @@ import WaveSurfer from "wavesurfer.js";
 import "./Waveform.css";
 
 // FontAwesome
+import { faPlusCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleMinus } from "@fortawesome/free-solid-svg-icons";
 
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -279,7 +279,7 @@ class AudioNode extends Component {
           <div className="removeNode">
             <Button variant="outline-danger" size="sm">
               <FontAwesomeIcon
-                icon={faCircleMinus}
+                icon={faMinusCircle}
                 onClick={() => {
                   this.handleDelete();
                 }}

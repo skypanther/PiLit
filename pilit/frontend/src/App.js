@@ -11,12 +11,9 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-import {
-  exportShow,
-  // getSavedShowList,
-  getShowByName,
-  saveShow,
-} from "lib/storage";
+import { exportShow, getShowByName, saveShow } from "./lib/storage";
+
+import network from "./lib/network";
 
 import TitleBar from "./components/titlebar";
 import TimeLineBar from "./components/timelinebar";
@@ -51,12 +48,12 @@ class App extends Component {
 
   componentDidMount() {
     this.checkAndLoadSavedShows();
+    alert(network.getSavedShowList());
   }
 
   saveShowTimes = (showTimes) => {
     // passed to, and called from timlinebar.js to save the show times
     let newShow = this.state.show;
-    // console.log(this.state, newShow, showTimes);
     if (!newShow) return;
     newShow.startTime = showTimes.startTime;
     newShow.stopTime = showTimes.stopTime;
@@ -75,7 +72,7 @@ class App extends Component {
     let tmpShow = this.state.show;
     // check to see if the anim already exists in the array
     let nodeIndex = tmpShow.channels[animObj.channelIndex].animations.findIndex(
-      (item) => item.nodeIndex === subset.nodeIndex
+      (item) => item.nodeIndex == subset.nodeIndex
     );
     if (nodeIndex === -1) {
       // not found, so add it
@@ -312,10 +309,7 @@ class App extends Component {
             </Row>
             <Row id="show-stage-wrapper">
               <Col xs={2}>
-                <ShowDetails
-                  show={this.state.show}
-                  saveShowTimes={this.saveShowTimes}
-                ></ShowDetails>
+                <ShowDetails show={this.state.show}></ShowDetails>
               </Col>
               <Col>
                 <Stage show={this.state.show} />

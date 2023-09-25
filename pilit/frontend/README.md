@@ -1,14 +1,6 @@
-# PiLit Frontend (formerly PiLit GUI)
+# PiLit GUI
 
 This is work-in-progress, and as such will require some web developer skills. PiLit GUI is a React app for generating light show sequences for the PiLit system.
-
-This app relies on an apparently abandoned UI time picker component. For now, I'm using a fork from someone who submitted a PR to fix the dependency. It hasn't been merged into the upstream project yet. If this dev deletes their branch, `npm install` will fail. This is the command used to install the component; you may need to adjust.
-
-`npm install git@github.com:inshatan/react-timekeeper.git#react-18`
-
----
-
-Older notes, to be updated
 
 You will need a working React development environment in order to use this app. (This [article](https://www.codecademy.com/articles/react-setup-i) might be as good as any to help you get a React environment set up.)
 

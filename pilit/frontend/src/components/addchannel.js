@@ -10,8 +10,8 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
 // FontAwesome
+import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 
 import { nodeTypes } from "../constants";
 
@@ -66,7 +66,7 @@ class AddChannel extends Component {
       channelType: val,
     });
     let mqttNameFormControl = ReactDOM.findDOMNode(this.mqttNameRef);
-    if (val === "AudioChannel") {
+    if (val == "AudioChannel") {
       mqttNameFormControl.value = "music";
       mqttNameFormControl.disabled = true;
     } else {
@@ -164,7 +164,7 @@ class AddChannel extends Component {
           <div className="addchannel-button-wrapper">
             <Button variant="light" size="lg">
               <FontAwesomeIcon
-                icon={faCirclePlus}
+                icon={faPlusCircle}
                 onClick={() => {
                   this.handleAddChannel();
                 }}
