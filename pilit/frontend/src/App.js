@@ -26,6 +26,7 @@ import ShowDetails from "./components/showdetails";
 const makeShowTemplate = () => {
   return {
     showName: "",
+    showDescription: "",
     version: 1,
     startTime: "00:00",
     stopTime: "01:00",
@@ -40,15 +41,21 @@ class App extends Component {
       nextIndex: 0,
       channels: [],
       showName: "",
+      showId: null,
+      showDescription: "",
       show: makeShowTemplate(),
       showExport: false,
       totalDuration: 0,
+      showsList: [],
     };
   }
 
   componentDidMount() {
-    this.checkAndLoadSavedShows();
-    alert(network.getSavedShowList());
+    network.getSavedShowList().then((res) => {
+      this.setState({
+        showsList: res.data,
+      });
+    });
   }
 
   saveShowTimes = (showTimes) => {
@@ -61,6 +68,27 @@ class App extends Component {
       show: newShow,
     });
     this.handleSave();
+  };
+
+  handleAddShow = (show) => {
+    // call network to add the show, then:
+    this.setState({
+      showName: show.showName,
+      showId: show.showId,
+    });
+    console.log(show);
+  };
+
+  handleGetShow = (showId) => {
+    // call the network to get the show, then:
+    network.getShowById(showId).then((res) => {
+      this.setState({
+        showId: showId,
+        showName: res.data.name,
+        showDescription: res.data.description,
+      });
+      console.log(res.data);
+    });
   };
 
   handleAddAnimation = (animObj) => {
@@ -183,11 +211,6 @@ class App extends Component {
     return channels;
   };
 
-  checkAndLoadSavedShows = () => {
-    const showToImport = this.state.show.showName;
-    this.handleImport(getShowByName(showToImport));
-  };
-
   handleExport = () => {
     // Export the show to a JSON file to be used by the accompanying player
     // Called from titlebar.js
@@ -257,6 +280,8 @@ class App extends Component {
       nextIndex: 0,
       channels: [],
       showName: "",
+      showDescription: "",
+      showId: null,
       show: makeShowTemplate(),
       showExport: false,
       totalDuration: 0,
@@ -268,7 +293,7 @@ class App extends Component {
     var channels = null;
     var addNewChannel = null;
     var emptyShow = null;
-    if (this.state.channels.length > 0) {
+    if (this.state.showId) {
       channels = this.state.channels;
       addNewChannel = (
         <AddChannel
@@ -280,7 +305,10 @@ class App extends Component {
       emptyShow = (
         <EmptyShow
           handleAddNewChannel={this.handleAddChannel}
+          handleAddShow={this.handleAddShow}
+          handleGetShow={this.handleGetShow}
           hasAudioChannel={this.hasAudioChannel}
+          showsList={this.state.showsList}
         />
       );
     }
@@ -309,10 +337,13 @@ class App extends Component {
             </Row>
             <Row id="show-stage-wrapper">
               <Col xs={2}>
-                <ShowDetails show={this.state.show}></ShowDetails>
+                <ShowDetails
+                  showName={this.state.showName}
+                  show={this.state.show}
+                ></ShowDetails>
               </Col>
               <Col>
-                <Stage show={this.state.show} />
+                <Stage showDescription={this.state.showDescription} />
               </Col>
             </Row>
           </Container>

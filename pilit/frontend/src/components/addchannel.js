@@ -159,7 +159,7 @@ class AddChannel extends Component {
         </Modal>
         <div className="addchannel-wrapper">
           <div className="addchannel-title">
-            <p>Add Another Channel</p>
+            <p>Add A Channel</p>
           </div>
           <div className="addchannel-button-wrapper">
             <Button variant="light" size="lg">

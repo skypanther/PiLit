@@ -150,24 +150,44 @@ body nav{
     STYLES FOR A NEW/EMPTY SHOW COMPONENT
    ---------------------------------------------- */
 .emptyshow-wrapper {
-  width: 250pt;
-  height: 250pt;
+  width: 66%;
+  min-width: 250pt;
+  height: 40%;
   border: 1px solid #eee;
   border-radius: 10pt;
-  text-align: center;
-  vertical-align: middle;
-  justify-content: center;
   position: absolute;
-  left: 50%;
-  transform: translate(-50%, 50%);
+  left: 33%;
+  transform: translate(-33%, 33%);
 }
 .emptyshow-wrapper p {
   margin-top: 75pt;
 }
-.emptyshow-title {
-  color: #999;
+#emptyshow-title-row {
+  /* margin-bottom: 2em; */
+  position: fixed;
 }
+#emptyshow-col-headers-row {
+  margin-top:4em;
+}
+.emptyshow-title {
+  color: var(--gamboge);
+  font-size: 110%;
+  font-weight: bold;
+}
+#emptyshow-container{
+  padding: 2em 0em;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.showsList-col {
+  color: var(--light-gray);
+  cursor: pointer;
+}
+
 .emptyshow-button-wrapper {
+  position: absolute;
+  right: 4em;
+  bottom: 4em;
   padding-top: 20pt;
 }
 .emptyshow-button-wrapper .btn {

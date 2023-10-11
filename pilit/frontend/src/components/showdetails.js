@@ -15,7 +15,7 @@ class ShowDetails extends Component {
     this.state = {
       modalVisible: false,
       modalTitle: startTimeTitle,
-      showTitle: this.props.show.showName,
+      showTitle: this.props.showName,
       startTime: {
         formatted24: "00:00",
         formatted12: "00:00 pm",
@@ -97,9 +97,7 @@ class ShowDetails extends Component {
         <div id="show-info-wrapper">
           <div>
             <span className="col1">Show Name:</span>
-            <span className="col2">
-              {this.props.show.showName || emptyTitle}
-            </span>
+            <span className="col2">{this.props.showName || emptyTitle}</span>
           </div>
           <div>
             <span className="col1">Start Time:</span>

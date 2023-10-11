@@ -20,6 +20,7 @@ class EmptyShow extends Component {
     this.state = {
       show: false,
       showName: "",
+      showId: null,
       channelType: "",
       channelName: "",
       nodes: [],
@@ -27,7 +28,7 @@ class EmptyShow extends Component {
     this.handleShow = this.handleShow.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.handleClose = this.handleClose.bind(this);
-    this.handleAddChannel = this.handleAddChannel.bind(this);
+    this.handleAddShow = this.handleAddShow.bind(this);
     this.setShowName = this.setShowName.bind(this);
     this.setChannelType = this.setChannelType.bind(this);
     this.setChannelName = this.setChannelName.bind(this);
@@ -41,14 +42,15 @@ class EmptyShow extends Component {
   };
   handleSave = () => {
     this.setState({ show: false });
-    this.props.handleAddNewChannel({
+    this.props.handleAddShow({
       showName: this.state.showName,
+      showId: this.state.showId,
       channelType: this.state.channelType,
       channelName: this.state.channelName,
     });
   };
 
-  handleAddChannel = () => {
+  handleAddShow = () => {
     this.setState({ show: true });
   };
 
@@ -60,6 +62,28 @@ class EmptyShow extends Component {
   };
   setChannelName = (val) => {
     this.setState({ channelName: val });
+  };
+
+  generateShowsList = () => {
+    let showsList = [];
+    this.props.showsList.forEach((show) => {
+      showsList.push(
+        <Row
+          key={show.id}
+          onClick={() => {
+            this.setState({
+              showId: show.id,
+            });
+            this.props.handleGetShow(show.id);
+          }}
+        >
+          <Col className="showsList-col">{show.name}</Col>
+          <Col className="showsList-col">{show.created_at}</Col>
+          <Col className="showsList-col">{show.description}</Col>
+        </Row>
+      );
+    });
+    return showsList;
   };
 
   render() {
@@ -137,19 +161,23 @@ class EmptyShow extends Component {
           </Modal.Footer>
         </Modal>
         <div className="emptyshow-wrapper">
-          <div className="emptyshow-title">
-            <p>
-              Let&apos;s get this show on the road!
-              <br />
-              Start a new show by clicking the +
-            </p>
-          </div>
+          <Container id="emptyshow-container">
+            <Row id="emptyshow-title-row">
+              <Col className="emptyshow-title">PiLit Shows</Col>
+            </Row>
+            <Row id="emptyshow-col-headers-row">
+              <Col className="emptyshow-title">Show Name</Col>
+              <Col className="emptyshow-title">Created</Col>
+              <Col className="emptyshow-title">Description</Col>
+            </Row>
+            {this.generateShowsList()}
+          </Container>
           <div className="emptyshow-button-wrapper">
             <Button variant="light" size="lg">
               <FontAwesomeIcon
                 icon={faPlusCircle}
                 onClick={() => {
-                  this.handleAddChannel();
+                  this.handleAddShow();
                 }}
               />
             </Button>

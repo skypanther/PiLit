@@ -14,6 +14,16 @@ class Network {
       console.error(error);
     }
   }
+
+  async getShowById(id) {
+    let url = `${this.baseUrl}/shows/${id}`;
+    try {
+      const response = await axios.get(url);
+      return response;
+    } catch (error) {
+      console.error(error);
+    }
+  }
 }
 
 export default network = new Network();
