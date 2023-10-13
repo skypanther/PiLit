@@ -25,6 +25,7 @@ import ShowDetails from "./components/showdetails";
 
 const makeShowTemplate = () => {
   return {
+    id: 1,
     showName: "",
     showDescription: "",
     version: 1,
@@ -51,7 +52,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    network.getSavedShowList().then((res) => {
+    network.getShows().then((res) => {
       this.setState({
         showsList: res.data,
       });
@@ -87,7 +88,18 @@ class App extends Component {
         showName: res.data.name,
         showDescription: res.data.description,
       });
-      console.log(res.data);
+      network.getChannelsAndClipsForShow(showId).then((channelsAndClips) => {
+        let newShow = makeShowTemplate();
+        newShow.id = showId;
+        newShow.showName = res.data.name;
+        newShow.showDescription = res.data.description;
+        newShow.channels = channelsAndClips.channels;
+        this.setState({
+          channels: channelsAndClips.channels,
+          show: newShow,
+        });
+        console.log(newShow);
+      });
     });
   };
 

@@ -2,8 +2,18 @@
 
 ## Current status:
 
+API:
+
 - Base routes implemented
 - Base database structure defined
+
+Front End:
+
+- In-progress:
+  - Retrieve list of shows from API
+  - Retrieve a show blob from API and populate state
+    LEFT OFF HERE: I may need to implement the full animation type / channel type stuff on the backend. Or, I'll need to create a mapping from the types defined in the front-end to their IDs which are stored on the server.
+    From there, I'm populating the state.channels and show vars but the channels aren't being rendered. Find and fix.
 
 ### Next steps:
 
