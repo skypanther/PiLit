@@ -235,8 +235,8 @@ void setup() {
   pinMode(relay2GpioPin, OUTPUT);
 
   connectToNetwork();
-  saveCurrentAnimation(turn_on_signal);  // should be turn_off_signal
-  currentAnimation = turn_on;
+  saveCurrentAnimation(turn_off_signal);  // should be turn_off_signal
+  currentAnimation = turn_off;
   currentAnimation();
 }
 
