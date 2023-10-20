@@ -360,7 +360,6 @@ body nav{
 }
 
 .node-inner-wrapper p {
-  font-size: 10pt;
   font-size: 8pt;
   white-space: pre-wrap;
   line-height: 10pt;
@@ -427,4 +426,11 @@ body nav{
 .btn-primary {
   background-color: var(--alloy-orange) !important;
   border-color: var(--alloy-orange) !important;
+}
+
+.audio-filename, .audio-details {
+  font-size: 8pt;
+  white-space: pre-wrap;
+  line-height: 10pt;
+  margin: 3px;
 }

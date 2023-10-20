@@ -96,12 +96,16 @@ def on_message(client, userdata, message):
     """
     MQTT callback function, called when this node receives a message
 
-    The message should be in form:  clip_name, start_milliseconds, stop_milliseconds
+    The message should be in form:  clip_name, start_ms, stop_ms
     """
     global current_clip_parts, current_clip, playback
     received_clip = extract_message_parts(message)
-    clip_name, start_sec, stop_ms = received_clip
-    if clip_name.lower() == "stop" and playback is not None:
+    clip_name, start_ms, stop_ms = received_clip
+    if (
+        clip_name.lower() == "stop"
+        or clip_name.lower() == "off"
+        and playback is not None
+    ):
         playback.stop_all()
         return
     if (
@@ -113,7 +117,7 @@ def on_message(client, userdata, message):
         return
     try:
         current_clip_parts = received_clip
-        current_clip = load_clip(clip_name, start_sec, stop_ms)
+        current_clip = load_clip(clip_name, start_ms, stop_ms)
         # play_buffer plays our audio clip
         playback = simpleaudio.play_buffer(
             current_clip.raw_data,
@@ -133,7 +137,7 @@ def main():
     client.connect(mqtt_config.server_name)
     client.on_message = on_message
     client.loop_start()  # Start loop
-    sleep(2)
+    sleep(2)  # initial 2-sec sleep to make sure it's all up and running
     while True:
         # simple loop so that we don't exit
         sleep(delay)

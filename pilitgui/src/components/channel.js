@@ -8,6 +8,7 @@ import OnOffNode from "./nodes/onoffnode";
 import MultiRelayNode from "./nodes/multirelaynode";
 import SpheroNode from "./nodes/sphero";
 import MovinMax from "./nodes/movinmax";
+import AudioNode from "./nodes/audioNode";
 
 // FontAwesome
 import { faPlusCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
@@ -141,6 +142,20 @@ class Channel extends Component {
             />
           );
           break;
+        case "AudioChannel":
+          newNode = (
+            <AudioNode
+              key={"node" + anim.nodeIndex}
+              mqttName={this.props.channelName}
+              channelIndex={this.props.channelIndex}
+              type={this.props.type}
+              saveNodeConfig={this.saveNodeConfig}
+              removeNode={this.removeNode}
+              index={anim.nodeIndex}
+              initialProperties={anim}
+            />
+          );
+          break;
       }
       this.state.animNodes.push({
         nodeIndex: anim.nodeIndex,
@@ -231,6 +246,20 @@ class Channel extends Component {
       case "MovinMax":
         newNode = (
           <MovinMax
+            key={"node" + index}
+            mqttName={this.props.mqttName}
+            channelIndex={this.props.channelIndex}
+            channelName={this.props.channelName}
+            type={this.props.type}
+            saveNodeConfig={this.saveNodeConfig}
+            removeNode={this.removeNode}
+            index={index}
+          />
+        );
+        break;
+      case "AudioChannel":
+        newNode = (
+          <AudioNode
             key={"node" + index}
             mqttName={this.props.mqttName}
             channelIndex={this.props.channelIndex}

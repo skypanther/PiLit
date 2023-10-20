@@ -2,6 +2,8 @@
 
 The PiLit Player is, well, the player for your animation script. It is a Python app. I run it on a Raspberry Pi, though you should be able to run it on any computer with a Python environment (and network connectivity).
 
+Note: If you modify PiLit to add a new node type, you will need to update the `make_animation_command()` function in pilit_player.py file.
+
 ## Usage
 
 You will need an MQTT broker (server) on your network. If you use a Raspberry Pi, install the Mosquitto broker:

@@ -66,7 +66,7 @@ class AddChannel extends Component {
       channelType: val,
     });
     let mqttNameFormControl = ReactDOM.findDOMNode(this.mqttNameRef);
-    if (val == "AudioChannel") {
+    if (val == "AudioNode") {
       mqttNameFormControl.value = "music";
       mqttNameFormControl.disabled = true;
     } else {
