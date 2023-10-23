@@ -19,10 +19,10 @@ import Button from "react-bootstrap/Button";
 import leaping_arch from "url:~/public/images/leaping_arch.jpg";
 import mega_tree from "url:~/public/images/mega_tree.jpg";
 import pixel_tree from "url:~/public/images/pixel_tree.gif";
-import spotlight from "url:~/public/images/spotlight.jpg";
+import spotlight from "url:~/public/images/spotlight.png";
 import sphero_img from "url:~/public/images/sphero_img.jpg";
 import music_note from "url:~/public/images/music_note2.png";
-import movin_max from "url:~/public/images/movin_max.jpg";
+import movin_max from "url:~/public/images/movin_max.png";
 
 const nodeTypes = {
   AudioChannel: music_note,

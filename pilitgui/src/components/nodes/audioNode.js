@@ -2,31 +2,21 @@
 
 Dev notes: 
 
-Short term, I could:
-  - put the files on both player node and whatever runs this front-end
-  - add build script that runs before "parcel" in the start script
-    - it should read the contents of the public/audio_clips directory
-    - generate a file containing that list of names, one per line
-    - write that file to public/audio_files.txt
-  - this component would import the list of files
-    - read the names
-    - populate the state.animations array
-    - which would then be used to provide a select list of the clip files, which WaveSurfer could then parse
-  - it should have a sticky param for the abs file path on the player (server) node
-  - for now, it can simply play from time 0 to the end of the clip; so, hard-code those values to 0
+Short term, audio support requires these specific steps/conditions:
+  - audio files must be put on both player node and whatever runs this front-end
+  - the audio files must be in the public/audio_clips folder at _build time_
+  - you have to manually enter the duration -- ** Tip: put the duration in the file name **
 
 Long term (once the API-based server is done) I think I need to:
   - make the web server be the player node
   - rewrite the node (server side component, not this file here) as a FastAPI controller that plays the sound when a URL is hit
   - this component should have a URL param, which can be "sticky" as well as a file name param
   - the component should query the server for all of the sound files available
-  - it can then download and parse the file to get the needed details (duration, etc.) for WaveSurfer
+  - it can then download and parse the file to get the needed details (duration, etc.)
   - the component, or another, should provide an upload form to add new sounds -- actually, probably full-on CRUD for sound files
   - support clip seeking (playing from start_ms > 0 and stop_ms < duration)
 
-Future / maybe:
-  - Add component that let's you select & save clips from a longer audio file. E.g. show full waveform for whole file. Give controls for selecting and playing back sections of the file, then saving that selected portion to a standalone file. It could automatically upload them to the server, or if that's not implemented to the local public/audio_clips path.
-*/
+  */
 import React, { Component } from "react";
 import Select from "react-select";
 
@@ -118,6 +108,7 @@ class AudioNode extends Component {
     this.state = {
       show: false,
       waveformId: `waveform-${+new Date()}`,
+      animation: "",
       filename: "",
       nodeText: "",
       animations: [],
@@ -173,16 +164,18 @@ class AudioNode extends Component {
     this.props.removeNode(this.state, this.props.channelIndex);
   };
 
-  setAnimationType(fn) {
+  setAnimationType(evt) {
     this.setState({
-      animation: fn,
-      filename: fn,
+      animation: evt.value,
+      filename: evt.value,
       animationIndex: 0,
     });
   }
   setDuration(newValue) {
     if (newValue) {
-      this.setState({ duration: parseInt(newValue) });
+      this.setState({
+        duration: parseInt(newValue),
+      });
     }
   }
   setStartMs(newValue) {
@@ -220,7 +213,7 @@ class AudioNode extends Component {
     return (
       <div>
         <div className="audio-filename">{this.state.filename}</div>
-        <div className="audio-details">D: {audio.duration} sec</div>
+        <div className="audio-details">D: {this.state.duration} sec</div>
       </div>
     );
     console.log(audio);
@@ -250,7 +243,7 @@ class AudioNode extends Component {
                     styles={animationStyles}
                     id="filename"
                     value={this.state.filename}
-                    onChange={(e) => this.setAnimationType(e.value)}
+                    onChange={(e) => this.setAnimationType(e)}
                   />
                 </Col>
               </Row>

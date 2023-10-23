@@ -1,30 +1,56 @@
 /* Colors */
 
+/*
+Shades of blue
+  #0d1b2a;
+  #142133;
+  #182437;
+  #1b263b;
+  #202d43;
+  #25334a;
+  #2e4059;
+  #384d68;
+  #3d5470;
+  #415a77;
+
+
+
+  */
+
+
+
 :root {
-  --rich-black-fogra-29: #001219ff;
-  --blue-sapphire: #005f73ff;
-  --viridian-green: #0a9396ff;
-  --middle-blue-green: #94d2bdff;
-  --medium-champagne: #e9d8a6ff;
-  --medium-champagne-border: #e9d8a699;
-  --gamboge: #ee9b00ff;
-  --gamboge-border: #ee9b0099;
-  --alloy-orange: #ca6702ff;
+  --page-background: #0d1b2a; /* #001219ff; */
+  --row-bg-darkest: #182437; /* #005f73ff; */
+  --row-bg-dark: #202d43; /* #0a9396ff; */
+  --row-bg-medium: #2e4059; /* #e9d8a6ff; */
+  --row-bg-light: #415a77; /* #ee9b00ff; */
+  --btn-primary-bg: rgb(223, 112, 1);
+  --btn-primary-border: #834200;
+  --btn-secondary-bg: #395756;
+  --btn-bg-danger: #ae2012ff;
+  --btn-bg-medium: #e9d8a6;
+  --node-border-dark: #ee9b0099;
+  --node-border-light: #e9d8a6;
+  --light-gray: #eeeeee;
+  --medium-gray: 555555;
+  --node-text-light: #fff;
+  --node-text-dark: #555555;
+  --app-title: #f4f400;
+  
+  /* not used */
+  --blue-but-not-as-dark: rgba(24, 31, 50, 1);
+  --light-blue-gray: rgba(138, 147, 162, 1);
   --mahogany: #bb3e03ff;
-  --rufous: #ae2012ff;
   --ruby-red: #9b2226ff;
 
-  --blue-but-not-as-dark: rgba(24, 31, 50, 1);
-  --medium-gray: rgba(85, 85, 85, 1);
-  --light-blue-gray: rgba(138, 147, 162, 1);
-  --light-gray: rgba(238, 238, 238, 1);
 
   --title-bar-height: 35pt;
 }
 
 body,
 html {
-  background-color: var(--rich-black-fogra-29);
+  background-color: var(--page-background);
   margin: 0;
   padding: 0;
 }
@@ -42,28 +68,28 @@ body {
   position: fixed;
   height: 100vw;
   width: 100vw;
-  background-color: var(--rich-black-fogra-29);
+  background-color: var(--page-background);
 }
 
 body nav{
   position: sticky;
   top: 0;
-  background-color: var(--rich-black-fogra-29);
+  background-color: var(--page-background);
 }
 
 #contents-wrapper {
   max-height: 80vh;
   overflow-x: auto;
   overflow-y: scroll;
-  background-color: var(--rich-black-fogra-29);
+  background-color: var(--page-background);
 }
 
 #app-title-bar {
   margin: 0 0 10pt 0;
   padding: 5pt 10pt;
-  background-color: var(--rich-black-fogra-29);
+  background-color: var(--page-background);
   height: var(--title-bar-height);
-  border-bottom: 2px solid var(--rich-black-fogra-29);
+  border-bottom: 2px solid var(--page-background);
   position: fixed;
   top: 0;
   left: 0;
@@ -71,7 +97,7 @@ body nav{
 }
 
 #app-name {
-  color: var(--gamboge);
+  color: var(--app-title);
   font-size: 11pt;
 }
 
@@ -82,18 +108,28 @@ body nav{
 }
 #export-button-wrapper .btn {
   margin-left: 5pt;
+  border-color: var(--medium-gray) !important;
+  background-color: var(--btn-secondary-bg) !important;
 }
 
+#export-button-wrapper .btn-success {
+  background-color: var(--btn-bg-medium) !important;
+  color: var(--node-text-dark)
+}
+
+#export-button-wrapper .btn-danger {
+  background-color: var(--btn-bg-danger) !important;
+}
 #show-timeline-wrapper {
   margin: 0;
   min-width: 10000pt;
   left: 0;
   border-bottom: 1px solid var(--medium-gray);
-  background: var(--rich-black-fogra-29);
+  background: var(--page-background);
 }
 
 #show-stage-wrapper {
-  /* background-color: var(--rich-black-fogra-29); */
+  /* background-color: var(--page-background); */
   position: fixed;
   width: 100%;
   height: 100pt;
@@ -102,12 +138,12 @@ body nav{
 
 #show-info-wrapper {
   color: var(--light-gray);
-  background-color: var(--rich-black-fogra-29);
+  background-color: var(--page-background);
 }
 
 #stage-wrapper {
   height: 100pt;
-  background-color: var(--rich-black-fogra-29);
+  background-color: var(--page-background);
   color: var(--light-gray);
 }
 
@@ -180,7 +216,7 @@ body nav{
 .addchannel-wrapper {
   width: 200pt;
   height: 100pt;
-  border: 1px solid var(--medium-champagne);
+  border: 1px solid var(--btn-bg-medium);
   border-radius: 10pt;
   text-align: center;
   vertical-align: middle;
@@ -191,14 +227,14 @@ body nav{
   margin-top: 10pt;
 }
 .addchannel-title {
-  color: var(--medium-champagne);
+  color: var(--btn-bg-medium);
 }
 .addchannel-button-wrapper {
   padding-top: 5pt;
 }
 .addchannel-button-wrapper .btn {
   padding: 10pt;
-  background-color: var(--medium-champagne);
+  background-color: var(--btn-bg-medium);
 }
 
 /* ----------------------------------------------
@@ -210,7 +246,7 @@ body nav{
   padding: 0;
   width: 10000px;
   height: 60pt;
-  background-color: var(--rich-black-fogra-29);
+  background-color: var(--page-background);
   border-bottom: 1px solid var(--medium-gray);
 }
 .channel-wrapper {
@@ -246,7 +282,7 @@ body nav{
 .channel-image {
   height: 60pt;
   width: 60pt;
-  background-color: var(--light-gray);
+  background-color: var(--medium-gray);
   border-bottom: 1px solid var(--medium-gray);
 }
 
@@ -258,7 +294,7 @@ body nav{
   width: 99%;
   height: 12pt;
   background-color: var(--light-gray);
-  color: var(--rich-black-fogra-29);
+  color: var(--page-background);
   font-size: 8pt;
   text-align: center;
 }
@@ -268,7 +304,7 @@ body nav{
   margin: auto 1px;
 }
 .channel-button-wrapper .btn {
-  background: var(--medium-champagne) !important;
+  background: var(--btn-bg-medium) !important;
 }
 /* ----------------------------------------------
   MODAL STYLES
@@ -299,52 +335,54 @@ body nav{
   text-overflow: clip;
   position: relative;
   top: -9pt;
+  background: rgb(0,0,0);
+  background: linear-gradient(0deg, #00000020 0%, #0001 20%, #0000 40%); 
 }
 
 .PixelNode .channel-title,
 .PixelNode .node-inner-wrapper,
 .PixelNode .node-inner-wrapper p {
-  background-color: var(--medium-champagne);
-  color: var(--rich-black-fogra-29);
-  border-color: var(--rich-black-fogra-29);
+  background-color: var(--row-bg-medium);
+  color: var(--node-text-light);
+  border-color: var(--page-background);
 }
 .PixelTree .channel-title,
 .PixelTree .node-inner-wrapper,
 .PixelTree .node-inner-wrapper p {
-  background-color: var(--alloy-orange);
+  background-color: var(--row-bg-light);
   color: var(--light-gray);
-  border-color: var(--gamboge-border);
+  border-color: var(--node-border-dark);
 }
 .OnOffNode .channel-title,
 .OnOffNode .node-inner-wrapper,
 .OnOffNode .node-inner-wrapper p {
-  background-color: var(--viridian-green);
-  color: var(--medium-champagne);
-  border-color: var(--medium-champagne-border);
+  background-color: var(--row-bg-dark);
+  color: var(--node-text-light);
+  border-color: var(--row-bg-medium);
 }
 .MultiRelayNode .channel-title,
 .MultiRelayNode .node-inner-wrapper,
 .MultiRelayNode .node-inner-wrapper p {
-  background-color: var(--ruby-red);
-  color: var(--medium-champagne);
-  border-color: var(--medium-champagne-border);
+  background-color: var(--row-bg-medium);
+  color: var(--node-text-light);
+  border-color: var(--row-bg-medium);
 }
 .SpheroNode .channel-title,
 .SpheroNode .node-inner-wrapper,
 .SpheroNode .node-inner-wrapper p {
-  background-color: var(--blue-sapphire);
+  background-color: var(--row-bg-darkest);
   color: var(--light-gray);
-  border-color: var(--gamboge-border);
+  border-color: var(--node-border-dark);
 }
 .AudioChannel .channel-title,
 .AudioChannel .node-inner-wrapper,
 .AudioChannel .node-inner-wrapper p {
-  background-color: var(--blue-sapphire);
+  background-color: var(--row-bg-darkest);
   color: var(--light-gray);
-  border-color: var(--gamboge-border);
+  border-color: var(--node-border-dark);
 }
 .AudioChannel .channel-wrapper .channel-image-wrapper {
-  background-color: var(--rich-black-fogra-29);
+  background-color: var(--row-bg-darkest);
 }
 .AudioChannel .channel-wrapper .channel-image-wrapper img.channel-image {
   transform: scale(25%, 40%) translateY(-15pt);
@@ -354,9 +392,9 @@ body nav{
 .MovinMax .channel-title,
 .MovinMax .node-inner-wrapper,
 .MovinMax .node-inner-wrapper p {
-  background-color: var(--ruby-red);
-  color: var(--medium-champagne);
-  border-color: var(--medium-champagne-border);
+  background-color: var(--row-bg-medium);
+  color: var(--light-gray);
+  border-color: var(--row-bg-medium);
 }
 
 .node-inner-wrapper p {
@@ -388,7 +426,7 @@ body nav{
 .removeNode .btn, .removeChannel .btn {
   border: 0;
   padding: 2pt;
-  color: var(--gamboge);
+  color: var(--btn-bg-medium);
 }
 .removeNode .btn:hover, .removeChannel .btn:hover {
   background-color: transparent;
@@ -419,13 +457,13 @@ body nav{
 }
 
 .btn-success {
-  background-color: var(--viridian-green) !important;
-  border-color: var(--viridian-green) !important;
+  background-color: var(--row-bg-dark) !important;
+  border-color: var(--row-bg-dark) !important;
 }
 
 .btn-primary {
-  background-color: var(--alloy-orange) !important;
-  border-color: var(--alloy-orange) !important;
+  background-color: var(--btn-primary-bg) !important;
+  border-color: var(--btn-primary-border) !important;
 }
 
 .audio-filename, .audio-details {
