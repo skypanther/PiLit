@@ -17,7 +17,7 @@ mosquitto_pub -h BROKER_ADDR -i publisher -t NODE_NAME -m 'blue:solid_color'
 
 // EXCEPT YOU MIGHT NEED TO SWAP WHICH OF THESE IS COMMENTED OUT
 #define FASTLED_ESP8266_RAW_PIN_ORDER
-//#define FASTLED_ESP8266_NODEMCU_PIN_ORDER
+// #define FASTLED_ESP8266_NODEMCU_PIN_ORDER
 
 
 #include <ArduinoOTA.h>
@@ -52,22 +52,22 @@ NTPClient timeClient(ntpUDP, "pool.ntp.org", utcOffsetInSeconds,
                      NTP_UPDATE_THROTTLE_MILLLISECONDS);
 
 char valid_colors[] =
-    "white snow silver gray grey darkgray darkgrey black red crimson "
-    "darkmagenta darkred magenta maroon orange orangered darkorange yellow "
-    "gold green lime darkgreen forestgreen cyan darkcyan blue deepskyblue "
-    "royalblue skyblue darkblue navy blueviolet purple violet indigo "
-    "darkviolet";
+  "white snow silver gray grey darkgray darkgrey black red crimson "
+  "darkmagenta darkred magenta maroon orange orangered darkorange yellow "
+  "gold green lime darkgreen forestgreen cyan darkcyan blue deepskyblue "
+  "royalblue skyblue darkblue navy blueviolet purple violet indigo "
+  "darkviolet";
 char valid_functions[] =
-    "solid_color center_out edges_in slinky slinky_backwards bounce "
-    "bounce_backwards circle circle_backwards flash rainbow rainbow_stripes "
-    "stripes stripes_white ocean";
+  "solid_color center_out edges_in slinky slinky_backwards bounce "
+  "bounce_backwards circle circle_backwards flash slow_fade rainbow "
+  "rainbow_stripes stripes stripes_white ocean";
 char delim[] = ":";
 char *current_color = "black";
 std::function<void(void)> currentAnimation;
 int16_t positionRed = 0;    // Set initial start position of Red pixel
 int16_t positionWhite = 1;  // Set initial start position of White pixel
 int16_t positionBlue = 2;   // Set initial start position of Blue pixel
-int8_t delta = 1;  // Using a negative value will move pixels backwards.
+int8_t delta = 1;           // Using a negative value will move pixels backwards.
 
 int16_t slinkyPosition = 1;
 int16_t edgesCenterPosition = 0;
@@ -85,49 +85,49 @@ TBlendType currentBlending;
 // Lookup table of colors - to convert string to CRGB reference
 //
 std::unordered_map<std::string, CRGB> colorTable = {
-    {"white", CRGB::White},
-    {"snow", CRGB::Snow},
-    {"silver", CRGB::Silver},
-    {"gray", CRGB::Gray},
-    {"grey", CRGB::Grey},
-    {"darkgray", CRGB::DarkGray},
-    {"darkgrey", CRGB::DarkGrey},
-    {"black", CRGB::Black},
+  { "white", CRGB::White },
+  { "snow", CRGB::Snow },
+  { "silver", CRGB::Silver },
+  { "gray", CRGB::Gray },
+  { "grey", CRGB::Grey },
+  { "darkgray", CRGB::DarkGray },
+  { "darkgrey", CRGB::DarkGrey },
+  { "black", CRGB::Black },
 
-    {"red", CRGB::Red},
-    {"crimson", CRGB::Crimson},
-    {"darkmagenta", CRGB::DarkMagenta},
-    {"darkred", CRGB::DarkRed},
-    {"magenta", CRGB::Magenta},
-    {"maroon", CRGB::Maroon},
+  { "red", CRGB::Red },
+  { "crimson", CRGB::Crimson },
+  { "darkmagenta", CRGB::DarkMagenta },
+  { "darkred", CRGB::DarkRed },
+  { "magenta", CRGB::Magenta },
+  { "maroon", CRGB::Maroon },
 
-    {"orange", CRGB::Orange},
-    {"orangered", CRGB::OrangeRed},
-    {"darkorange", CRGB::DarkOrange},
+  { "orange", CRGB::Orange },
+  { "orangered", CRGB::OrangeRed },
+  { "darkorange", CRGB::DarkOrange },
 
-    {"yellow", CRGB::Yellow},
-    {"gold", CRGB::Gold},
+  { "yellow", CRGB::Yellow },
+  { "gold", CRGB::Gold },
 
-    {"green", CRGB::Green},
-    {"lime", CRGB::Lime},
-    {"darkgreen", CRGB::DarkGreen},
-    {"forestgreen", CRGB::ForestGreen},
+  { "green", CRGB::Green },
+  { "lime", CRGB::Lime },
+  { "darkgreen", CRGB::DarkGreen },
+  { "forestgreen", CRGB::ForestGreen },
 
-    {"cyan", CRGB::Cyan},
-    {"darkcyan", CRGB::DarkCyan},
+  { "cyan", CRGB::Cyan },
+  { "darkcyan", CRGB::DarkCyan },
 
-    {"blue", CRGB::Blue},
-    {"deepskyblue", CRGB::DeepSkyBlue},
-    {"royalblue", CRGB::RoyalBlue},
-    {"skyblue", CRGB::SkyBlue},
-    {"darkblue", CRGB::DarkBlue},
-    {"navy", CRGB::Navy},
+  { "blue", CRGB::Blue },
+  { "deepskyblue", CRGB::DeepSkyBlue },
+  { "royalblue", CRGB::RoyalBlue },
+  { "skyblue", CRGB::SkyBlue },
+  { "darkblue", CRGB::DarkBlue },
+  { "navy", CRGB::Navy },
 
-    {"blueviolet", CRGB::BlueViolet},
-    {"purple", CRGB::Purple},
-    {"violet", CRGB::Violet},
-    {"indigo", CRGB::Indigo},
-    {"darkviolet", CRGB::DarkViolet},
+  { "blueviolet", CRGB::BlueViolet },
+  { "purple", CRGB::Purple },
+  { "violet", CRGB::Violet },
+  { "indigo", CRGB::Indigo },
+  { "darkviolet", CRGB::DarkViolet },
 };
 
 void saveCurrentAnimation(char *theFunction) {
@@ -161,6 +161,9 @@ void saveCurrentAnimation(char *theFunction) {
   } else if (strcmp(theFunction, "flash") == 0) {
     currentAnimation = flash;
     // log("currentAnimate = flash");
+  } else if (strcmp(theFunction, "slow_fade") == 0) {
+    currentAnimation = slow_fade;
+    // log("currentAnimate = slow_fade");
   } else if (strcmp(theFunction, "rainbow") == 0) {
     currentAnimation = animatePalette;
     currentPalette = RainbowColors_p;
@@ -212,7 +215,9 @@ void FillLEDsFromPaletteColors(uint8_t colorIndex) {
 //
 // LED pattern functions
 //
-void solid_color() { FastLED.showColor(currentColor); }
+void solid_color() {
+  FastLED.showColor(currentColor);
+}
 
 void center_out() {
   if (!repeat && doneTheNonRepeatingAnimationOnce == true) {
@@ -222,8 +227,7 @@ void center_out() {
   doneTheNonRepeatingAnimationOnce = true;
   for (int j = 0; j < NUM_LEDS; j++) {
     for (int i = 0; i < NUM_LEDS; i++) {
-      if (i <= NUM_LEDS / 2 + edgesCenterPosition &&
-          i >= NUM_LEDS / 2 - edgesCenterPosition) {
+      if (i <= NUM_LEDS / 2 + edgesCenterPosition && i >= NUM_LEDS / 2 - edgesCenterPosition) {
         leds[i] = currentColor;
       } else {
         leds[i] = CRGB::Black;
@@ -255,8 +259,7 @@ void edges_in() {
   doneTheNonRepeatingAnimationOnce = true;
   for (int j = 0; j < NUM_LEDS; j++) {
     for (int i = 0; i < NUM_LEDS; i++) {
-      if (i <= edgesCenterPosition ||
-          i >= NUM_LEDS - (edgesCenterPosition + 1)) {
+      if (i <= edgesCenterPosition || i >= NUM_LEDS - (edgesCenterPosition + 1)) {
         leds[i] = currentColor;
       } else {
         leds[i] = CRGB::Black;
@@ -495,6 +498,30 @@ void flash() {
   }
 }
 
+void slow_fade() {
+  if (!repeat && doneTheNonRepeatingAnimationOnce == true) {
+    return;
+  }
+  doneTheNonRepeatingAnimationOnce = true;
+  static int brightness = BRIGHTNESS;
+  if (brightness <= 0) {
+    fadeAmount = -fadeAmount;
+    brightness = 0 + fadeAmount;
+  } else if (brightness >= BRIGHTNESS) {
+    fadeAmount = -fadeAmount;
+    brightness = BRIGHTNESS + fadeAmount;
+  } else {
+    brightness -= fadeAmount;
+  }
+  for (int i = 0; i < NUM_LEDS; i++) {
+    leds[i] = currentColor;
+  }
+  FastLED.setBrightness(brightness);
+  FastLED.show();
+  delay(33);
+}
+
+
 void setupColorPalette(CRGB fillColor) {
   // 'black out' all 16 palette entries...
   fill_solid(currentPalette, 16, fillColor);
@@ -661,7 +688,9 @@ void connectToNetwork() {
     // NOTE: if updating FS this would be the place to unmount FS using FS.end()
     log("Start updating " + type);
   });
-  ArduinoOTA.onEnd([]() { log("End OTA update"); });
+  ArduinoOTA.onEnd([]() {
+    log("End OTA update");
+  });
   ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
     log("Progress: " + String(progress / (total / 100)));
   });
@@ -722,7 +751,9 @@ void setup() {
 }
 
 void loop() {
-  EVERY_N_SECONDS(1) { monitorWiFi(); }
+  EVERY_N_SECONDS(1) {
+    monitorWiFi();
+  }
   mqttClient.loop();    // this is ESSENTIAL for MQTT messages to be received!
   ArduinoOTA.handle();  // check for & handle OTA update requests
 

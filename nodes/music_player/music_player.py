@@ -10,7 +10,7 @@ import simpleaudio
 from simpleaudio import PlayObject
 from pydub import AudioSegment
 
-from config import MqttConfig
+from config import base_path, MqttConfig
 from includes.file_types_map import extensions_to_mime, mime_to_extensions
 from includes.exceptions import PiLitFileNotFound, PiLitInvalidFileType
 
@@ -24,7 +24,7 @@ mqtt_config: MqttConfig = MqttConfig()
 
 def _get_abs_path(file_name: str) -> str:
     abs_path = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "media", file_name)
+        os.path.join(base_path, file_name)  # see config.py to set the base path
     )
     if not os.path.isfile(abs_path):
         raise PiLitFileNotFound("No music file by that name")

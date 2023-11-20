@@ -1,5 +1,17 @@
 My setup:
 
+Relays (on off nodes) -- Current count: 8
+=================================
+int relayGpioPin = 5;  // D1
+
+char *hostname = "relay8";
+String topics[] = {
+  "all",
+  "onoffnodes",
+  "relay8"
+};
+
+
 Spiral tree (pixel node)
 ==================================
 #define LED_TYPE APA102

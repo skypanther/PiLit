@@ -109,7 +109,7 @@ def make_animation_command(type, animation):
         # obvs, this is the audio player
         # The message should be in form:  clip_name, start_ms, stop_ms
         anim = (
-            animation["animation"] if animation["animation"] != "" else "stop"
+            animation["filename"] if animation["filename"] != "" else "stop"
         )  # off works too
         start_ms = animation["start_ms"] if animation["start_ms"] else 0
         stop_ms = (

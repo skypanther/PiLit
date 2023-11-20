@@ -381,12 +381,9 @@ body nav{
   color: var(--light-gray);
   border-color: var(--node-border-dark);
 }
-.AudioChannel .channel-wrapper .channel-image-wrapper {
-  background-color: var(--row-bg-darkest);
-}
 .AudioChannel .channel-wrapper .channel-image-wrapper img.channel-image {
+  background-color: transparent;
   transform: scale(25%, 40%) translateY(-15pt);
-  filter: invert();
   border-bottom: none;
 }
 .MovinMax .channel-title,
