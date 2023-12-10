@@ -4,3 +4,4 @@ dist/
 .vscode/
 .next/
 .DS_Store
+.parcel-cache

@@ -8,6 +8,7 @@ import OnOffNode from "./nodes/onoffnode";
 import MultiRelayNode from "./nodes/multirelaynode";
 import SpheroNode from "./nodes/sphero";
 import MovinMax from "./nodes/movinmax";
+import AudioNode from "./nodes/audioNode";
 
 // FontAwesome
 import { faPlusCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
@@ -18,13 +19,13 @@ import Button from "react-bootstrap/Button";
 import leaping_arch from "url:~/public/images/leaping_arch.jpg";
 import mega_tree from "url:~/public/images/mega_tree.jpg";
 import pixel_tree from "url:~/public/images/pixel_tree.gif";
-import spotlight from "url:~/public/images/spotlight.jpg";
+import spotlight from "url:~/public/images/spotlight.png";
 import sphero_img from "url:~/public/images/sphero_img.jpg";
-import music_note from "url:~/public/images/music_note2.png";
-import movin_max from "url:~/public/images/movin_max.jpg";
+import music_note from "url:~/public/images/music_note3.png";
+import movin_max from "url:~/public/images/movin_max.png";
 
 const nodeTypes = {
-  AudioChannel: music_note,
+  AudioNode: music_note,
   PixelNode: leaping_arch,
   OnOffNode: spotlight,
   MultiRelayNode: mega_tree,
@@ -141,6 +142,20 @@ class Channel extends Component {
             />
           );
           break;
+        case "AudioNode":
+          newNode = (
+            <AudioNode
+              key={"node" + anim.nodeIndex}
+              mqttName={this.props.channelName}
+              channelIndex={this.props.channelIndex}
+              type={this.props.type}
+              saveNodeConfig={this.saveNodeConfig}
+              removeNode={this.removeNode}
+              index={anim.nodeIndex}
+              initialProperties={anim}
+            />
+          );
+          break;
       }
       this.state.animNodes.push({
         nodeIndex: anim.nodeIndex,
@@ -231,6 +246,20 @@ class Channel extends Component {
       case "MovinMax":
         newNode = (
           <MovinMax
+            key={"node" + index}
+            mqttName={this.props.mqttName}
+            channelIndex={this.props.channelIndex}
+            channelName={this.props.channelName}
+            type={this.props.type}
+            saveNodeConfig={this.saveNodeConfig}
+            removeNode={this.removeNode}
+            index={index}
+          />
+        );
+        break;
+      case "AudioNode":
+        newNode = (
+          <AudioNode
             key={"node" + index}
             mqttName={this.props.mqttName}
             channelIndex={this.props.channelIndex}

@@ -1,7 +1,7 @@
 import chroma from "chroma-js";
 
 export const nodeTypes = [
-  { label: "Audio Channel", value: "AudioChannel" },
+  { label: "Audio Channel", value: "AudioNode" },
   { label: "RGB Pixel Node", value: "PixelNode" },
   { label: "RGB Pixel Tree", value: "PixelTree" },
   { label: "On / Off (spotlight) Node", value: "OnOffNode" },

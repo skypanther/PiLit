@@ -54,6 +54,7 @@ char *debug_signal = "debug";
 int switch_state = LOW;
 int switch_one_ID = 0;
 int switch_two_ID = 1;
+bool is_driving = false;
 
 
 void turn_off() {
@@ -61,10 +62,16 @@ void turn_off() {
   digitalWrite(motorControllerIn1, LOW);
   digitalWrite(motorControllerIn2, LOW);
   analogWrite(motorEnA, 0);
+  is_driving = false;
 }
 void turn_on() {
   saveCurrentAnimation(turn_on_signal);
-  // loop() calls maybeChangeMotorDirection() which will drive the motor
+  if (!is_driving) {
+    digitalWrite(motorControllerIn1, HIGH);
+    digitalWrite(motorControllerIn2, LOW);
+    analogWrite(motorEnA, motor_speed);
+  }
+  is_driving = true;
 }
 
 void saveCurrentAnimation(char *theFunction) {
@@ -243,8 +250,8 @@ void setup() {
   pinMode(switchTwo, INPUT_PULLUP);  // for both switches
 
   connectToNetwork();
-  saveCurrentAnimation(turn_on_signal);  // should be turn_off_signal
-  currentAnimation = turn_on;
+  saveCurrentAnimation(turn_off_signal);  // should be turn_off_signal
+  currentAnimation = turn_off;
   currentAnimation();
 
   // attach interrupts to listen for mag switch changes

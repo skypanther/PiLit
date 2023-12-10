@@ -7,10 +7,10 @@
 // Change this to match the GPIO pin you're using
 int relayGpioPin = 5;  // D1
 
-char *hostname = "relay5";  // The hostname of this device -- eg. thishost.local
+char *hostname = "relay8";  // The hostname of this device -- eg. thishost.local
 String topics[] = {         // Create an array of topics to subscribe to
     "all",                  // add as many topics as necessary
-    "onoffnodes", "relay5"};
+    "onoffnodes", "relay8"};
 char *brokerHostname = "northpole.local";  // or "192.168.1.6";  // Hostname/IP
                                            // address of the MQTT broker
 char *ssid = "SSID_WIFI_NAME";
