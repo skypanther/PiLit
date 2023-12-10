@@ -66,7 +66,7 @@ class AddChannel extends Component {
       channelType: val,
     });
     let mqttNameFormControl = ReactDOM.findDOMNode(this.mqttNameRef);
-    if (val == "AudioChannel") {
+    if (val == "AudioNode") {
       mqttNameFormControl.value = "music";
       mqttNameFormControl.disabled = true;
     } else {
@@ -159,7 +159,7 @@ class AddChannel extends Component {
         </Modal>
         <div className="addchannel-wrapper">
           <div className="addchannel-title">
-            <p>Add A Channel</p>
+            <p>Add Another Channel</p>
           </div>
           <div className="addchannel-button-wrapper">
             <Button variant="light" size="lg">
