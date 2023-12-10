@@ -1,0 +1,207 @@
+[
+    {
+        "label": "Animation",
+        "displayPosition": 0,
+        "mqttMessagePosition": 1,
+        "type": "select",
+        "values": [
+            {
+                "label": "Solid color",
+                "value": "solid_color",
+                "description": "Turn all LEDs to a single color"
+            },
+            {
+                "label": "Center-outwards",
+                "value": "center_out",
+                "description": "LEDs light up, one-by-one, from the center towards the end till the whole strip is on"
+            },
+            {
+                "label": "Edges-inward",
+                "value": "edges_in",
+                "description": "LEDs light up, one-by-one, from two ends towards the center till the whole strip is on"
+            },
+            {
+                "label": "Slinky",
+                "value": "slinky",
+                "description": "LEDs light up, one-by-one, starting from end closest to the microcontroller towards the other end till the whole strip is on"
+            },
+            {
+                "label": "Slinky backwards",
+                "value": "slinky_backwards",
+                "description": "LEDs light up, one-by-one, starting from end furthest from the microcontroller towards the other end till the whole strip is on"
+            },
+            {
+                "label": "Bounce",
+                "value": "bounce",
+                "description": "3 LEDs light up, then move as a group to the other end with the rest of the LEDs all off. Once they reach the far end, they move back towards the beginning."
+            }
+        ],
+        "default": "solid_color"
+    },
+    {
+        "label": "Repeat",
+        "displayPosition": 1,
+        "mqttMessagePosition": 2,
+        "type": "boolean",
+        "default": true
+    },
+    {
+        "label": "Color",
+        "displayPosition": 2,
+        "mqttMessagePosition": 0,
+        "type": "select",
+        "values": [
+            {
+                "label": "Black / Off",
+                "value": "black"
+            },
+            {
+                "label": "White",
+                "value": "white"
+            },
+            {
+                "label": "Snow",
+                "value": "snow"
+            },
+            {
+                "label": "Silver",
+                "value": "silver"
+            },
+            {
+                "label": "Gray",
+                "value": "gray"
+            },
+            {
+                "label": "Dark Gray",
+                "value": "darkgray"
+            },
+            {
+                "label": "Red",
+                "value": "red"
+            },
+            {
+                "label": "Crimson",
+                "value": "crimson"
+            },
+            {
+                "label": "Dark Magenta",
+                "value": "darkmagenta"
+            },
+            {
+                "label": "Dark Red",
+                "value": "darkred"
+            },
+            {
+                "label": "Magenta",
+                "value": "magenta"
+            },
+            {
+                "label": "Maroon",
+                "value": "maroon"
+            },
+            {
+                "label": "Orange",
+                "value": "orange"
+            },
+            {
+                "label": "Orange Red",
+                "value": "orangered"
+            },
+            {
+                "label": "Dark Orange",
+                "value": "darkorange"
+            },
+            {
+                "label": "Yellow",
+                "value": "yellow"
+            },
+            {
+                "label": "Gold",
+                "value": "gold"
+            },
+            {
+                "label": "Green",
+                "value": "green"
+            },
+            {
+                "label": "Lime",
+                "value": "lime"
+            },
+            {
+                "label": "Dark Green",
+                "value": "darkgreen"
+            },
+            {
+                "label": "Forest Green",
+                "value": "forestgreen"
+            },
+            {
+                "label": "Cyan",
+                "value": "cyan"
+            },
+            {
+                "label": "Dark Cyan",
+                "value": "darkcyan"
+            },
+            {
+                "label": "Blue",
+                "value": "blue"
+            },
+            {
+                "label": "Deep Sky Blue",
+                "value": "deepskyblue"
+            },
+            {
+                "label": "Royal Blue",
+                "value": "royalblue"
+            },
+            {
+                "label": "Sky Blue",
+                "value": "skyblue"
+            },
+            {
+                "label": "Dark Blue",
+                "value": "darkblue"
+            },
+            {
+                "label": "Navy",
+                "value": "navy"
+            },
+            {
+                "label": "Blue Violet",
+                "value": "blueviolet"
+            },
+            {
+                "label": "Purple",
+                "value": "purple"
+            },
+            {
+                "label": "Violet",
+                "value": "violet"
+            },
+            {
+                "label": "Indigo",
+                "value": "indigo"
+            },
+            {
+                "label": "Dark Violet",
+                "value": "darkviolet"
+            }
+        ],
+        "default": "black"
+    },
+    {
+        "label": "Loop Delay",
+        "displayPosition": 3,
+        "mqttMessagePosition": 3,
+        "type": "integer",
+        "default": 10
+    },
+    {
+        "label": "Hold Time",
+        "displayPosition": 4,
+        "mqttMessagePosition": 4,
+        "type": "integer",
+        "default": 50
+    }
+]

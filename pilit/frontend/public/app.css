@@ -1,0 +1,471 @@
+/* Colors */
+
+/*
+Shades of blue
+  #0d1b2a;
+  #142133;
+  #182437;
+  #1b263b;
+  #202d43;
+  #25334a;
+  #2e4059;
+  #384d68;
+  #3d5470;
+  #415a77;
+
+
+
+  */
+
+
+
+:root {
+  --page-background: #0d1b2a; /* #001219ff; */
+  --row-bg-darkest: #182437; /* #005f73ff; */
+  --row-bg-dark: #202d43; /* #0a9396ff; */
+  --row-bg-medium: #2e4059; /* #e9d8a6ff; */
+  --row-bg-light: #415a77; /* #ee9b00ff; */
+  --btn-primary-bg: rgb(223, 112, 1);
+  --btn-primary-border: #834200;
+  --btn-secondary-bg: #395756;
+  --btn-bg-danger: #ae2012ff;
+  --btn-bg-medium: #e9d8a6;
+  --node-border-dark: #ee9b0099;
+  --node-border-light: #e9d8a6;
+  --light-gray: #eeeeee;
+  --medium-gray: 555555;
+  --node-text-light: #fff;
+  --node-text-dark: #555555;
+  --app-title: #ee9b00; /* #f4f400; */
+  
+  /* not used */
+  --blue-but-not-as-dark: rgba(24, 31, 50, 1);
+  --light-blue-gray: rgba(138, 147, 162, 1);
+  --mahogany: #bb3e03ff;
+  --ruby-red: #9b2226ff;
+
+
+  --title-bar-height: 35pt;
+}
+
+body,
+html {
+  background-color: var(--page-background);
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
+  box-sizing: border-box;
+}
+.App {
+  position: fixed;
+  height: 100vw;
+  width: 100vw;
+  background-color: var(--page-background);
+}
+
+body nav{
+  position: sticky;
+  top: 0;
+  background-color: var(--page-background);
+}
+
+#contents-wrapper {
+  max-height: 80vh;
+  overflow-x: auto;
+  overflow-y: scroll;
+  background-color: var(--page-background);
+}
+
+#app-title-bar {
+  margin: 0 0 10pt 0;
+  padding: 5pt 10pt;
+  background-color: var(--page-background);
+  height: var(--title-bar-height);
+  border-bottom: 2px solid var(--page-background);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+#app-name {
+  color: var(--app-title);
+  font-size: 11pt;
+}
+
+#export-button-wrapper {
+  position: absolute;
+  right: 5pt;
+  top: 3pt;
+}
+#export-button-wrapper .btn {
+  margin-left: 5pt;
+  border-color: var(--medium-gray) !important;
+  background-color: var(--btn-secondary-bg) !important;
+}
+
+#export-button-wrapper .btn-success {
+  background-color: var(--btn-bg-medium) !important;
+  color: var(--node-text-dark)
+}
+
+#export-button-wrapper .btn-danger {
+  background-color: var(--btn-bg-danger) !important;
+}
+#show-timeline-wrapper {
+  margin: 0;
+  min-width: 10000pt;
+  left: 0;
+  border-bottom: 1px solid var(--medium-gray);
+  background: var(--page-background);
+}
+
+#show-stage-wrapper {
+  /* background-color: var(--page-background); */
+  position: fixed;
+  width: 100%;
+  height: 100pt;
+
+}
+
+#show-info-wrapper {
+  color: var(--light-gray);
+  background-color: var(--page-background);
+}
+
+#stage-wrapper {
+  height: 100pt;
+  background-color: var(--page-background);
+  color: var(--light-gray);
+}
+
+.col1 {
+  width: 65pt;
+  display: inline-block;
+  font-size: 10pt;
+  padding-left: 3pt;
+}
+.col2 {
+  /* width: 125pt; */
+  /* display: inline-block; */
+  font-size: 10pt;
+}
+
+/* .timelinebar {
+  background-color: beige;
+} */
+.timelinebar-left-col {
+  text-align: left;
+  padding-left: 5pt;
+  padding-top: 4pt;
+  width: 90pt;
+  min-width: 90pt;
+  float: left;
+  font-size: 8pt;
+}
+.timelinebar-right-col {
+  /* width: 100%; */
+  height: 10px;
+  margin-left: 90pt;
+  padding: 0;
+  background-image: url(images/lines_light.svg);
+  background-repeat: repeat-x;
+  background-position: bottom left;
+  /* background-size: initial; */
+}
+
+/* ----------------------------------------------
+    STYLES FOR A NEW/EMPTY SHOW COMPONENT
+   ---------------------------------------------- */
+.emptyshow-wrapper {
+  width: 250pt;
+  height: 250pt;
+  border: 1px solid #eee;
+  border-radius: 10pt;
+  text-align: center;
+  vertical-align: middle;
+  justify-content: center;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 50%);
+}
+.emptyshow-wrapper p {
+  margin-top: 75pt;
+}
+.emptyshow-title {
+  color: #999;
+}
+.emptyshow-button-wrapper {
+  padding-top: 20pt;
+}
+.emptyshow-button-wrapper .btn {
+  padding: 20pt;
+}
+
+/* ----------------------------------------------
+    STYLES FOR THE ADD NEW CHANNEL COMPONENT
+   ---------------------------------------------- */
+.addchannel-wrapper {
+  width: 200pt;
+  height: 100pt;
+  border: 1px solid var(--btn-bg-medium);
+  border-radius: 10pt;
+  text-align: center;
+  vertical-align: middle;
+  justify-content: center;
+  margin: 10pt auto;
+}
+.addchannel-wrapper p {
+  margin-top: 10pt;
+}
+.addchannel-title {
+  color: var(--btn-bg-medium);
+}
+.addchannel-button-wrapper {
+  padding-top: 5pt;
+}
+.addchannel-button-wrapper .btn {
+  padding: 10pt;
+  background-color: var(--btn-bg-medium);
+}
+
+/* ----------------------------------------------
+    ROW / CHANNEL STYLES
+   ---------------------------------------------- */
+
+.channel-outer-wrapper {
+  margin: 0;
+  padding: 0;
+  width: 10000px;
+  height: 60pt;
+  background-color: var(--page-background);
+  border-bottom: 1px solid var(--medium-gray);
+}
+.channel-wrapper {
+  margin: 0;
+  padding: 0;
+  min-width: 100%;
+  height: 60pt;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.channel-inner-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 0;
+}
+
+.channel-title {
+  width: 30pt;
+  height: 60pt;
+  text-align: center;
+  border-bottom: 1px solid var(--medium-gray) !important;
+}
+.channel-title-text {
+  transform: rotate(-90deg) translateX(-60pt);
+  transform-origin: top left;
+  height: 30pt;
+  width: 60pt;
+  padding: 6pt 0;
+  font-size: 9pt;
+}
+
+.channel-image {
+  height: 60pt;
+  width: 60pt;
+  background-color: var(--medium-gray);
+  border-bottom: 1px solid var(--medium-gray);
+}
+
+.duration {
+  display: block;
+  position: relative;
+  bottom: 13pt;
+  left: 0;
+  width: 99%;
+  height: 12pt;
+  background-color: var(--light-gray);
+  color: var(--page-background);
+  font-size: 8pt;
+  text-align: center;
+}
+
+.channel-button-wrapper {
+  height: 30pt;
+  margin: auto 1px;
+}
+.channel-button-wrapper .btn {
+  background: var(--btn-bg-medium) !important;
+}
+/* ----------------------------------------------
+  MODAL STYLES
+---------------------------------------------- */
+.channel {
+  margin-top: 4pt;
+}
+.modal-label {
+  padding-top: 6pt;
+  font-size: 10pt;
+}
+/* ----------------------------------------------
+    NODE STYLES
+   ---------------------------------------------- */
+.node-wrapper {
+  padding: 0;
+  width: 100pt;
+  background-color: var(--light-gray);
+  border-bottom: 1px solid var(--medium-gray);
+  height: 60pt;
+}
+.node-inner-wrapper {
+  border-width: 1px;
+  border-style: solid;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  text-overflow: clip;
+  position: relative;
+  top: -9pt;
+  background: rgb(0,0,0);
+  background: linear-gradient(0deg, #00000020 0%, #0001 20%, #0000 40%); 
+}
+
+.PixelNode .channel-title,
+.PixelNode .node-inner-wrapper,
+.PixelNode .node-inner-wrapper p {
+  background-color: var(--row-bg-medium);
+  color: var(--node-text-light);
+  border-color: var(--page-background);
+}
+.PixelTree .channel-title,
+.PixelTree .node-inner-wrapper,
+.PixelTree .node-inner-wrapper p {
+  background-color: var(--row-bg-light);
+  color: var(--light-gray);
+  border-color: var(--node-border-dark);
+}
+.OnOffNode .channel-title,
+.OnOffNode .node-inner-wrapper,
+.OnOffNode .node-inner-wrapper p {
+  background-color: var(--row-bg-dark);
+  color: var(--node-text-light);
+  border-color: var(--row-bg-medium);
+}
+.MultiRelayNode .channel-title,
+.MultiRelayNode .node-inner-wrapper,
+.MultiRelayNode .node-inner-wrapper p {
+  background-color: var(--row-bg-medium);
+  color: var(--node-text-light);
+  border-color: var(--row-bg-medium);
+}
+.SpheroNode .channel-title,
+.SpheroNode .node-inner-wrapper,
+.SpheroNode .node-inner-wrapper p {
+  background-color: var(--row-bg-darkest);
+  color: var(--light-gray);
+  border-color: var(--node-border-dark);
+}
+.AudioNode .channel-title,
+.AudioNode .node-inner-wrapper,
+.AudioNode .node-inner-wrapper p {
+  background-color: var(--row-bg-darkest);
+  color: var(--light-gray);
+  border-color: var(--node-border-dark);
+}
+.AudioNode .channel-wrapper .channel-image-wrapper img.channel-image {
+  background-color: transparent;
+  transform: scale(25%, 40%) translateY(-15pt);
+  border-bottom: none;
+}
+.MovinMax .channel-title,
+.MovinMax .node-inner-wrapper,
+.MovinMax .node-inner-wrapper p {
+  background-color: var(--row-bg-medium);
+  color: var(--light-gray);
+  border-color: var(--row-bg-medium);
+}
+
+.node-inner-wrapper p {
+  font-size: 8pt;
+  white-space: pre-wrap;
+  line-height: 10pt;
+  margin: 3px;
+}
+
+.removeChannel {
+  position: relative;
+  margin-right: 8pt;
+  /* margin-top: 1pt; */
+  top: -70pt;
+  height: 8pt;
+  width: 8pt;
+  float: right;
+  z-index: 2;
+}
+.removeNode {
+  position: relative;
+  margin-right: 7pt;
+  margin-top: 1pt;
+  height: 8pt;
+  width: 8pt;
+  float: right;
+  z-index: 2;
+}
+.removeNode .btn, .removeChannel .btn {
+  border: 0;
+  padding: 2pt;
+  color: var(--btn-bg-medium);
+}
+.removeNode .btn:hover, .removeChannel .btn:hover {
+  background-color: transparent;
+  color: red;
+}
+
+.react-select-container {
+  white-space: nowrap;
+  vertical-align: top;
+}
+.react-select__control {
+  padding: 0;
+  margin: 0;
+}
+.react-select__indicators {
+  padding: 0;
+  margin: 0;
+}
+
+.node-checkbox {
+  font-size: 8pt;
+  display: inline-block;
+}
+
+.form-control {
+  font-size: 8pt;
+  display: inline-block;
+}
+
+.btn-success {
+  background-color: var(--row-bg-dark) !important;
+  border-color: var(--row-bg-dark) !important;
+}
+
+.btn-primary {
+  background-color: var(--btn-primary-bg) !important;
+  border-color: var(--btn-primary-border) !important;
+}
+
+.audio-filename, .audio-details {
+  font-size: 8pt;
+  white-space: pre-wrap;
+  line-height: 10pt;
+  margin: 3px;
+}
