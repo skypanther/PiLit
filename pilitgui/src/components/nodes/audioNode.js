@@ -1,8 +1,24 @@
+/*
+
+Dev notes: 
+
+Short term, audio support requires these specific steps/conditions:
+  - audio files must be put on both player node and whatever runs this front-end
+  - the audio files must be in the public/audio_clips folder at _build time_
+  - you have to manually enter the duration -- ** Tip: put the duration in the file name **
+
+Long term (once the API-based server is done) I think I need to:
+  - make the web server be the player node
+  - rewrite the node (server side component, not this file here) as a FastAPI controller that plays the sound when a URL is hit
+  - this component should have a URL param, which can be "sticky" as well as a file name param
+  - the component should query the server for all of the sound files available
+  - it can then download and parse the file to get the needed details (duration, etc.)
+  - the component, or another, should provide an upload form to add new sounds -- actually, probably full-on CRUD for sound files
+  - support clip seeking (playing from start_ms > 0 and stop_ms < duration)
+
+  */
 import React, { Component } from "react";
 import Select from "react-select";
-
-import WaveSurfer from "wavesurfer.js";
-import "./Waveform.css";
 
 // FontAwesome
 import { faPlusCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
@@ -14,6 +30,13 @@ import Modal from "react-bootstrap/Modal";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+
+const audioCtx = new AudioContext();
+let buffer;
+
+import { clips } from "../../../public/clips";
+
+const { useRef, useState, useEffect, useCallback } = React;
 
 const dot = (color = "#ccc") => ({
   alignItems: "center",
@@ -77,16 +100,21 @@ const animationStyles = {
   option: (styles) => ({ ...styles, fontSize: "8pt", padding: "4pt" }),
 };
 
+const animations = []; // to be populated with contents of public/clips.js
+
 class AudioNode extends Component {
   constructor(props) {
     super(props);
     this.state = {
       show: false,
       waveformId: `waveform-${+new Date()}`,
+      animation: "",
       filename: "",
       nodeText: "",
+      animations: [],
       animationIndex: this.props.index,
-      duration: 10,
+      startMs: 0,
+      duration: 0,
       mqttName: this.props.mqttName,
       type: this.props.type,
       nodeIndex: this.props.index,
@@ -136,84 +164,63 @@ class AudioNode extends Component {
     this.props.removeNode(this.state, this.props.channelIndex);
   };
 
-  setAnimationType(animObj) {
-    let animationIndex = animations.findIndex(
-      (item) => item.value === animObj.value
-    );
+  setAnimationType(evt) {
     this.setState({
-      animation: animObj.value,
-      animationIndex: animationIndex,
+      animation: evt.value,
+      filename: evt.value,
+      animationIndex: 0,
     });
   }
   setDuration(newValue) {
     if (newValue) {
-      this.setState({ duration: parseInt(newValue) });
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const { props, waveSurfer } = this;
-
-    if (!waveSurfer) {
-      return;
-    }
-
-    if (props.playbackSpeed !== nextProps.playbackSpeed) {
-      console.log(nextProps.playbackSpeed);
-      waveSurfer.setPlaybackRate(nextProps.playbackSpeed / 100);
-    }
-
-    if (props.renderData !== nextProps.renderData) {
-      this.performWithoutSeek(() => {
-        if (nextProps.renderData) {
-          const { currentFrame, sequence } = nextProps;
-          waveSurfer.seekTo(currentFrame / sequence.frameCount);
-          waveSurfer.play();
-        } else {
-          waveSurfer.stop();
-        }
+      this.setState({
+        duration: parseInt(newValue),
       });
     }
   }
-
+  setStartMs(newValue) {
+    if (newValue) {
+      this.setState({ startMs: parseInt(newValue) });
+    }
+  }
   componentDidMount() {
-    const { sequence } = this.props;
-    if (sequence) {
-      const waveSurfer = new WaveSurfer(this.getWaveSurferProperties());
-      this.waveSurfer = waveSurfer;
-
-      waveSurfer.init();
-
-      const url = `${restConfig.ROOT_URL}/sequences/${sequence.id}/songAudio`;
-      waveSurfer.load(url);
-      waveSurfer.on("audioprocess", this.publishRenderedFrame);
-      waveSurfer.on("seek", this.selectFrame);
+    if (animations.length == 0) {
+      clips.forEach((clip) =>
+        animations.push({
+          label: clip,
+          value: clip,
+          description: "Play the specified sound file",
+        })
+      );
     }
   }
 
-  componentWillUnmount() {
-    this.waveSurfer.destroy();
-  }
+  getAudioDetailsContainer() {
+    if (!this.state.filename) {
+      return null;
+    }
 
-  performWithoutSeek = (callback) => {
-    this.waveSurfer.un("seek");
-    callback();
-    this.waveSurfer.on("seek", this.selectFrame);
-  };
-
-  getWaveSurferProperties() {
-    return {
-      container: "#" + this.state.waveformId,
-      cursorWidth: 0,
-      height: 50,
-      waveColor: "#fff",
-      progressColor: "#fff",
-    };
+    var audio = new Audio();
+    // audio.onloadedmetadata = function () {
+    //   console.log(
+    //     "Loaded metadata for %s, duration=%s",
+    //     soundUrl,
+    //     audio.duration
+    //   );
+    //   audio = null;
+    // };
+    audio.src = `../../../audio_clips/${this.state.filename}`;
+    return (
+      <div>
+        <div className="audio-filename">{this.state.filename}</div>
+        <div className="audio-details">D: {this.state.duration} sec</div>
+      </div>
+    );
+    console.log(audio);
   }
 
   render() {
     let nodeWidth = Math.max(this.state.duration * 10, 100);
-
     return (
       <>
         <Modal
@@ -222,7 +229,7 @@ class AudioNode extends Component {
           animation={true}
         >
           <Modal.Header closeButton>
-            <Modal.Title>Pixel Animation Settings</Modal.Title>
+            <Modal.Title>Audio Animation Settings</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Container>
@@ -231,33 +238,49 @@ class AudioNode extends Component {
                   <Select
                     className="react-select-container"
                     classNamePrefix="react-select"
-                    placeholder="Animation"
+                    placeholder="Sound file"
                     options={animations}
                     styles={animationStyles}
-                    value={
-                      this.state.animationIndex !== null
-                        ? animations[this.state.animationIndex]
-                        : null
-                    }
+                    id="filename"
+                    value={this.state.filename}
                     onChange={(e) => this.setAnimationType(e)}
                   />
                 </Col>
               </Row>
               <Row>
                 <Col xs={3} className="modal-label">
-                  Duration
+                  Start ms
                 </Col>
                 <Col xs={3}>
                   <Form.Control
                     type="text"
                     className="form-control"
+                    id="startms"
+                    value={this.state.startMs || 0}
+                    onChange={(e) => this.setStartMs(e.target.value)}
+                  />
+                </Col>
+                <Col xs={6} className="modal-label">
+                  {" "}
+                  (milliseconds)
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={3} className="modal-label">
+                  Stop ms
+                </Col>
+                <Col xs={3}>
+                  <Form.Control
+                    type="text"
+                    className="form-control"
+                    id="stopms"
                     value={this.state.duration}
                     onChange={(e) => this.setDuration(e.target.value)}
                   />
                 </Col>
                 <Col xs={6} className="modal-label">
                   {" "}
-                  (seconds)
+                  (0 = to end of clip)
                 </Col>
               </Row>
             </Container>
@@ -287,13 +310,13 @@ class AudioNode extends Component {
             </Button>
           </div>
           <div className="node-inner-wrapper" onClick={this.handleShow}>
-            <div className="WaveformContainer">
-              <div
-                id={this.state.waveformId}
-                className="Waveform"
-                style={{ nodeWidth }}
-              />
-            </div>
+            {this.state.filename ? (
+              <div className="audio-container">
+                {this.getAudioDetailsContainer()}
+              </div>
+            ) : (
+              ""
+            )}
           </div>
         </div>
       </>
@@ -301,4 +324,4 @@ class AudioNode extends Component {
   }
 }
 
-export default OnOffNode;
+export default AudioNode;

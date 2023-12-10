@@ -6,7 +6,9 @@
 #define motorEnA 14           // D5
 #define motorControllerIn1 4  // D2
 #define motorControllerIn2 5  // D1
-#define toggleGpioPin 13      // D7
+#define switchOne 13          // D7
+#define switchTwo 12          // D6
+
 
 // ------> CONFIGURE THESE VARIABLES TO MATCH YOUR SETUP  <------
 // The hostname of this device -- eg. thishost.local
@@ -16,9 +18,9 @@ String topics[] = {  // Create an array of topics to subscribe to
   "motorinmax"
 };
 // Hostname or IP of the MQTT broker (aka, server)
-char *brokerHostname = "northpole.local";
+char *brokerHostname = "192.168.0.100";
 
-char *ssid = "SSID_WIFI_NAME";
+char *ssid = "NETWORK_NAME";
 char *password = "PASSWORD";
 char *ota_password = "PASSWORD";  // password for OTA updates
 
@@ -32,3 +34,7 @@ int utcOffsetInHours = -5;
 uint16_t loopDelay = 200;
 // Repeat the animations. If false, they complete once then stop
 bool repeat = true;
+
+// switch-related config values
+uint16_t debounceWaitTime = 200;       // ms
+uint16_t ignoreSameSwitchTime = 2000;  // ms  // not yet implemented

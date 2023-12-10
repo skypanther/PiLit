@@ -1,15 +1,18 @@
 """
 PiLit Player - the player for PiLit light show sequences
 
-(c) 2019 Tim Poulsen
+(c) 2019-2023 Tim Poulsen
 MIT License
 
 Usage:
 
-    Edit this file to specify the name of your mqtt_server (see line below)
-    pip install paho-mqtt
-    python3 pilit_player.py <show_file_name.json>
+    Edit the config.py file to specify the name of your mqtt_server
+    See the readme for MQTT broker installation info
+    Run with:
+        python3 pilit_player.py <path/to/show_file_name.json>
 
+Note: If you modify PiLit to add a new node type, you will need to
+    update the `make_animation_command()` function in this file.
 """
 
 import json
@@ -19,9 +22,11 @@ import sys
 from datetime import datetime, timedelta
 from time import sleep
 
-mqtt_server = "northpole.local"  # my server is named northpole, change this
-show_loop_interval = 0.5  # seconds
-logging_enabled = True
+# import config
+from config import log, mqtt_server, show_loop_interval
+
+
+# local vars
 times_shutoff_cmd_sent = 0
 
 
@@ -43,10 +48,12 @@ def load_file(show_path):
     show_file = ""
     with open(show_path) as sp:
         show_file = json.load(sp)
-    validate_file(show_file)
+    if validate_file(show_file=show_file):
+        show = preprocess_file(show_file=show_file)
+        run_show(show)
 
 
-def validate_file(show_file):
+def validate_file(show_file) -> bool:
     if (
         show_file
         and show_file != ""
@@ -56,10 +63,9 @@ def validate_file(show_file):
         and show_file["channels"]
     ):
         # show is valid
-        preprocess_file(show_file)
-        return
-    print("Show file is not a valid PiLit file.")
-    exit()
+        return True
+    log("Show file is not a valid PiLit file.")
+    raise Exception("Not a valid PiLit show file")
 
 
 def preprocess_file(show_file):
@@ -82,11 +88,12 @@ def preprocess_file(show_file):
             )
         channels.append(channel_commands)
     show = {"start_time": start_time, "end_time": end_time, "channels": channels}
-    run_show(show)
+    return show
 
 
 def make_animation_command(type, animation):
     if type in ["PixelNode", "PixelTree", "SpheroNode"]:
+        # These are the RGB LED type nodes
         anim = animation["animation"] if animation["animation"] != "" else "off"
         color = animation["color"] if animation["color"] != "" else "black"
         loopDelay = animation["loopDelay"] if animation["loopDelay"] != "" else "10"
@@ -94,11 +101,25 @@ def make_animation_command(type, animation):
         repeatable = animation["repeatable"] if animation["repeatable"] else True
         return f"{color}:{anim}:{loopDelay}:{holdTime}:{repeatable}"
     elif type == "MultiRelayNode":
+        # this is my megatree node, basically a 16-relay controller
         anim = animation["animation"] if animation["animation"] != "" else "off"
         loopDelay = animation["loopDelay"] if animation["loopDelay"] != "" else "10"
         return f"{anim}:{loopDelay}"
+    elif type == "AudioNode":
+        # obvs, this is the audio player
+        # The message should be in form:  clip_name, start_ms, stop_ms
+        anim = (
+            animation["filename"] if animation["filename"] != "" else "stop"
+        )  # off works too
+        start_ms = animation["start_ms"] if animation["start_ms"] else 0
+        stop_ms = (
+            animation["stop_ms"] if animation["stop_ms"] else 0
+        )  # 0 means to end of file
+        return f"{anim}:{start_ms}:{stop_ms}"
     else:
-        # elif type in ["OnOffNode", "MovinMax", "MotorinMax"]:
+        # These are the on/off type nodes - "OnOffNode", "MovinMax", "MotorinMax"
+        # and also the "Santa Drop In" node, which is on/off and automatically does
+        # the alternating  between Drop and In being lit.
         anim = animation["animation"] if animation["animation"] != "" else "off"
         return f"{anim}"
 
@@ -127,11 +148,6 @@ def get_show_times_for_today(start_time, stop_time):
             hour=stop_time[0], minute=stop_time[1], second=59, microsecond=999999
         )
     return st, et
-
-
-def log(msg):
-    if logging_enabled:
-        print(msg)
 
 
 def send_command(topic, payload, sum_of_durations, this_duration):

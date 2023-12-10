@@ -1,14 +1,19 @@
 # Nodes
 
-Nodes are the lighting controllers. Currently, PiLit supplies 3 types of nodes:
+Nodes are the lighting controllers. Currently, PiLit supplies these types of nodes:
 
 - pixel_node -- (Arduino / ESP8266) used to control "neopixel" strips
 - onoff_node -- (Arduino / ESP8266) used to control simple on/off relays
 - multi_relay -- (Python / Raspberry Pi) used to control multi-relay boards
 - sphero -- (Arduino / ESP8266) used to control "neopixel" strips arranged in a globe of N spokes
 - drop_in_node -- (Arduino / ESP8266) 4-channel on/off relays w/some ganged (used for my "Santa Drop In" sign)
+- motor control node -- used for my "movin' Max" decoration where a motor drives Max back and forth.
 
 In general, for all types of nodes, you will need to customize a few variables in each script before loading it onto your microcontroller/Pi.
+
+Generally, configuration is all done in the config.h file. You probably won't need to touch the ino files unless you're customizing functionality.
+
+I've found that some GPIO pins work better than others. These are the default values you'll find in the config.h files. When wiring up your nodes, you should try to stick to those GPIO ports (though if you use others, make sure to update the config.h file).
 
 ## pixel_node
 
@@ -16,7 +21,7 @@ This node is to control "neopixel" strips. In my setup, I use a generic off-bran
 
 ### Configuration and installation
 
-Open pixel_node.ino with the Arduino editor and customize the following values to match your setup:
+Open config.h with the Arduino editor and customize the following values to match your setup:
 
 ```c++
 // CHANGE THESE TO MATCH THE PIXEL TYPE AND SPECIFICS OF YOUR SETUP
@@ -88,7 +93,7 @@ Using `off` is the same as setting all LEDs to black and running the solid_color
 - circle_backwards -- Same as circle, starting from the opposite end
 - flash -- Whole strip lights up at full brightness, then fades to black
 - rainbow -- A moving, blended (continuous) rainbow pattern fills the entire strip (_see note_)
-- rainbow_stripes -- Like rainbow, but with discrete stripes of rainbow colors separated by black (_see note_)
+- rainbow*stripes -- Like rainbow, but with discrete stripes of rainbow colors separated by black (\_see note*)
 - ocean -- A moving, blended (continuous) pattern of blues, greens, and white fills the entire strip (_see note_)
 - stripes -- Multiple discrete stripes of a single color travel down the strip with black between
 - stripes_white -- Multiple discrete stripes of a single color travel down the strip with white between
@@ -125,7 +130,7 @@ This is a modified version of the pixel_node script. It has all the same feature
 
 This node is to control simple on/off relays. In my setup, I use these nodes to control spot lights, traditional holiday light strings, and other devices to be simply turned on or off.
 
-Open onoff_node.ino with the Arduino editor and customize the following values to match your setup:
+Open config.h with the Arduino editor and customize the following values to match your setup:
 
 ```c++
 #define gpioPin 5                           // Change this to match the GPIO pin you're using

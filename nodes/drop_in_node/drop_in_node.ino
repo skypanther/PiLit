@@ -1,120 +1,98 @@
 /*
-   ESP8266 code to control one-channel relays (on/off switches)
-    - Network connection code
-    - MQTT subscriber code
+   ESP8266/ESP32 code to control a "Santa Drop In" sign in which
+   a pair of relays is used to turn the words Drop and In on and
+   off, alternating.
+
+    - Configuration is done in config.h
+  License: MIT
+
+
+Test with:
+mosquitto_pub -h BROKER_ADDR -i publisher -t NODE_NAME -m 'on'
+
 */
 
-#include <string>
+// XXXXXXXXXXXXXXXXXXXX
+// GENERALLY, ALL CONFIGURATION CAN BE DONE IN THE config.h FILE
+// XXXXXXXXXXXXXXXXXXXX
 
-#include <ESP8266mDNS.h>
+#include <ArduinoOTA.h>
 #include <ESP8266WiFi.h>
-#include <ESP8266WiFiMulti.h>
+#include <ESP8266mDNS.h>
+#include <FastLED.h>
+#include <NTPClient.h>
+#include <PubSubClient.h>
 #include <WiFiClient.h>
 #include <WiFiClientSecure.h>
 #include <WiFiServer.h>
 #include <WiFiServerSecure.h>
 #include <WiFiUdp.h>
-#include <PubSubClient.h>
+
+#include <string>
+#include <unordered_map>
+
+#include "config.h"
 #include "utils.h"
+
 #define MAX_MESSAGE_LENGTH 128
 
-#define relay1GpioPin 1                      // Change this to match the GPIO pin you're using
-#define relay2GpioPin 3                      // Change this to match the GPIO pin you're using
-#define relay3GpioPin 4                      // Change this to match the GPIO pin you're using
-#define relay4GpioPin 5                      // Change this to match the GPIO pin you're using
+WiFiClient wifiClient;
+PubSubClient mqttClient(wifiClient);
+boolean connectioWasAlive = true;
+int utcOffsetInSeconds = utcOffsetInHours * 60 * 60;
 
-
-// ------> CONFIGURE THESE VARIABLES TO MATCH YOUR SETUP  <------
-char *hostname = "dropin";                  // The hostname of this device -- eg. thishost.local
-String topics[] = {                         // Create an array of topics to subscribe to
-  "all",                                    // add as many topics as necessary
-  "onoffnodes",
-  "dropin"
-};
-char *brokerHostname = "northpole.local";  // or "192.168.1.6";  // Hostname/IP address of the MQTT broker
-char *net1_ssid = "WIFI_NETWORK_SSID";
-char *net1_password = "PASSWORD";
-//char *net2_ssid = "WIFI_NETWORK_SSID";
-//char *net2_password = "PASSWORD";
-
-uint16_t loopDelay = 10;     // Time (ms) between calls to loop(), probably best to leave as-is
-
-// XXXXXXXXXX  DON'T CHANGE ANYTHING BELOW THIS IN THIS FILE  XXXXXXXXXX
-
+// Create an NTP client so we can get the current time
+WiFiUDP ntpUDP;
+// Ping NTP server no more than every 5 minutes
+#define NTP_UPDATE_THROTTLE_MILLLISECONDS (5UL * 60UL * 60UL * 1000UL)
+NTPClient timeClient(ntpUDP, "pool.ntp.org", utcOffsetInSeconds,
+                     NTP_UPDATE_THROTTLE_MILLLISECONDS);
 std::function<void(void)> currentAnimation;
+char *current_function = "turn_off";
+char *turn_on_signal = "turn_on";
+char *turn_off_signal = "turn_off";
+char *animate_signal = "animate";
+char *debug_signal = "debug";
+bool isAnimating = false;
+bool relay2IsOn = false;
 
 struct NetworkData {
   char *ssid;
   char *password;
 };
 
-ESP8266WiFiMulti wifiMulti;
-WiFiClient wifiClient;
-PubSubClient mqttClient(wifiClient);
-boolean connectioWasAlive = true;
-bool relaysAreOn = false;
-bool isAnimating = false;
-
 void turn_off() {
+  // Relay 1 is a "master switch" so it suffices
+  // to turn just it off.
   log("turning off...");
-  saveCurrentAnimation("turn_off");
-  isAnimating = false;
-  relaysAreOn = false;
+  saveCurrentAnimation(turn_off_signal);
   digitalWrite(relay1GpioPin, LOW);
-  digitalWrite(relay2GpioPin, LOW);
-  digitalWrite(relay3GpioPin, LOW);
-  digitalWrite(relay4GpioPin, LOW);
 }
 void turn_on() {
   log("turning on...");
-  saveCurrentAnimation("turn_on");
-  relaysAreOn = true;
+  saveCurrentAnimation(turn_on_signal);
   digitalWrite(relay1GpioPin, HIGH);
-  digitalWrite(relay2GpioPin, HIGH);
-  digitalWrite(relay3GpioPin, HIGH);
-  digitalWrite(relay4GpioPin, HIGH);
-}
-void toggle() {
-  saveCurrentAnimation("toggle");
-  if (relaysAreOn) {
-    log("turning off...");
-    relaysAreOn = false;
-    digitalWrite(relay1GpioPin, LOW);
-    digitalWrite(relay2GpioPin, LOW);
-    digitalWrite(relay3GpioPin, LOW);
-    digitalWrite(relay4GpioPin, LOW);
-  } else {
-    log("turning on...");
-    relaysAreOn = true;
-    digitalWrite(relay1GpioPin, HIGH);
-    digitalWrite(relay2GpioPin, HIGH);
-    digitalWrite(relay3GpioPin, HIGH);
-    digitalWrite(relay4GpioPin, HIGH);
-  }
+  animate();
 }
 
 void animate() {
   /*
   Santa Drop In sign animation:
-    - Relay 1 controls word "Santa" and is always on
-    - Relay 2 controls word "Drop" and one pointing hand
-    - Relay 3 controls word "In" and other pointing hand
-    - Relay 4 not used
-    - relays 3 and 4 alternate on/off every second
+    - Relay 1 controls overall power and turns on word "Santa"
+      It remains on the entire time the animation is running.
+    - Relay 2 alternates between NO and NC to turn on word "Drop" and one
+  pointing hand, then "In" and the other pointing hand.
   */
   log("animating...");
-  saveCurrentAnimation("animate");
+  saveCurrentAnimation(animate_signal);
   digitalWrite(relay1GpioPin, HIGH);
-  if (relaysAreOn) {
-    relaysAreOn = false;
-    digitalWrite(relay2GpioPin, HIGH);
-    digitalWrite(relay3GpioPin, LOW);
-  } else {
-    relaysAreOn = true;
+  if (relay2IsOn) {
+    relay2IsOn = false;
     digitalWrite(relay2GpioPin, LOW);
-    digitalWrite(relay3GpioPin, HIGH);
+  } else {
+    relay2IsOn = true;
+    digitalWrite(relay2GpioPin, HIGH);
   }
-  delay(900);
 }
 
 void saveCurrentAnimation(char *theFunction) {
@@ -122,16 +100,12 @@ void saveCurrentAnimation(char *theFunction) {
     currentAnimation = turn_off;
   } else if (strcmp(theFunction, "turn_on") == 0) {
     currentAnimation = turn_on;
-  } else if (strcmp(theFunction, "toggle") == 0) {
-    currentAnimation = toggle;
   } else if (strcmp(theFunction, "animate") == 0) {
     currentAnimation = animate;
   } else {
     currentAnimation = turn_off;
   }
 }
-
-
 
 void handleMqttMessage(char *topic, byte *payload, unsigned int length) {
   char message[MAX_MESSAGE_LENGTH + 1];
@@ -141,21 +115,18 @@ void handleMqttMessage(char *topic, byte *payload, unsigned int length) {
   // convert the type *payload to a string
   strncpy(message, (char *)payload, length);
   message[length] = '\0';
-  log("message: ", false);log(message);
+  log("message: ", false);
+  log(message);
   if (strcmp(message, (char *)"off") == 0) {
-    saveCurrentAnimation("turn_off");
+    saveCurrentAnimation(turn_off_signal);
     return;
   }
   if (strcmp(message, (char *)"on") == 0) {
-    saveCurrentAnimation("turn_on");
-    return;
-  }
-  if (strcmp(message, (char *)"toggle") == 0) {
-    saveCurrentAnimation("toggle");
+    saveCurrentAnimation(turn_on_signal);
     return;
   }
   if (strcmp(message, (char *)"animate") == 0) {
-    saveCurrentAnimation("animate");
+    saveCurrentAnimation(turn_on_signal);
     return;
   }
 }
@@ -179,15 +150,15 @@ void mqttReconnect() {
   }
 }
 
-void connectToNetwork(ESP8266WiFiMulti wifiMulti, char *hostname, NetworkData networks[], int num_elems = 0) {
-  if (num_elems == 0) {
-    return;
-  }
-  for (int i = 0; i < num_elems; i++) {
-    wifiMulti.addAP(networks[i].ssid, networks[i].password);
-  }
-  log("Connecting ", false);
-  while (wifiMulti.run() != WL_CONNECTED) {
+void connectToNetwork() {
+  // Network setup
+  WiFi.mode(WIFI_STA);
+  WiFi.setSleepMode(WIFI_NONE_SLEEP);
+  WiFi.begin(ssid, password);
+  mqttClient.setServer(brokerHostname, 1883);
+  mqttClient.setCallback(handleMqttMessage);
+
+  while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
     log('.');
   }
@@ -195,53 +166,88 @@ void connectToNetwork(ESP8266WiFiMulti wifiMulti, char *hostname, NetworkData ne
   log("Network:\t" + WiFi.SSID());
   log("IP address:\t" + WiFi.localIP().toString());
 
-  if (!MDNS.begin(hostname)) { // Start the mDNS responder for esp8266.local
+  // Start the mDNS responder for esp8266.local
+  if (!MDNS.begin(hostname)) {
     log("Error setting up MDNS responder!");
+    return;
   }
-  // log("mDNS responder started");
+  MDNS.setHostname(hostname);
+  timeClient.begin();
+
+  // OTA Update Config
+  ArduinoOTA.setHostname(hostname);
+  ArduinoOTA.setPassword(ota_password);
+  ArduinoOTA.onStart([]() {
+    String type = "sketch";
+    if (ArduinoOTA.getCommand() == U_FS) {
+      // command value for updating the sketch U_FLASH
+      type = "filesystem";
+    }
+    // NOTE: if updating FS this would be the place to unmount FS using FS.end()
+    log("Start updating " + type);
+  });
+  ArduinoOTA.onEnd([]() {
+    log("End OTA update");
+  });
+  ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
+    log("Progress: " + String(progress / (total / 100)));
+  });
+  ArduinoOTA.onError([](ota_error_t error) {
+    if (error == OTA_AUTH_ERROR) {
+      log("Auth Failed");
+    } else if (error == OTA_BEGIN_ERROR) {
+      log("Begin Failed");
+    } else if (error == OTA_CONNECT_ERROR) {
+      log("Connect Failed");
+    } else if (error == OTA_RECEIVE_ERROR) {
+      log("Receive Failed");
+    } else if (error == OTA_END_ERROR) {
+      log("End Failed");
+    }
+  });
+  ArduinoOTA.begin();
 }
 
-void monitorWiFi(ESP8266WiFiMulti wifiMulti) {
-  if (wifiMulti.run() != WL_CONNECTED) {
+void monitorWiFi() {
+  if (WiFi.status() != WL_CONNECTED) {
     if (connectioWasAlive == true) {
       connectioWasAlive = false;
-      // log("Looking for WiFi ");
     }
-    // log(".", false);
-    delay(500);
     MDNS.notifyAPChange();
   } else if (connectioWasAlive == false) {
     connectioWasAlive = true;
-    // log(" connected to " + WiFi.SSID());
   }
-  // Calling update() is key to getting the ESP8266 to respond to hostname.local
   MDNS.update();
+  if (!mqttClient.connected()) {
+    mqttReconnect();
+  }
+  timeClient.update();
+  // TODO -- use the time that was returned, see
+  // https://github.com/arduino-libraries/NTPClient/blob/master/NTPClient.h
 }
 
 void setup() {
   Serial.begin(115200);
+  enableLogging();
+  delay(250);
+
   pinMode(relay1GpioPin, OUTPUT);
   pinMode(relay2GpioPin, OUTPUT);
-  pinMode(relay3GpioPin, OUTPUT);
-  pinMode(relay4GpioPin, OUTPUT);
-  NetworkData net1, net2;
-  net1.ssid = net1_ssid;
-  net1.password = net1_password;
-//  net2.ssid = net2_ssid;
-//  net2.password = net2_password;
-  NetworkData networks[] = {net1};
-  enableLogging();
-  connectToNetwork(wifiMulti, hostname, networks, 1);
-  mqttClient.setServer(brokerHostname, 1883);
-  mqttClient.setCallback(handleMqttMessage);
+
+  connectToNetwork();
+  saveCurrentAnimation(turn_off_signal);  // should be turn_off_signal
+  currentAnimation = turn_off;
+  currentAnimation();
 }
 
 void loop() {
-  monitorWiFi(wifiMulti);
-  if (!mqttClient.connected()) {
-    mqttReconnect();
+  EVERY_N_SECONDS(1) {
+    monitorWiFi();
   }
-  mqttClient.loop();  // this is ESSENTIAL!
-  currentAnimation();
-  delay(loopDelay);
+  mqttClient.loop();    // this is ESSENTIAL for MQTT messages to be received!
+  ArduinoOTA.handle();  // check for & handle OTA update requests
+
+  EVERY_N_MILLISECONDS(loopDelay) {
+    currentAnimation();
+  }
 }

@@ -71,6 +71,12 @@ class App extends Component {
     // Remove various fields from original object with destructuring & spread operator
     const { show, nodeText, animationIndex, mqttName, type, ...subset } =
       animObj;
+    console.log(subset);
+    if (subset.hasOwnProperty("waveformId")) {
+      // For audio nodes, we want the file name to be in the filename prop, not
+      // animation. So, sniff and stuff here
+      subset.filename = subset.animation;
+    }
     let tmpShow = this.state.show;
     // check to see if the anim already exists in the array
     let nodeIndex = tmpShow.channels[animObj.channelIndex].animations.findIndex(
@@ -116,7 +122,7 @@ class App extends Component {
     // First check if we're adding an audio channel when there's already
     // one in the show (only single audio track supported)
     let showHasAudioChannel = this.hasAudioChannel();
-    if (showHasAudioChannel && newChannel.channelType === "AudioChannel") {
+    if (showHasAudioChannel && newChannel.channelType === "AudioNode") {
       alert("You cannot have multiple audio tracks in a show. Sorry.");
       return;
     }
@@ -148,7 +154,7 @@ class App extends Component {
     let nextIndex = index + 1;
     let updatedStateChannels = [];
     // now add it to the channels array, audio channel goes first
-    if (newChannel.channelType === "AudioChannel") {
+    if (newChannel.channelType === "AudioNode") {
       newShow.channels = this.renumberChannels(newShow.channels);
       newShow.channels.unshift(channelToCreate);
       updatedStateChannels = [channelToAdd, ...this.state.channels];
@@ -171,7 +177,7 @@ class App extends Component {
   };
 
   hasAudioChannel = () => {
-    const isAudioChannel = (channel) => channel.type === "AudioChannel";
+    const isAudioChannel = (channel) => channel.type === "AudioNode";
     return this.state.show.channels.some(isAudioChannel);
   };
 

@@ -48,39 +48,30 @@ NTPClient timeClient(ntpUDP, "pool.ntp.org", utcOffsetInSeconds,
                      NTP_UPDATE_THROTTLE_MILLLISECONDS);
 std::function<void(void)> currentAnimation;
 char *current_function = "turn_off";
+char *turn_on_signal = "turn_on";
+char *turn_off_signal = "turn_off";
+char *debug_signal = "debug";
 int switch_state = LOW;
+int switch_one_ID = 0;
+int switch_two_ID = 1;
+bool is_driving = false;
+
 
 void turn_off() {
-  log("turning off...");
-  saveCurrentAnimation("turn_off");
+  saveCurrentAnimation(turn_off_signal);
   digitalWrite(motorControllerIn1, LOW);
   digitalWrite(motorControllerIn2, LOW);
   analogWrite(motorEnA, 0);
+  is_driving = false;
 }
 void turn_on() {
-  log("turning on...");
-  saveCurrentAnimation("turn_on");
-  // loop() calls maybeChangeMotorDirection() which will drive the motor
-}
-
-void maybeChangeMotorDirection() {
-  if (current_function == "turn_off") {
-    // make sure motor is off, then return
-    turn_off();
-    return;
-  }
-  // read the switch and decide if we need to reverse direction
-  switch_state = digitalRead(toggleGpioPin);
-  if (switch_state == HIGH) {
-    log("going forward");
+  saveCurrentAnimation(turn_on_signal);
+  if (!is_driving) {
     digitalWrite(motorControllerIn1, HIGH);
     digitalWrite(motorControllerIn2, LOW);
-  } else {
-    log("going in reverse");
-    digitalWrite(motorControllerIn1, LOW);
-    digitalWrite(motorControllerIn2, HIGH);
+    analogWrite(motorEnA, motor_speed);
   }
-  analogWrite(motorEnA, motor_speed);
+  is_driving = true;
 }
 
 void saveCurrentAnimation(char *theFunction) {
@@ -94,6 +85,41 @@ void saveCurrentAnimation(char *theFunction) {
   }
 }
 
+void switch_trigger(uint16_t sw_num) {
+  if (current_function == turn_off_signal) {
+    // make sure motor is off, then return
+    log("Shutting down...");
+    turn_off();
+    return;
+  }
+  static unsigned long last_interrupt_time = 0;
+  unsigned long interrupt_time = millis();
+  if (interrupt_time - last_interrupt_time > debounceWaitTime) {
+    if (sw_num == switch_one_ID) {
+      log("going forward");
+      digitalWrite(motorControllerIn1, HIGH);
+      digitalWrite(motorControllerIn2, LOW);
+    } else {
+      log("going in reverse");
+      digitalWrite(motorControllerIn1, LOW);
+      digitalWrite(motorControllerIn2, HIGH);
+    }
+    analogWrite(motorEnA, motor_speed);
+  }
+  // update the time in case we're in a debounce time
+  last_interrupt_time = interrupt_time;
+}
+
+void IRAM_ATTR sw1_trigger() {
+  log("sw1_trigger");
+  switch_trigger(switch_one_ID);
+}
+
+void IRAM_ATTR sw2_trigger() {
+  log("sw2_trigger");
+  switch_trigger(switch_two_ID);
+}
+
 void handleMqttMessage(char *topic, byte *payload, unsigned int length) {
   char message[MAX_MESSAGE_LENGTH + 1];
   if (length > MAX_MESSAGE_LENGTH) {
@@ -105,15 +131,15 @@ void handleMqttMessage(char *topic, byte *payload, unsigned int length) {
   log("message: ", false);
   log(message);
   if (strcmp(message, (char *)"off") == 0 || strcmp(message, (char *)"turn_off") == 0) {
-    saveCurrentAnimation("turn_off");
+    saveCurrentAnimation(turn_off_signal);
     return;
   }
   if (strcmp(message, (char *)"on") == 0 || strcmp(message, (char *)"turn_on") == 0) {
-    saveCurrentAnimation("turn_on");
+    saveCurrentAnimation(turn_on_signal);
     return;
   }
   if (strcmp(message, (char *)"debug") == 0) {
-    saveCurrentAnimation("debug");
+    saveCurrentAnimation(debug_signal);
     return;
   }
 }
@@ -215,16 +241,31 @@ void monitorWiFi() {
 
 void setup() {
   Serial.begin(115200);
+  enableLogging();
+  delay(250);
   pinMode(motorEnA, OUTPUT);
   pinMode(motorControllerIn1, OUTPUT);
   pinMode(motorControllerIn2, OUTPUT);
-  pinMode(toggleGpioPin, INPUT_PULLUP);
+  pinMode(switchOne, INPUT_PULLUP);  // Basically, I'm using ez_switch_lib's C2 circuit
+  pinMode(switchTwo, INPUT_PULLUP);  // for both switches
 
-  enableLogging();
   connectToNetwork();
-  saveCurrentAnimation("turn_off");
+  saveCurrentAnimation(turn_off_signal);  // should be turn_off_signal
   currentAnimation = turn_off;
-  turn_off();
+  currentAnimation();
+
+  // attach interrupts to listen for mag switch changes
+  // by attaching to rising, we'll respond only when the switch is turned on
+  // and igonre when it's turned off
+  attachInterrupt(digitalPinToInterrupt(switchOne), sw1_trigger, RISING);
+  attachInterrupt(digitalPinToInterrupt(switchTwo), sw2_trigger, RISING);
+
+  // start motor going in one direction to kick things off
+  delay(250);
+  // Start motor initially ... hopefully it's going the right direction to not go off the track
+  digitalWrite(motorControllerIn1, LOW);
+  digitalWrite(motorControllerIn2, HIGH);
+  analogWrite(motorEnA, motor_speed);
 }
 
 void loop() {
@@ -236,8 +277,5 @@ void loop() {
 
   EVERY_N_MILLISECONDS(loopDelay) {
     currentAnimation();
-    // will read toggle switch state and change motor direction
-    // if the switch has been flipped since the last run
-    maybeChangeMotorDirection();
   }
 }

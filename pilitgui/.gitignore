@@ -1,5 +1,7 @@
 # audio clips
 public/audio/
+public/audio_clips/
+public/clips.txt
 
 # dependencies
 node_modules/
