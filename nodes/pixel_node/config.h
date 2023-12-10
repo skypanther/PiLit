@@ -17,8 +17,9 @@
 // CHANGE THESE TO MATCH YOUR NETWORK
 char *hostname = "globe1";  // The hostname of this device
 String topics[] = {         // Create an array of topics to subscribe to
-    "all",                  // add as many topics as necessary
-    "globe1"};
+  "all",                    // add as many topics as necessary
+  "globe1"
+};
 
 // HOSTNAME OR IP ADDRESS OF YOUR MQTT BROKER (SERVER)
 char *brokerHostname = "northpole.local";

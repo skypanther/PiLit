@@ -36,7 +36,7 @@ Shades of blue
   --medium-gray: 555555;
   --node-text-light: #fff;
   --node-text-dark: #555555;
-  --app-title: #f4f400;
+  --app-title: #ee9b00; /* #f4f400; */
   
   /* not used */
   --blue-but-not-as-dark: rgba(24, 31, 50, 1);
@@ -374,14 +374,14 @@ body nav{
   color: var(--light-gray);
   border-color: var(--node-border-dark);
 }
-.AudioChannel .channel-title,
-.AudioChannel .node-inner-wrapper,
-.AudioChannel .node-inner-wrapper p {
+.AudioNode .channel-title,
+.AudioNode .node-inner-wrapper,
+.AudioNode .node-inner-wrapper p {
   background-color: var(--row-bg-darkest);
   color: var(--light-gray);
   border-color: var(--node-border-dark);
 }
-.AudioChannel .channel-wrapper .channel-image-wrapper img.channel-image {
+.AudioNode .channel-wrapper .channel-image-wrapper img.channel-image {
   background-color: transparent;
   transform: scale(25%, 40%) translateY(-15pt);
   border-bottom: none;

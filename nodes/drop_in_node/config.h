@@ -8,8 +8,9 @@
 
 char *hostname = "dropin";  // The hostname of this device -- eg. thishost.local
 String topics[] = {         // Create an array of topics to subscribe to
-    "all",                  // add as many topics as necessary
-    "onoffnodes", "dropin"};
+  "all",                    // add as many topics as necessary
+  "onoffnodes", "dropin"
+};
 
 char *brokerHostname = "192.168.0.100";
 

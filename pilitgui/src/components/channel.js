@@ -25,7 +25,7 @@ import music_note from "url:~/public/images/music_note3.png";
 import movin_max from "url:~/public/images/movin_max.png";
 
 const nodeTypes = {
-  AudioChannel: music_note,
+  AudioNode: music_note,
   PixelNode: leaping_arch,
   OnOffNode: spotlight,
   MultiRelayNode: mega_tree,
@@ -142,7 +142,7 @@ class Channel extends Component {
             />
           );
           break;
-        case "AudioChannel":
+        case "AudioNode":
           newNode = (
             <AudioNode
               key={"node" + anim.nodeIndex}
@@ -257,7 +257,7 @@ class Channel extends Component {
           />
         );
         break;
-      case "AudioChannel":
+      case "AudioNode":
         newNode = (
           <AudioNode
             key={"node" + index}
