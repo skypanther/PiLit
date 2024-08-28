@@ -155,9 +155,10 @@ class App extends Component {
     let updatedStateChannels = [];
     // now add it to the channels array, audio channel goes first
     if (newChannel.channelType === "AudioNode") {
-      newShow.channels = this.renumberChannels(newShow.channels);
       newShow.channels.unshift(channelToCreate);
+      newShow.channels = this.renumberChannels(newShow.channels);
       updatedStateChannels = [channelToAdd, ...this.state.channels];
+      updatedStateChannels = this.renumberChannels(updatedStateChannels);
     } else {
       newShow.channels.push(channelToCreate);
       updatedStateChannels = [...this.state.channels, channelToAdd];
@@ -168,6 +169,26 @@ class App extends Component {
       channels: updatedStateChannels,
       show: newShow,
       showExport: true,
+    });
+    this.handleSave();
+  };
+
+  handleDeleteChannel = (index) => {
+    let newShow = this.state.show;
+    // state.show.channels is an array of JS objects
+    let newShowChannels = [...this.state.show.channels];
+    // state.channels is an array of React elements
+    let newStateChannels = [...this.state.channels];
+    newShowChannels.splice(index, 1);
+    newStateChannels.splice(index, 1);
+    newShowChannels = this.renumberChannels(newShowChannels);
+    newShow.channels = newShowChannels;
+    console.log(Array.isArray(newShowChannels));
+    let nextIndex = newShowChannels.length;
+    this.setState({
+      nextIndex: nextIndex,
+      channels: newStateChannels,
+      show: newShow,
     });
     this.handleSave();
   };
@@ -183,7 +204,7 @@ class App extends Component {
 
   renumberChannels = (channels) => {
     const renumberChannel = (channel, idx) => {
-      channel.channelIndex = idx + 1;
+      channel.channelIndex = idx;
       channel.animations.forEach((animation) => (animation.channelIndex = idx));
       return channel;
     };
@@ -218,6 +239,7 @@ class App extends Component {
         mqttName={newChannel.mqttName}
         handleAddAnimation={this.handleAddAnimation}
         handleRemoveAnimation={this.handleRemoveAnimation}
+        handleDeleteChannel={this.handleDeleteChannel}
         animationsFromImport={newChannel.animations}
         channelIndex={index}
       />

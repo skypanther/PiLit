@@ -23,6 +23,9 @@ import spotlight from "url:~/public/images/spotlight.png";
 import sphero_img from "url:~/public/images/sphero_img.jpg";
 import music_note from "url:~/public/images/music_note3.png";
 import movin_max from "url:~/public/images/movin_max.png";
+import MenuContext from "./subcomponents/menucontext";
+
+import { channelContextMenuItems } from "../ChannelContextMenuItems";
 
 const nodeTypes = {
   AudioNode: music_note,
@@ -367,21 +370,24 @@ class Channel extends Component {
     return (
       <div className={class_name}>
         <div className="channel-wrapper">
-          <div className="channel-title">
-            <div className="channel-title-text">{this.props.channelName}</div>
-          </div>
+          <MenuContext
+            channelName={this.props.channelName}
+            channelIndex={this.props.channelIndex}
+            handleDeleteChannel={this.props.handleDeleteChannel}
+          />
           <div className="channel-image-wrapper" id="rowImage">
             <img src={nodeTypes[this.props.type]} className="channel-image" />
             <span className="duration">{this.state.totalDuration}</span>
             <div className="removeChannel">
+              {/* now available in context menu, so removed here
               <Button variant="outline-danger" size="sm">
                 <FontAwesomeIcon
                   icon={faMinusCircle}
                   onClick={() => {
-                    alert(this.props.index);
+                    this.props.handleDeleteChannel(this.props.channelIndex);
                   }}
                 />
-              </Button>
+              </Button> */}
             </div>
           </div>
           <div id="rowWrapper" className="channel-inner-wrapper">
