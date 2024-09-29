@@ -97,7 +97,7 @@ class AddChannel extends Component {
           animation={true}
         >
           <Modal.Header closeButton>
-            <Modal.Title>Add An Animation Channel / Group</Modal.Title>
+            <Modal.Title>Add An Animation Channel</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Container>

@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 
-const MenuContext = ({ channelName, channelIndex, handleDeleteChannel }) => {
+const MenuContext = ({
+  channelName,
+  channelIndex,
+  handleDeleteChannel,
+  handleChannelEdit,
+  mqttName,
+}) => {
   const [clicked, setClicked] = useState(false);
   const [points, setPoints] = useState({
     x: 0,
@@ -32,7 +38,14 @@ const MenuContext = ({ channelName, channelIndex, handleDeleteChannel }) => {
           }, 0);
         }}
       >
-        <div className="channel-title-text">{channelName}</div>
+        <div
+          className="channel-title-text"
+          onClick={() => {
+            handleChannelEdit(channelIndex, channelName, mqttName);
+          }}
+        >
+          {channelName}
+        </div>
       </div>
       {clicked && (
         <div className="context-menu-container" id={"cm_" + channelName}>

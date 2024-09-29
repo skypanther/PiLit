@@ -5,6 +5,7 @@ export const nodeTypes = [
   { label: "RGB Pixel Node", value: "PixelNode" },
   { label: "RGB Pixel Tree", value: "PixelTree" },
   { label: "On / Off (spotlight) Node", value: "OnOffNode" },
+  { label: "Shelly On / Off Node", value: "ShellyNode" },
   { label: "Mega Tree (multi-relay)", value: "MultiRelayNode" },
   { label: "Sphero Pixel Node", value: "SpheroNode" },
   { label: "Movin Max", value: "MovinMax" },

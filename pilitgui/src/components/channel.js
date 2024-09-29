@@ -9,6 +9,7 @@ import MultiRelayNode from "./nodes/multirelaynode";
 import SpheroNode from "./nodes/sphero";
 import MovinMax from "./nodes/movinmax";
 import AudioNode from "./nodes/audioNode";
+import ShellyNode from "./nodes/shelly";
 
 // FontAwesome
 import { faPlusCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
@@ -23,6 +24,7 @@ import spotlight from "url:~/public/images/spotlight.png";
 import sphero_img from "url:~/public/images/sphero_img.jpg";
 import music_note from "url:~/public/images/music_note3.png";
 import movin_max from "url:~/public/images/movin_max.png";
+import light_switch from "url:~/public/images/light_switch.jpg";
 import MenuContext from "./subcomponents/menucontext";
 
 import { channelContextMenuItems } from "../ChannelContextMenuItems";
@@ -35,6 +37,7 @@ const nodeTypes = {
   PixelTree: pixel_tree,
   SpheroNode: sphero_img,
   MovinMax: movin_max,
+  ShellyNode: light_switch,
 };
 
 class Channel extends Component {
@@ -92,6 +95,20 @@ class Channel extends Component {
         case "OnOffNode":
           newNode = (
             <OnOffNode
+              key={"node" + anim.nodeIndex}
+              mqttName={this.props.channelName}
+              channelIndex={this.props.channelIndex}
+              type={this.props.type}
+              saveNodeConfig={this.saveNodeConfig}
+              removeNode={this.removeNode}
+              index={anim.nodeIndex}
+              initialProperties={anim}
+            />
+          );
+          break;
+        case "ShellyNode":
+          newNode = (
+            <ShellyNode
               key={"node" + anim.nodeIndex}
               mqttName={this.props.channelName}
               channelIndex={this.props.channelIndex}
@@ -218,6 +235,19 @@ class Channel extends Component {
           />
         );
         break;
+      case "ShellyNode":
+        newNode = (
+          <ShellyNode
+            key={"node" + index}
+            mqttName={this.props.mqttName}
+            channelIndex={this.props.channelIndex}
+            channelName={this.props.channelName}
+            type={this.props.type}
+            saveNodeConfig={this.saveNodeConfig}
+            removeNode={this.removeNode}
+            index={index}
+          />
+        );
       case "MultiRelayNode":
         newNode = (
           <MultiRelayNode
@@ -374,6 +404,8 @@ class Channel extends Component {
             channelName={this.props.channelName}
             channelIndex={this.props.channelIndex}
             handleDeleteChannel={this.props.handleDeleteChannel}
+            handleChannelEdit={this.props.handleChannelEdit}
+            mqttName={this.props.mqttName}
           />
           <div className="channel-image-wrapper" id="rowImage">
             <img src={nodeTypes[this.props.type]} className="channel-image" />

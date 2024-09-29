@@ -7,9 +7,12 @@ MIT License
 */
 
 import React, { Component } from "react";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
+import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/Container";
+import Form from "react-bootstrap/Form";
+import Modal from "react-bootstrap/Modal";
+import Row from "react-bootstrap/Row";
 
 import {
   exportShow,
@@ -46,6 +49,10 @@ class App extends Component {
       show: makeShowTemplate(),
       showExport: false,
       totalDuration: 0,
+      showEdit: false,
+      editChannelIndex: null,
+      editChannelName: null,
+      editChannelMqttName: null,
     };
   }
 
@@ -147,6 +154,7 @@ class App extends Component {
         mqttName={newChannel.mqttName}
         handleAddAnimation={this.handleAddAnimation}
         handleRemoveAnimation={this.handleRemoveAnimation}
+        handleChannelEdit={this.handleChannelEdit}
         channelIndex={index}
       />
     );
@@ -240,6 +248,7 @@ class App extends Component {
         handleAddAnimation={this.handleAddAnimation}
         handleRemoveAnimation={this.handleRemoveAnimation}
         handleDeleteChannel={this.handleDeleteChannel}
+        handleChannelEdit={this.handleChannelEdit}
         animationsFromImport={newChannel.animations}
         channelIndex={index}
       />
@@ -294,6 +303,55 @@ class App extends Component {
     this.handleSave();
   };
 
+  handleChannelEdit = (channelIndex, channelName, mqttName) => {
+    // Displays the Edit Channel modal
+    this.setState({
+      showEdit: true,
+      editChannelIndex: channelIndex,
+      editChannelName: channelName,
+      editChannelMqttName: mqttName,
+    });
+  };
+
+  handleCloseEdit = () => {
+    // Closes the Edit Channel modal
+    this.setState({
+      showEdit: false,
+      editChannelIndex: null,
+      editChannelName: null,
+      editChannelMqttName: null,
+    });
+  };
+
+  handleSaveEdit = () => {
+    // Saves an edited channel
+    let updatedShow = this.state.show;
+    updatedShow.channels[this.state.editChannelIndex].channelName =
+      this.state.editChannelName;
+    updatedShow.channels[this.state.editChannelIndex].mqttName =
+      this.state.editChannelMqttName;
+    this.setState({
+      showEdit: false,
+      show: updatedShow,
+      editChannelIndex: null,
+      editChannelName: null,
+      editChannelMqttName: null,
+    });
+    this.handleSave();
+    alert("Reload the page to see your changes");
+  };
+
+  setEditChannelName = (newName) => {
+    this.setState({
+      editChannelName: newName,
+    });
+  };
+  setEditMqttName = (newMqttName) => {
+    this.setState({
+      editChannelMqttName: newMqttName,
+    });
+  };
+
   render() {
     var channels = null;
     var addNewChannel = null;
@@ -318,6 +376,60 @@ class App extends Component {
 
     return (
       <div className="App">
+        <Modal
+          show={this.state.showEdit}
+          onHide={this.handleCloseEdit}
+          animation={true}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Edit an Animation Channel</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Container>
+              <Row>
+                <Col xs={4} className="modal-label">
+                  Title
+                </Col>
+                <Col xs={8}>
+                  <Form.Control
+                    type="text"
+                    className="form-control"
+                    defaultValue={this.state.editChannelName}
+                    onChange={(e) => this.setEditChannelName(e.target.value)}
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={4} className="modal-label">
+                  MQTT Subscriber
+                </Col>
+                <Col xs={8}>
+                  <Form.Control
+                    ref={(c) => (this.mqttNameRef = c)}
+                    type="text"
+                    className="form-control"
+                    defaultValue={this.state.editChannelMqttName}
+                    onChange={(e) => this.setEditMqttName(e.target.value)}
+                  />
+                </Col>
+              </Row>
+            </Container>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={this.handleCloseEdit}>
+              Close
+            </Button>
+            <Button
+              variant="primary"
+              onClick={this.handleSaveEdit}
+              disabled={
+                !(this.state.editChannelName && this.state.editChannelMqttName)
+              }
+            >
+              Save Changes
+            </Button>
+          </Modal.Footer>
+        </Modal>
         <nav>
           <TitleBar
             showExportVisible={this.state.showExport}
