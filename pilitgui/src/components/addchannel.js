@@ -162,13 +162,14 @@ class AddChannel extends Component {
             <p>Add Another Channel</p>
           </div>
           <div className="addchannel-button-wrapper">
-            <Button variant="light" size="lg">
-              <FontAwesomeIcon
-                icon={faPlusCircle}
-                onClick={() => {
-                  this.handleAddChannel();
-                }}
-              />
+            <Button
+              variant="light"
+              size="lg"
+              onClick={() => {
+                this.handleAddChannel();
+              }}
+            >
+              <FontAwesomeIcon icon={faPlusCircle} />
             </Button>
           </div>
         </div>

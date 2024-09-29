@@ -106,20 +106,6 @@ class Channel extends Component {
             />
           );
           break;
-        case "ShellyNode":
-          newNode = (
-            <ShellyNode
-              key={"node" + anim.nodeIndex}
-              mqttName={this.props.channelName}
-              channelIndex={this.props.channelIndex}
-              type={this.props.type}
-              saveNodeConfig={this.saveNodeConfig}
-              removeNode={this.removeNode}
-              index={anim.nodeIndex}
-              initialProperties={anim}
-            />
-          );
-          break;
         case "MultiRelayNode":
           newNode = (
             <MultiRelayNode
@@ -165,6 +151,20 @@ class Channel extends Component {
         case "AudioNode":
           newNode = (
             <AudioNode
+              key={"node" + anim.nodeIndex}
+              mqttName={this.props.channelName}
+              channelIndex={this.props.channelIndex}
+              type={this.props.type}
+              saveNodeConfig={this.saveNodeConfig}
+              removeNode={this.removeNode}
+              index={anim.nodeIndex}
+              initialProperties={anim}
+            />
+          );
+          break;
+        case "ShellyNode":
+          newNode = (
+            <ShellyNode
               key={"node" + anim.nodeIndex}
               mqttName={this.props.channelName}
               channelIndex={this.props.channelIndex}
@@ -235,19 +235,6 @@ class Channel extends Component {
           />
         );
         break;
-      case "ShellyNode":
-        newNode = (
-          <ShellyNode
-            key={"node" + index}
-            mqttName={this.props.mqttName}
-            channelIndex={this.props.channelIndex}
-            channelName={this.props.channelName}
-            type={this.props.type}
-            saveNodeConfig={this.saveNodeConfig}
-            removeNode={this.removeNode}
-            index={index}
-          />
-        );
       case "MultiRelayNode":
         newNode = (
           <MultiRelayNode
@@ -304,6 +291,19 @@ class Channel extends Component {
           />
         );
         break;
+      case "ShellyNode":
+        newNode = (
+          <ShellyNode
+            key={"node" + index}
+            mqttName={this.props.mqttName}
+            channelIndex={this.props.channelIndex}
+            channelName={this.props.channelName}
+            type={this.props.type}
+            saveNodeConfig={this.saveNodeConfig}
+            removeNode={this.removeNode}
+            index={index}
+          />
+        );
     }
     this.setState({
       nodes: [...this.state.nodes, newNode],
@@ -426,13 +426,13 @@ class Channel extends Component {
             {this.state.nodes}
           </div>
           <div className="channel-button-wrapper">
-            <Button variant="light">
-              <FontAwesomeIcon
-                icon={faPlusCircle}
-                onClick={() => {
-                  this.handleAddNode();
-                }}
-              />
+            <Button
+              variant="light"
+              onClick={() => {
+                this.handleAddNode();
+              }}
+            >
+              <FontAwesomeIcon icon={faPlusCircle} />
             </Button>
           </div>
         </div>

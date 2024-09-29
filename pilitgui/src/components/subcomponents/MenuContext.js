@@ -29,7 +29,6 @@ const MenuContext = ({
             x: e.pageX,
             y: e.pageY,
           });
-          console.log("Right Click", e.pageX, e.pageY);
           setTimeout(() => {
             document.getElementById("cm_" + channelName).style.top = 20;
             document.getElementById("cm_" + channelName).style.left = 20;

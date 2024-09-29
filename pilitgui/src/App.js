@@ -78,7 +78,6 @@ class App extends Component {
     // Remove various fields from original object with destructuring & spread operator
     const { show, nodeText, animationIndex, mqttName, type, ...subset } =
       animObj;
-    console.log(subset);
     if (subset.hasOwnProperty("waveformId")) {
       // For audio nodes, we want the file name to be in the filename prop, not
       // animation. So, sniff and stuff here
@@ -191,7 +190,6 @@ class App extends Component {
     newStateChannels.splice(index, 1);
     newShowChannels = this.renumberChannels(newShowChannels);
     newShow.channels = newShowChannels;
-    console.log(Array.isArray(newShowChannels));
     let nextIndex = newShowChannels.length;
     this.setState({
       nextIndex: nextIndex,
@@ -372,7 +370,8 @@ class App extends Component {
         />
       );
     }
-    // console.log(this.state);
+    // console.log(this.state.show.channels);
+    // console.log(this.state.channels);
 
     return (
       <div className="App">
