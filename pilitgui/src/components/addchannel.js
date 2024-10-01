@@ -97,7 +97,7 @@ class AddChannel extends Component {
           animation={true}
         >
           <Modal.Header closeButton>
-            <Modal.Title>Add An Animation Channel / Group</Modal.Title>
+            <Modal.Title>Add An Animation Channel</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Container>
@@ -162,13 +162,14 @@ class AddChannel extends Component {
             <p>Add Another Channel</p>
           </div>
           <div className="addchannel-button-wrapper">
-            <Button variant="light" size="lg">
-              <FontAwesomeIcon
-                icon={faPlusCircle}
-                onClick={() => {
-                  this.handleAddChannel();
-                }}
-              />
+            <Button
+              variant="light"
+              size="lg"
+              onClick={() => {
+                this.handleAddChannel();
+              }}
+            >
+              <FontAwesomeIcon icon={faPlusCircle} />
             </Button>
           </div>
         </div>

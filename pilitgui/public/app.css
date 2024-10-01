@@ -33,10 +33,12 @@ Shades of blue
   --node-border-dark: #ee9b0099;
   --node-border-light: #e9d8a6;
   --light-gray: #eeeeee;
+  --light-gray-blended: #eeeeee33;
   --medium-gray: 555555;
   --node-text-light: #fff;
   --node-text-dark: #555555;
   --app-title: #ee9b00; /* #f4f400; */
+  --context-menu-background: #395756;
   
   /* not used */
   --blue-but-not-as-dark: rgba(24, 31, 50, 1);
@@ -132,7 +134,6 @@ body nav{
   /* background-color: var(--page-background); */
   position: fixed;
   width: 100%;
-  height: 100pt;
 
 }
 
@@ -142,7 +143,6 @@ body nav{
 }
 
 #stage-wrapper {
-  height: 100pt;
   background-color: var(--page-background);
   color: var(--light-gray);
 }
@@ -256,6 +256,7 @@ body nav{
   height: 60pt;
   display: flex;
   justify-content: flex-start;
+  border-bottom: 1px solid var(--light-gray-blended);
 }
 
 .channel-inner-wrapper {
@@ -277,6 +278,7 @@ body nav{
   width: 60pt;
   padding: 6pt 0;
   font-size: 9pt;
+  color: var(--node-text-light);
 }
 
 .channel-image {
@@ -468,4 +470,35 @@ body nav{
   white-space: pre-wrap;
   line-height: 10pt;
   margin: 3px;
+}
+
+/* ----------------------------------------------
+    CONTEXT MENU STYLES
+   ---------------------------------------------- */
+.context-menu-container {
+  border: 1px solid #ffffff;
+  background-color: var(--context-menu-background);
+  border-radius: 4px;
+  padding: 0;
+  margin: 5px 0;
+  box-sizing: border-box;
+  width: 120pt;
+  position: relative;
+  display: none;
+  z-index: 10;
+  opacity: 100%;
+}
+.context-menu-container ul {
+  box-sizing: border-box;
+  padding: 0px;
+  margin: 0;
+  list-style: none;
+}
+.context-menu-container ul li {
+  padding: 18px 12px;
+}
+/* hover */
+.context-menu-container ul li:hover {
+  cursor: pointer;
+  background-color: #000000;
 }

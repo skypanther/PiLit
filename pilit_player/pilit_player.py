@@ -117,10 +117,12 @@ def make_animation_command(type, animation):
         )  # 0 means to end of file
         return f"{anim}:{start_ms}:{stop_ms}"
     else:
-        # These are the on/off type nodes - "OnOffNode", "MovinMax", "MotorinMax"
-        # and also the "Santa Drop In" node, which is on/off and automatically does
-        # the alternating  between Drop and In being lit.
+        # These are the on/off type nodes - "OnOffNode", "MovinMax", "MotorinMax",
+        # "ShellyNode", and also the "Santa Drop In" node, which is on/off and
+        # automatically does the alternating between Drop and In being lit.
         anim = animation["animation"] if animation["animation"] != "" else "off"
+        if type == "ShellyNode":
+            anim = '{"method": "Switch.Set", "params":{"id":0,"on":false}}'
         return f"{anim}"
 
 

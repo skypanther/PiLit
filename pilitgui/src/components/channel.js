@@ -9,6 +9,7 @@ import MultiRelayNode from "./nodes/multirelaynode";
 import SpheroNode from "./nodes/sphero";
 import MovinMax from "./nodes/movinmax";
 import AudioNode from "./nodes/audioNode";
+import ShellyNode from "./nodes/shelly";
 
 // FontAwesome
 import { faPlusCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
@@ -23,6 +24,10 @@ import spotlight from "url:~/public/images/spotlight.png";
 import sphero_img from "url:~/public/images/sphero_img.jpg";
 import music_note from "url:~/public/images/music_note3.png";
 import movin_max from "url:~/public/images/movin_max.png";
+import light_switch from "url:~/public/images/light_switch.jpg";
+import MenuContext from "./subcomponents/menucontext";
+
+import { channelContextMenuItems } from "../ChannelContextMenuItems";
 
 const nodeTypes = {
   AudioNode: music_note,
@@ -32,6 +37,7 @@ const nodeTypes = {
   PixelTree: pixel_tree,
   SpheroNode: sphero_img,
   MovinMax: movin_max,
+  ShellyNode: light_switch,
 };
 
 class Channel extends Component {
@@ -145,6 +151,20 @@ class Channel extends Component {
         case "AudioNode":
           newNode = (
             <AudioNode
+              key={"node" + anim.nodeIndex}
+              mqttName={this.props.channelName}
+              channelIndex={this.props.channelIndex}
+              type={this.props.type}
+              saveNodeConfig={this.saveNodeConfig}
+              removeNode={this.removeNode}
+              index={anim.nodeIndex}
+              initialProperties={anim}
+            />
+          );
+          break;
+        case "ShellyNode":
+          newNode = (
+            <ShellyNode
               key={"node" + anim.nodeIndex}
               mqttName={this.props.channelName}
               channelIndex={this.props.channelIndex}
@@ -271,6 +291,19 @@ class Channel extends Component {
           />
         );
         break;
+      case "ShellyNode":
+        newNode = (
+          <ShellyNode
+            key={"node" + index}
+            mqttName={this.props.mqttName}
+            channelIndex={this.props.channelIndex}
+            channelName={this.props.channelName}
+            type={this.props.type}
+            saveNodeConfig={this.saveNodeConfig}
+            removeNode={this.removeNode}
+            index={index}
+          />
+        );
     }
     this.setState({
       nodes: [...this.state.nodes, newNode],
@@ -367,34 +400,40 @@ class Channel extends Component {
     return (
       <div className={class_name}>
         <div className="channel-wrapper">
-          <div className="channel-title">
-            <div className="channel-title-text">{this.props.channelName}</div>
-          </div>
+          <MenuContext
+            channelName={this.props.channelName}
+            channelIndex={this.props.channelIndex}
+            handleDeleteChannel={this.props.handleDeleteChannel}
+            handleDuplicateChannel={this.props.handleDuplicateChannel}
+            handleChannelEdit={this.props.handleChannelEdit}
+            mqttName={this.props.mqttName}
+          />
           <div className="channel-image-wrapper" id="rowImage">
             <img src={nodeTypes[this.props.type]} className="channel-image" />
             <span className="duration">{this.state.totalDuration}</span>
             <div className="removeChannel">
+              {/* now available in context menu, so removed here
               <Button variant="outline-danger" size="sm">
                 <FontAwesomeIcon
                   icon={faMinusCircle}
                   onClick={() => {
-                    alert(this.props.index);
+                    this.props.handleDeleteChannel(this.props.channelIndex);
                   }}
                 />
-              </Button>
+              </Button> */}
             </div>
           </div>
           <div id="rowWrapper" className="channel-inner-wrapper">
             {this.state.nodes}
           </div>
           <div className="channel-button-wrapper">
-            <Button variant="light">
-              <FontAwesomeIcon
-                icon={faPlusCircle}
-                onClick={() => {
-                  this.handleAddNode();
-                }}
-              />
+            <Button
+              variant="light"
+              onClick={() => {
+                this.handleAddNode();
+              }}
+            >
+              <FontAwesomeIcon icon={faPlusCircle} />
             </Button>
           </div>
         </div>

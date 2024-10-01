@@ -7,9 +7,12 @@ MIT License
 */
 
 import React, { Component } from "react";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
+import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/Container";
+import Form from "react-bootstrap/Form";
+import Modal from "react-bootstrap/Modal";
+import Row from "react-bootstrap/Row";
 
 import {
   exportShow,
@@ -46,6 +49,10 @@ class App extends Component {
       show: makeShowTemplate(),
       showExport: false,
       totalDuration: 0,
+      showEdit: false,
+      editChannelIndex: null,
+      editChannelName: null,
+      editChannelMqttName: null,
     };
   }
 
@@ -71,7 +78,6 @@ class App extends Component {
     // Remove various fields from original object with destructuring & spread operator
     const { show, nodeText, animationIndex, mqttName, type, ...subset } =
       animObj;
-    console.log(subset);
     if (subset.hasOwnProperty("waveformId")) {
       // For audio nodes, we want the file name to be in the filename prop, not
       // animation. So, sniff and stuff here
@@ -147,6 +153,8 @@ class App extends Component {
         mqttName={newChannel.mqttName}
         handleAddAnimation={this.handleAddAnimation}
         handleRemoveAnimation={this.handleRemoveAnimation}
+        handleChannelEdit={this.handleChannelEdit}
+        handleDuplicateChannel={this.handleDuplicateChannel}
         channelIndex={index}
       />
     );
@@ -155,9 +163,10 @@ class App extends Component {
     let updatedStateChannels = [];
     // now add it to the channels array, audio channel goes first
     if (newChannel.channelType === "AudioNode") {
-      newShow.channels = this.renumberChannels(newShow.channels);
       newShow.channels.unshift(channelToCreate);
+      newShow.channels = this.renumberChannels(newShow.channels);
       updatedStateChannels = [channelToAdd, ...this.state.channels];
+      updatedStateChannels = this.renumberChannels(updatedStateChannels);
     } else {
       newShow.channels.push(channelToCreate);
       updatedStateChannels = [...this.state.channels, channelToAdd];
@@ -168,6 +177,25 @@ class App extends Component {
       channels: updatedStateChannels,
       show: newShow,
       showExport: true,
+    });
+    this.handleSave();
+  };
+
+  handleDeleteChannel = (index) => {
+    let newShow = this.state.show;
+    // state.show.channels is an array of JS objects
+    let newShowChannels = [...this.state.show.channels];
+    // state.channels is an array of React elements
+    let newStateChannels = [...this.state.channels];
+    newShowChannels.splice(index, 1);
+    newStateChannels.splice(index, 1);
+    newShowChannels = this.renumberChannels(newShowChannels);
+    newShow.channels = newShowChannels;
+    let nextIndex = newShowChannels.length;
+    this.setState({
+      nextIndex: nextIndex,
+      channels: newStateChannels,
+      show: newShow,
     });
     this.handleSave();
   };
@@ -183,7 +211,7 @@ class App extends Component {
 
   renumberChannels = (channels) => {
     const renumberChannel = (channel, idx) => {
-      channel.channelIndex = idx + 1;
+      channel.channelIndex = idx;
       channel.animations.forEach((animation) => (animation.channelIndex = idx));
       return channel;
     };
@@ -218,6 +246,9 @@ class App extends Component {
         mqttName={newChannel.mqttName}
         handleAddAnimation={this.handleAddAnimation}
         handleRemoveAnimation={this.handleRemoveAnimation}
+        handleDeleteChannel={this.handleDeleteChannel}
+        handleDuplicateChannel={this.handleDuplicateChannel}
+        handleChannelEdit={this.handleChannelEdit}
         animationsFromImport={newChannel.animations}
         channelIndex={index}
       />
@@ -272,6 +303,92 @@ class App extends Component {
     this.handleSave();
   };
 
+  handleChannelEdit = (channelIndex, channelName, mqttName) => {
+    // Displays the Edit Channel modal
+    this.setState({
+      showEdit: true,
+      editChannelIndex: channelIndex,
+      editChannelName: channelName,
+      editChannelMqttName: mqttName,
+    });
+  };
+
+  handleCloseEdit = () => {
+    // Closes the Edit Channel modal
+    this.setState({
+      showEdit: false,
+      editChannelIndex: null,
+      editChannelName: null,
+      editChannelMqttName: null,
+    });
+  };
+
+  handleSaveEdit = () => {
+    // Saves an edited channel
+    let updatedShow = this.state.show;
+    updatedShow.channels[this.state.editChannelIndex].channelName =
+      this.state.editChannelName;
+    updatedShow.channels[this.state.editChannelIndex].mqttName =
+      this.state.editChannelMqttName;
+    this.setState({
+      showEdit: false,
+      show: updatedShow,
+      editChannelIndex: null,
+      editChannelName: null,
+      editChannelMqttName: null,
+    });
+    this.handleSave();
+    this.checkAndLoadSavedShows();
+  };
+
+  setEditChannelName = (newName) => {
+    this.setState({
+      editChannelName: newName,
+    });
+  };
+  setEditMqttName = (newMqttName) => {
+    this.setState({
+      editChannelMqttName: newMqttName,
+    });
+  };
+
+  handleDuplicateChannel = (channelIndex) => {
+    /* 
+    Duplicates a channel, adding the new channel following
+    the one being copied. 
+    Can't duplicate an AudioChannel
+    */
+    if (this.hasAudioChannel()) {
+      alert("You can have only one Audio Channel");
+      return;
+    }
+    let updatedShow = this.state.show;
+    let channelToDupe = Object.assign(
+      {},
+      this.state.show.channels[channelIndex]
+    );
+    channelToDupe.channelName = channelToDupe.channelName + "2";
+    channelToDupe.mqttName = channelToDupe.mqttName + "2";
+    let newChannels = this.state.show.channels;
+    newChannels.splice(channelIndex + 1, 0, channelToDupe);
+    updatedShow.channels = newChannels;
+    this.setState({
+      show: updatedShow,
+    });
+    this.handleSave();
+    this.checkAndLoadSavedShows();
+  };
+
+  setShowName = (newName) => {
+    let updatedShow = this.state.show;
+    updatedShow.showName = newName;
+    this.setState({
+      show: updatedShow,
+    });
+    this.handleSave();
+    this.checkAndLoadSavedShows();
+  };
+
   render() {
     var channels = null;
     var addNewChannel = null;
@@ -292,10 +409,65 @@ class App extends Component {
         />
       );
     }
-    // console.log(this.state);
+    // console.log(this.state.show.channels);
+    // console.log(this.state.channels);
 
     return (
       <div className="App">
+        <Modal
+          show={this.state.showEdit}
+          onHide={this.handleCloseEdit}
+          animation={true}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Edit an Animation Channel</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Container>
+              <Row>
+                <Col xs={4} className="modal-label">
+                  Title
+                </Col>
+                <Col xs={8}>
+                  <Form.Control
+                    type="text"
+                    className="form-control"
+                    defaultValue={this.state.editChannelName}
+                    onChange={(e) => this.setEditChannelName(e.target.value)}
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={4} className="modal-label">
+                  MQTT Subscriber
+                </Col>
+                <Col xs={8}>
+                  <Form.Control
+                    ref={(c) => (this.mqttNameRef = c)}
+                    type="text"
+                    className="form-control"
+                    defaultValue={this.state.editChannelMqttName}
+                    onChange={(e) => this.setEditMqttName(e.target.value)}
+                  />
+                </Col>
+              </Row>
+            </Container>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={this.handleCloseEdit}>
+              Close
+            </Button>
+            <Button
+              variant="primary"
+              onClick={this.handleSaveEdit}
+              disabled={
+                !(this.state.editChannelName && this.state.editChannelMqttName)
+              }
+            >
+              Save Changes
+            </Button>
+          </Modal.Footer>
+        </Modal>
         <nav>
           <TitleBar
             showExportVisible={this.state.showExport}
@@ -309,7 +481,7 @@ class App extends Component {
               marginTop: "35pt",
               marginLeft: "0",
               marginBottom: "0",
-              height: "100pt",
+              height: "60pt",
             }}
           >
             <Row>
@@ -317,7 +489,10 @@ class App extends Component {
             </Row>
             <Row id="show-stage-wrapper">
               <Col xs={2}>
-                <ShowDetails show={this.state.show}></ShowDetails>
+                <ShowDetails
+                  show={this.state.show}
+                  handleSetShowName={this.setShowName}
+                ></ShowDetails>
               </Col>
               <Col>
                 <Stage show={this.state.show} />
