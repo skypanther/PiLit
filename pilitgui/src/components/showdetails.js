@@ -2,9 +2,13 @@
   showdetails.js -- show name, start, end times
 */
 import React, { Component } from "react";
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
 import TimeKeeper from "react-timekeeper";
+import Button from "react-bootstrap/Button";
+import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/Container";
+import Form from "react-bootstrap/Form";
+import Modal from "react-bootstrap/Modal";
+import Row from "react-bootstrap/Row";
 
 const startTimeTitle = "Light Show Start Time";
 const stopTimeTitle = "Light Show Stop Time";
@@ -14,6 +18,7 @@ class ShowDetails extends Component {
     super(props);
     this.state = {
       modalVisible: false,
+      showEditTitle: false,
       modalTitle: startTimeTitle,
       showTitle: this.props.show.showName,
       startTime: {
@@ -72,6 +77,15 @@ class ShowDetails extends Component {
     }
   };
 
+  showEditTitleModal = () => {
+    this.setState({
+      showEditTitle: true,
+    });
+  };
+  hideEditTitleModal = () => {
+    this.setState({ showEditTitle: false });
+  };
+
   render() {
     let emptyTitle = "Empty Show";
     return (
@@ -94,10 +108,49 @@ class ShowDetails extends Component {
           </Modal.Footer>
         </Modal>
 
+        <Modal
+          show={this.state.showEditTitle}
+          onHide={this.state.hideEditTitleModal}
+          animation={true}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Edit Show Title</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Container>
+              <Row>
+                <Col xs={4} className="modal-label">
+                  Title
+                </Col>
+                <Col xs={8}>
+                  <Form.Control
+                    type="text"
+                    className="form-control"
+                    defaultValue={this.props.show.showName || emptyTitle}
+                    onChange={(e) =>
+                      this.props.handleSetShowName(e.target.value)
+                    }
+                  />
+                </Col>
+              </Row>
+            </Container>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="primary" onClick={this.hideEditTitleModal}>
+              Save
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
         <div id="show-info-wrapper">
           <div>
             <span className="col1">Show Name:</span>
-            <span className="col2">
+            <span
+              className="col2"
+              onClick={(e) => {
+                this.showEditTitleModal();
+              }}
+            >
               {this.props.show.showName || emptyTitle}
             </span>
           </div>

@@ -154,6 +154,7 @@ class App extends Component {
         handleAddAnimation={this.handleAddAnimation}
         handleRemoveAnimation={this.handleRemoveAnimation}
         handleChannelEdit={this.handleChannelEdit}
+        handleDuplicateChannel={this.handleDuplicateChannel}
         channelIndex={index}
       />
     );
@@ -246,6 +247,7 @@ class App extends Component {
         handleAddAnimation={this.handleAddAnimation}
         handleRemoveAnimation={this.handleRemoveAnimation}
         handleDeleteChannel={this.handleDeleteChannel}
+        handleDuplicateChannel={this.handleDuplicateChannel}
         handleChannelEdit={this.handleChannelEdit}
         animationsFromImport={newChannel.animations}
         channelIndex={index}
@@ -336,7 +338,7 @@ class App extends Component {
       editChannelMqttName: null,
     });
     this.handleSave();
-    alert("Reload the page to see your changes");
+    this.checkAndLoadSavedShows();
   };
 
   setEditChannelName = (newName) => {
@@ -348,6 +350,43 @@ class App extends Component {
     this.setState({
       editChannelMqttName: newMqttName,
     });
+  };
+
+  handleDuplicateChannel = (channelIndex) => {
+    /* 
+    Duplicates a channel, adding the new channel following
+    the one being copied. 
+    Can't duplicate an AudioChannel
+    */
+    if (this.hasAudioChannel()) {
+      alert("You can have only one Audio Channel");
+      return;
+    }
+    let updatedShow = this.state.show;
+    let channelToDupe = Object.assign(
+      {},
+      this.state.show.channels[channelIndex]
+    );
+    channelToDupe.channelName = channelToDupe.channelName + "2";
+    channelToDupe.mqttName = channelToDupe.mqttName + "2";
+    let newChannels = this.state.show.channels;
+    newChannels.splice(channelIndex + 1, 0, channelToDupe);
+    updatedShow.channels = newChannels;
+    this.setState({
+      show: updatedShow,
+    });
+    this.handleSave();
+    this.checkAndLoadSavedShows();
+  };
+
+  setShowName = (newName) => {
+    let updatedShow = this.state.show;
+    updatedShow.showName = newName;
+    this.setState({
+      show: updatedShow,
+    });
+    this.handleSave();
+    this.checkAndLoadSavedShows();
   };
 
   render() {
@@ -442,7 +481,7 @@ class App extends Component {
               marginTop: "35pt",
               marginLeft: "0",
               marginBottom: "0",
-              height: "100pt",
+              height: "60pt",
             }}
           >
             <Row>
@@ -450,7 +489,10 @@ class App extends Component {
             </Row>
             <Row id="show-stage-wrapper">
               <Col xs={2}>
-                <ShowDetails show={this.state.show}></ShowDetails>
+                <ShowDetails
+                  show={this.state.show}
+                  handleSetShowName={this.setShowName}
+                ></ShowDetails>
               </Col>
               <Col>
                 <Stage show={this.state.show} />

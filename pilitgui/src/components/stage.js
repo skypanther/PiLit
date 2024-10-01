@@ -9,12 +9,7 @@ class Stage extends Component {
   }
 
   render() {
-    return (
-      <div id="stage-wrapper">
-        This is the stage, where you'll see previews of the show elements
-        (nodes).
-      </div>
-    );
+    return <div id="stage-wrapper"></div>;
   }
 }
 

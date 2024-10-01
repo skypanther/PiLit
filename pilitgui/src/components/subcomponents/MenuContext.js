@@ -4,6 +4,7 @@ const MenuContext = ({
   channelName,
   channelIndex,
   handleDeleteChannel,
+  handleDuplicateChannel,
   handleChannelEdit,
   mqttName,
 }) => {
@@ -49,13 +50,16 @@ const MenuContext = ({
       {clicked && (
         <div className="context-menu-container" id={"cm_" + channelName}>
           <ul>
-            <li>Copy</li>
-            <li>Paste</li>
             <li
               onClick={(e) => {
-                // if (confirm("There's no undo... Delete this channel?")) {
+                handleDuplicateChannel(channelIndex);
+              }}
+            >
+              Duplicate
+            </li>
+            <li
+              onClick={(e) => {
                 handleDeleteChannel(channelIndex);
-                // }
               }}
             >
               Delete

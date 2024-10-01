@@ -404,6 +404,7 @@ class Channel extends Component {
             channelName={this.props.channelName}
             channelIndex={this.props.channelIndex}
             handleDeleteChannel={this.props.handleDeleteChannel}
+            handleDuplicateChannel={this.props.handleDuplicateChannel}
             handleChannelEdit={this.props.handleChannelEdit}
             mqttName={this.props.mqttName}
           />
