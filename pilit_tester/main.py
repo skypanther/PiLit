@@ -20,7 +20,6 @@ templates = Jinja2Templates(
 
 with open("testing_animations.yaml") as stream:
     try:
-        # print(yaml.safe_load(stream))
         config = yaml.safe_load(stream)
         mqtt_server = config["mqtt_server"]
         mqtt_port = config["mqtt_port"]
@@ -30,29 +29,6 @@ with open("testing_animations.yaml") as stream:
 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
-
-# nodes = [
-#     {
-#         "id": 0,
-#         "title": "Please select",
-#         "value": "",
-#     },
-#     {
-#         "id": 1,
-#         "title": "Node 1",
-#         "value": "mqtt_node1",
-#     },
-#     {
-#         "id": 2,
-#         "title": "Node 2",
-#         "value": "mqtt_node2",
-#     },
-#     {
-#         "id": 3,
-#         "title": "Node 3",
-#         "value": "mqtt_node3",
-#     },
-# ]
 
 
 @app.get("/", response_class=HTMLResponse)
