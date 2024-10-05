@@ -1,0 +1,91 @@
+<script>
+  async function getNodeAnimations(mqtt_name) {
+    if (!mqtt_name) {
+      let animSelect = document.getElementById("animation");
+      animSelect.style = "display:none";
+      return;
+    }
+    const url = `/get_animations/${mqtt_name}`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+
+      const jsonString = await response.json();
+      const json = JSON.parse(jsonString);
+      populateAnimationsSelectList(json);
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+
+  function populateAnimationsSelectList(animations) {
+    let animSelect = document.getElementById("animation");
+    let animOptions = animSelect.options;
+    for (let i = 0; i < animOptions.length; i++) {
+      animSelect.remove(i);
+    }
+    let firstOption = document.createElement("option");
+    firstOption.text = "Please select...";
+    firstOption.value = "";
+    animSelect.add(firstOption);
+    for (let i = 0; i < animations.length; i++) {
+      let newOption = document.createElement("option");
+      newOption.text = animations[i].name;
+      newOption.value = animations[i].text;
+      animSelect.add(newOption);
+    }
+    animSelect.style = "display:block";
+  }
+
+  function enableSubmitButton(animation) {
+    let submitBtn = document.getElementById("submitBtn");
+    if (!animation) {
+      submitBtn.disabled = true;
+      return;
+    }
+    submitBtn.disabled = false;
+  }
+</script>
+
+{% extends 'core.html' %} {% block core_body%}
+<div class="panel panel-info wrapper">
+  <div class="panel-heading">
+    <h3 class="panel-title">PiLit Tester</h3>
+  </div>
+  <div class="panel-body">
+    <p>Select a node to test</p>
+    <form method="post" enctype="application/x-www-form-urlencoded" action="/">
+      <select
+        id="mqtt_name"
+        name="mqtt_name"
+        onchange="getNodeAnimations(this.value)"
+      >
+        <option value="">Please select a node</option>
+        {% if nodes %} {% for node in nodes %}
+        <option value="{{node.mqtt_name}}">{{node.name}}</option>
+        {% endfor %} {% endif %}
+      </select>
+      <br /><br />
+      <select
+        id="animation"
+        name="animation"
+        style="display: none"
+        onchange="enableSubmitButton(this.value)"
+      ></select>
+
+      <div class="submit-button">
+        <button
+          type="submit"
+          id="submitBtn"
+          class="btn btn-lg btn-primary"
+          disabled
+        >
+          Test It
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock core_body%}

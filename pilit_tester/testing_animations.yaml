@@ -1,0 +1,75 @@
+# Configuration of nodes and the animations to choose from during testing
+
+mqtt_server: northpole.local
+mqtt_port: 1883
+nodes:
+  - name: Pixel Node
+    mqtt_name: node_1_mqtt
+    type: PixelNode
+    animations:
+      - name: "Turn Off"
+        text: black:solid_color
+      - name: Solid Red
+        text: red:solid_color
+      - name: Solid Blue
+        text: blue:solid_color
+      - name: Bounce Red
+        text: red:bounce
+  - name: Sphero
+    mqtt_name: node_2_mqtt
+    type: SpheroNode
+    animations:
+      - name: "Turn Off"
+        text: black:solid_color
+      - name: Spin, 1 spoke
+        text: spin_1
+      - name: Spin, 2 spokes
+        text: spin_2
+      - name: Solid Blue
+        text: blue:solid_color
+  - name: On/Off Node
+    mqtt_name: node_3_mqtt
+    type: OnOffNode
+    animations:
+      - name: "Turn On"
+        text: "on"
+      - name: "Turn Off"
+        text: "off"
+  - name: Shelly On/Off Node
+    mqtt_name: node_4_mqtt
+    type: ShellyNode
+    animations:
+      - name: "Turn On"
+        text: "on"
+      - name: "Turn Off"
+        text: "off"
+  - name: Movin Max
+    mqtt_name: node_5_mqtt
+    type: MovinMax
+    animations:
+      - name: "Turn On"
+        text: "on"
+      - name: "Turn Off"
+        text: "off"
+      - name: "Debug"
+        text: "debug"
+  - name: Shelly On/Off Node
+    mqtt_name: node_6_mqtt
+    type: ShellyNode
+    animations:
+      - name: "Turn On"
+        text: "on"
+      - name: "Turn Off"
+        text: "off"
+  - name: Multirelay Node
+    mqtt_name: node_7_mqtt
+    type: MultiRelayNode
+    animations:
+      - name: "All off"
+        text: "off"
+      - name: "March - single"
+        text: "march_single"
+      - name: "March 4"
+        text: "march_four"
+      - name: "Alternate"
+        text: "alternate"
