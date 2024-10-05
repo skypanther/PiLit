@@ -1,0 +1,17 @@
+body{
+    background-color: rgb(37, 37, 37) !important;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.wrapper {
+    margin-top: 10pt;
+    min-height: 600px !important;
+    max-height: 95% !important;
+    padding: 10pt 5pt;
+    border-radius: 10pt;
+    background-color: white;
+    font-size: 14pt;
+}
+.submit-button {
+    margin-top: 15pt;
+}
