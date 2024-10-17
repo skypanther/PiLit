@@ -33,16 +33,16 @@ uint16_t loopDelay = 1000;
 // Time to show all the pixels "filled" before resetting and starting over
 uint16_t holdDelay = 2000;
 
-char *hostname = "martha_may";  // The hostname of this device -- eg. thishost.local
-String topics[] = {             // Create an array of topics to subscribe to
-  "all",                        // add as many topics as necessary
-  "onoffnodes", "martha_may"
-};
+char *hostname =
+    "martha_may";    // The hostname of this device -- eg. thishost.local
+String topics[] = {  // Create an array of topics to subscribe to
+    "all",           // add as many topics as necessary
+    "onoffnodes", "martha_may"};
 
 char *brokerHostname = "192.168.0.100";
 
-char *ssid = "poulsen";
-char *password = "hobbes22";
+char *ssid = "NETWORK_NAME";
+char *password = "PASSWORD";
 char *ota_password = "PASSWORD";  // password for OTA updates
 
 // UTC offset, -5 is EST
