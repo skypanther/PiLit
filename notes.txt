@@ -1,5 +1,10 @@
 My setup:
 
+Shellies:
+================================
+Shelly 1 (aka "mini") - shelly1minig3-dcda0ce69534
+Shelly2 - shelly1minig3-cc8da244998c
+
 Relays (on off nodes) -- Current count: 8
 =================================
 int relayGpioPin = 5;  // D1
@@ -14,12 +19,11 @@ String topics[] = {
 
 Spiral tree (pixel node)
 ==================================
-#define LED_TYPE APA102
+#define LED_TYPE WS2812B
 #define DATA_PIN 5
-#define CLOCK_PIN 4
-#define NUM_LEDS 266
-#define COLOR_ORDER BGR
-#define BRIGHTNESS 180
+#define NUM_LEDS 268
+#define COLOR_ORDER RGB
+#define BRIGHTNESS 150
 
 char *hostname = "spiral1";
 String topics[] = {
@@ -76,10 +80,17 @@ String topics[] = {
   "archball"
 };
 
-To Do:
+Martha May Whovier - martha_may node type
+=====================================
+#define LED_TYPE WS2812B
+#define DATA_PIN 5
+#define NUM_LEDS 8
+#define COLOR_ORDER GRB
+#define BRIGHTNESS 64
 
-* Edit / remove channel details
-* Select a color for channels when you create them -- used on left title bg as well as bgcolor of timeline boxes
-* Add a no-op action type to allow for gaps in a channel where a group-channel will take priority -- fill with an empty/transparent box?
-*
-http://127.0.0.1:8000/redoc
+char *hostname = "martha_may";
+String topics[] = {
+    "all",
+    "onoffnodes",
+    "martha_may"
+};

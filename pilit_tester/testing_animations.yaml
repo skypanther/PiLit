@@ -35,9 +35,18 @@ nodes:
         text: "on"
       - name: "Turn Off"
         text: "off"
-  - name: Shelly On/Off Node
-    mqtt_name: shelly1minig3-dcda0ce69534/rpc
+  - name: Shelly 1
+    mqtt_name: shelly1minig3-dcda0ce69534
     type: ShellyNode
+    animations:
+      - name: "Turn On"
+        text: '{"method": "Switch.Set", "params":{"id":0,"on":true}}'
+      - name: "Turn Off"
+        text: '{"method": "Switch.Set", "params":{"id":0,"on":false}}'
+  - name: Shelly 2
+    mqtt_name: shelly1minig3-cc8da244998c
+    type: ShellyNode
+    animations:
     animations:
       - name: "Turn On"
         text: '{"method": "Switch.Set", "params":{"id":0,"on":true}}'
@@ -53,14 +62,6 @@ nodes:
         text: "off"
       - name: "Debug"
         text: "debug"
-  - name: Shelly On/Off Node
-    mqtt_name: node_6_mqtt
-    type: ShellyNode
-    animations:
-      - name: "Turn On"
-        text: "on"
-      - name: "Turn Off"
-        text: "off"
   - name: Multirelay Node
     mqtt_name: node_7_mqtt
     type: MultiRelayNode
