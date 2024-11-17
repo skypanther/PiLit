@@ -3,21 +3,29 @@
 mqtt_server: northpole.local
 mqtt_port: 1883
 nodes:
-  - name: Pixel Node
-    mqtt_name: node_1_mqtt
-    type: PixelNode
+  - name: Megatree
+    mqtt_name: "megatree"
+    type: "MultiRelayNode"
     animations:
+      - name: "All off"
+        text: "off"
+      - name: "March - single"
+        text: "march_single"
+      - name: "March 4"
+        text: "march_four"
+      - name: "Alternate"
+        text: "alternate"
+  - name: Who star
+    mqtt_name: "whostar"
+    type: "OnOffNode"
+    animations:
+      - name: "Turn On"
+        text: "on"
       - name: "Turn Off"
-        text: black:solid_color
-      - name: Solid Red
-        text: red:solid_color
-      - name: Solid Blue
-        text: blue:solid_color
-      - name: Bounce Red
-        text: red:bounce
-  - name: Sphero
-    mqtt_name: node_2_mqtt
-    type: SpheroNode
+        text: "off"
+  - name: Arch ball
+    mqtt_name: "archball"
+    type: "SpheroNode"
     animations:
       - name: "Turn Off"
         text: black:solid_color
@@ -27,9 +35,153 @@ nodes:
         text: spin_2
       - name: Solid Blue
         text: blue:solid_color
-  - name: On/Off Node
-    mqtt_name: node_3_mqtt
-    type: OnOffNode
+  - name: Leaping Arch 1
+    mqtt_name: "arch1"
+    type: "PixelNode"
+    animations:
+      - name: "Turn Off"
+        text: black:solid_color
+      - name: Spin, 1 spoke
+        text: spin_1
+      - name: Spin, 2 spokes
+        text: spin_2
+      - name: Solid Blue
+        text: blue:solid_color
+  - name: Leaping Arch 2
+    mqtt_name: "arch2"
+    type: "PixelNode"
+    animations:
+      - name: "Turn Off"
+        text: black:solid_color
+      - name: Spin, 1 spoke
+        text: spin_1
+      - name: Spin, 2 spokes
+        text: spin_2
+      - name: Solid Blue
+        text: blue:solid_color
+  - name: Drop In
+    mqtt_name: "dropin"
+    type: "OnOffNode"
+    animations:
+      - name: "Turn On"
+        text: "on"
+      - name: "Turn Off"
+        text: "off"
+  - name: Movin Max
+    mqtt_name: "movinmax"
+    type: "MovinMax"
+    animations:
+      - name: "Turn On"
+        text: "on"
+      - name: "Turn Off"
+        text: "off"
+  - name: Globe 1
+    mqtt_name: "globe1"
+    type: "PixelNode"
+    animations:
+      - name: "Turn Off"
+        text: black:solid_color
+      - name: Spin, 1 spoke
+        text: spin_1
+      - name: Spin, 2 spokes
+        text: spin_2
+      - name: Solid Blue
+        text: blue:solid_color
+  - name: Spiral tree 1
+    mqtt_name: "spiral1"
+    type: "PixelNode"
+    animations:
+      - name: "Turn Off"
+        text: black:solid_color
+      - name: Spin, 1 spoke
+        text: spin_1
+      - name: Spin, 2 spokes
+        text: spin_2
+      - name: Solid Blue
+        text: blue:solid_color
+  - name: Pixel tree 1
+    mqtt_name: "tree1"
+    type: "PixelNode"
+    animations:
+      - name: "Turn Off"
+        text: black:solid_color
+      - name: Spin, 1 spoke
+        text: spin_1
+      - name: Spin, 2 spokes
+        text: spin_2
+      - name: Solid Blue
+        text: blue:solid_color
+  - name: Pixel tree 2
+    mqtt_name: "tree2"
+    type: "PixelNode"
+    animations:
+      - name: "Turn Off"
+        text: black:solid_color
+      - name: Spin, 1 spoke
+        text: spin_1
+      - name: Spin, 2 spokes
+        text: spin_2
+      - name: Solid Blue
+        text: blue:solid_color
+  - name: Relay 1
+    mqtt_name: "relay1"
+    type: "OnOffNode"
+    animations:
+      - name: "Turn On"
+        text: "on"
+      - name: "Turn Off"
+        text: "off"
+  - name: Relay 2
+    mqtt_name: "relay2"
+    type: "OnOffNode"
+    animations:
+      - name: "Turn On"
+        text: "on"
+      - name: "Turn Off"
+        text: "off"
+  - name: Relay 3
+    mqtt_name: "relay3"
+    type: "OnOffNode"
+    animations:
+      - name: "Turn On"
+        text: "on"
+      - name: "Turn Off"
+        text: "off"
+  - name: Relay 4
+    mqtt_name: "relay4"
+    type: "OnOffNode"
+    animations:
+      - name: "Turn On"
+        text: "on"
+      - name: "Turn Off"
+        text: "off"
+  - name: Relay 5
+    mqtt_name: "relay5"
+    type: "OnOffNode"
+    animations:
+      - name: "Turn On"
+        text: "on"
+      - name: "Turn Off"
+        text: "off"
+  - name: Relay 6
+    mqtt_name: "relay6"
+    type: "OnOffNode"
+    animations:
+      - name: "Turn On"
+        text: "on"
+      - name: "Turn Off"
+        text: "off"
+  - name: Relay 7
+    mqtt_name: "relay7"
+    type: "OnOffNode"
+    animations:
+      - name: "Turn On"
+        text: "on"
+      - name: "Turn Off"
+        text: "off"
+  - name: Relay 8
+    mqtt_name: "relay8"
+    type: "OnOffNode"
     animations:
       - name: "Turn On"
         text: "on"
@@ -47,30 +199,23 @@ nodes:
     mqtt_name: shelly1minig3-cc8da244998c
     type: ShellyNode
     animations:
+      - name: "Turn On"
+        text: '{"method": "Switch.Set", "params":{"id":0,"on":true}}'
+      - name: "Turn Off"
+        text: '{"method": "Switch.Set", "params":{"id":0,"on":false}}'
+  - name: Shelly 3
+    mqtt_name: shelly1minig3-cc8da2457068
+    type: ShellyNode
     animations:
       - name: "Turn On"
         text: '{"method": "Switch.Set", "params":{"id":0,"on":true}}'
       - name: "Turn Off"
         text: '{"method": "Switch.Set", "params":{"id":0,"on":false}}'
-  - name: Movin Max
-    mqtt_name: node_5_mqtt
-    type: MovinMax
+  - name: Martha May
+    mqtt_name: "martha_may"
+    type: "OnOffNode"
     animations:
       - name: "Turn On"
         text: "on"
       - name: "Turn Off"
         text: "off"
-      - name: "Debug"
-        text: "debug"
-  - name: Multirelay Node
-    mqtt_name: node_7_mqtt
-    type: MultiRelayNode
-    animations:
-      - name: "All off"
-        text: "off"
-      - name: "March - single"
-        text: "march_single"
-      - name: "March 4"
-        text: "march_four"
-      - name: "Alternate"
-        text: "alternate"

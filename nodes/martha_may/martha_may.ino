@@ -68,6 +68,7 @@ void turn_off() {
   log("turning off...");
   saveCurrentAnimation(turn_off_signal);
   FastLED.showColor(CRGB::Black);
+  FastLED.delay(500);
 }
 void turn_on() {
   log("turning on...");
@@ -85,14 +86,16 @@ void animate() {
   // Draw the moving pixels.
   for (int i = 0; i < (NUM_LEDS - count); i++) {
     leds[i] = CRGB::White;
+    ;
     FastLED.show();
     delay(fill_delay);  // Slow things down just a bit.
     leds[i] = CRGB::Black;
-    FastLED.show();
+    // FastLED.show();
   }
 
   // Add the new filled pixels.
   leds[NUM_LEDS - 1 - count] = CRGB::White;
+  ;
   FastLED.show();
   count++;
 
@@ -269,6 +272,8 @@ void setup() {
   connectToNetwork();
   saveCurrentAnimation(turn_off_signal);  // should be turn_off_signal
   currentAnimation = turn_off;
+  // saveCurrentAnimation(turn_on_signal);  // should be turn_off_signal
+  // currentAnimation = turn_on;
   currentAnimation();
 }
 
@@ -279,7 +284,7 @@ void loop() {
   mqttClient.loop();    // this is ESSENTIAL for MQTT messages to be received!
   ArduinoOTA.handle();  // check for & handle OTA update requests
 
-  EVERY_N_MILLISECONDS(loopDelay) {
-    currentAnimation();
-  }
+  // EVERY_N_MILLISECONDS(loopDelay) {
+  currentAnimation();
+  // }
 }

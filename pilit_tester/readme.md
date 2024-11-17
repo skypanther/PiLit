@@ -48,5 +48,8 @@ nodes:
 
 1. Enter `source venv/bin/activate`
 2. Enter `fastapi dev main.py`
+3. Visit http://127.0.0.1:8000
 
-You should now be able to access the PiLit Tester web page by visiting `http://your_ip_address:8000`
+You should now be able to access the PiLit Tester web page.
+
+Note, this will work when accessing the PiLit Tester web page from the same computer. If you want to access from a different computer (or phone) on your network, you'll need to run `fastapi run main.py` (notice `run` instead of `dev`)

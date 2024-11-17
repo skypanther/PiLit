@@ -4,6 +4,7 @@ Shellies:
 ================================
 Shelly 1 (aka "mini") - shelly1minig3-dcda0ce69534
 Shelly2 - shelly1minig3-cc8da244998c
+Shelly3 - shelly1minig3-cc8da2457068
 
 Relays (on off nodes) -- Current count: 8
 =================================
