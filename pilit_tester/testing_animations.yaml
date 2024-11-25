@@ -41,10 +41,10 @@ nodes:
     animations:
       - name: "Turn Off"
         text: black:solid_color
-      - name: Spin, 1 spoke
-        text: spin_1
-      - name: Spin, 2 spokes
-        text: spin_2
+      - name: Rainbow
+        text: rainbow
+      - name: Bounce
+        text: bounce
       - name: Solid Blue
         text: blue:solid_color
   - name: Leaping Arch 2
@@ -53,10 +53,10 @@ nodes:
     animations:
       - name: "Turn Off"
         text: black:solid_color
-      - name: Spin, 1 spoke
-        text: spin_1
-      - name: Spin, 2 spokes
-        text: spin_2
+      - name: Rainbow
+        text: rainbow
+      - name: Bounce
+        text: bounce
       - name: Solid Blue
         text: blue:solid_color
   - name: Drop In
@@ -81,10 +81,10 @@ nodes:
     animations:
       - name: "Turn Off"
         text: black:solid_color
-      - name: Spin, 1 spoke
-        text: spin_1
-      - name: Spin, 2 spokes
-        text: spin_2
+      - name: Rainbow
+        text: rainbow
+      - name: Bounce
+        text: bounce
       - name: Solid Blue
         text: blue:solid_color
   - name: Spiral tree 1
@@ -93,10 +93,10 @@ nodes:
     animations:
       - name: "Turn Off"
         text: black:solid_color
-      - name: Spin, 1 spoke
-        text: spin_1
-      - name: Spin, 2 spokes
-        text: spin_2
+      - name: Rainbow
+        text: rainbow
+      - name: Bounce
+        text: bounce
       - name: Solid Blue
         text: blue:solid_color
   - name: Pixel tree 1
@@ -105,10 +105,10 @@ nodes:
     animations:
       - name: "Turn Off"
         text: black:solid_color
-      - name: Spin, 1 spoke
-        text: spin_1
-      - name: Spin, 2 spokes
-        text: spin_2
+      - name: Rainbow
+        text: rainbow
+      - name: Bounce
+        text: bounce
       - name: Solid Blue
         text: blue:solid_color
   - name: Pixel tree 2
@@ -117,10 +117,10 @@ nodes:
     animations:
       - name: "Turn Off"
         text: black:solid_color
-      - name: Spin, 1 spoke
-        text: spin_1
-      - name: Spin, 2 spokes
-        text: spin_2
+      - name: Rainbow
+        text: rainbow
+      - name: Bounce
+        text: bounce
       - name: Solid Blue
         text: blue:solid_color
   - name: Relay 1
