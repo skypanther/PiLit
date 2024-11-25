@@ -67,5 +67,14 @@ async def index_post(request: Request):
 
 def send_command(topic, payload):
     # paho mqtt send command here
+    if "shelly" in topic:
+        """ Hack method to determine if the node is a Shelly on/off node.
+        Such nodes need "/rpc" appended to their name. But I can't include
+        that in the YAML file because the name is used to build a URL and
+        the /rpc gets interpreted as part of the path. All the Shellies
+        I've tested include "shelly" at the beginning of their name, thus
+        the string search & append operation here.
+        """
+        topic = f"{topic}/rpc"
     print(f"mosquitto_pub -h {mqtt_server} -i publisher -t {topic} -m '{payload}'")
     publish.single(topic, payload=payload, hostname=mqtt_server)
