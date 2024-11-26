@@ -30,9 +30,9 @@ nodes:
       - name: "Turn Off"
         text: black:solid_color
       - name: Spin, 1 spoke
-        text: spin_1
+        text: red:spin_1
       - name: Spin, 2 spokes
-        text: spin_2
+        text: green:spin_2
       - name: Solid Blue
         text: blue:solid_color
   - name: Leaping Arch 1
@@ -42,9 +42,9 @@ nodes:
       - name: "Turn Off"
         text: black:solid_color
       - name: Rainbow
-        text: rainbow
+        text: red:rainbow
       - name: Bounce
-        text: bounce
+        text: green:bounce
       - name: Solid Blue
         text: blue:solid_color
   - name: Leaping Arch 2
@@ -54,9 +54,9 @@ nodes:
       - name: "Turn Off"
         text: black:solid_color
       - name: Rainbow
-        text: rainbow
+        text: red:rainbow
       - name: Bounce
-        text: bounce
+        text: green:bounce
       - name: Solid Blue
         text: blue:solid_color
   - name: Drop In
@@ -82,9 +82,9 @@ nodes:
       - name: "Turn Off"
         text: black:solid_color
       - name: Rainbow
-        text: rainbow
+        text: red:rainbow
       - name: Bounce
-        text: bounce
+        text: green:bounce
       - name: Solid Blue
         text: blue:solid_color
   - name: Spiral tree 1
@@ -94,9 +94,9 @@ nodes:
       - name: "Turn Off"
         text: black:solid_color
       - name: Rainbow
-        text: rainbow
+        text: red:rainbow
       - name: Bounce
-        text: bounce
+        text: green:bounce
       - name: Solid Blue
         text: blue:solid_color
   - name: Pixel tree 1
@@ -106,9 +106,9 @@ nodes:
       - name: "Turn Off"
         text: black:solid_color
       - name: Rainbow
-        text: rainbow
+        text: red:rainbow
       - name: Bounce
-        text: bounce
+        text: green:bounce
       - name: Solid Blue
         text: blue:solid_color
   - name: Pixel tree 2
@@ -118,9 +118,9 @@ nodes:
       - name: "Turn Off"
         text: black:solid_color
       - name: Rainbow
-        text: rainbow
+        text: red:rainbow
       - name: Bounce
-        text: bounce
+        text: green:bounce
       - name: Solid Blue
         text: blue:solid_color
   - name: Relay 1

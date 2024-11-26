@@ -7,7 +7,7 @@
 #define DATA_PIN 5
 // #define CLOCK_PIN 4  // uncomment if using LEDs with a clock line, such as
 // APA102C
-#define NUM_LEDS 50
+#define NUM_LEDS 268
 #define COLOR_ORDER RGB
 #define BRIGHTNESS 150
 
@@ -15,16 +15,17 @@
 // current draw
 
 // CHANGE THESE TO MATCH YOUR NETWORK
-char *hostname = "globe1";  // The hostname of this device
-String topics[] = {         // Create an array of topics to subscribe to
-  "all",                    // add as many topics as necessary
-  "globe1"
+char *hostname = "spiral1";  // The hostname of this device
+String topics[] = {          // Create an array of topics to subscribe to
+  "all",                     // add as many topics as necessary
+  "spiral1",
+  "spirals"
 };
 
 // HOSTNAME OR IP ADDRESS OF YOUR MQTT BROKER (SERVER)
 char *brokerHostname = "northpole.local";
 
-char *ssid = "SSID_WIFI_NAME";
+char *ssid = "NETWORK_NAME";
 char *password = "PASSWORD";
 char *ota_password = "PASSWORD";  // password for OTA updates
 
