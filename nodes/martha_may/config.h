@@ -9,16 +9,16 @@
 // APA102C
 #define NUM_LEDS 100
 #define COLOR_ORDER GRB
-#define BRIGHTNESS 64
+#define BRIGHTNESS 128
 
 // Animation-specific variables
 float delta;
 uint8_t count = 0;
 
 // Mess with these values for fill speed and slowing effect.
-uint8_t fill_delay = 1;         // Increase to slow fill rate.
+uint8_t fill_delay = 5;         // Increase to slow fill rate.
 float delay_base = 1.06;        // Used to add a delay as strip fills up.
-float delay_multiplier = 1.03;  // Used to add a delay as strip fills up.
+float delay_multiplier = 1.06;  // Used to add a delay as strip fills up.
 /*  Set delays to 1.0 if you don't want any slowing.  These numbers need to
     be tuned visually based on your preference and also based on the number
     of pixels in your strip.

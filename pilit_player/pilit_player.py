@@ -155,6 +155,13 @@ def get_show_times_for_today(start_time, stop_time):
 def send_command(topic, payload, sum_of_durations, this_duration):
     # paho mqtt send command here
     dur_string = f"{this_duration} of {sum_of_durations} sec".ljust(16, " ")
+    if "shelly" in topic:
+        """Hack method to determine if the node is a Shelly on/off node.
+        Such nodes need "/rpc" appended to their name. All the Shellies
+        I've tested include "shelly" at the beginning of their name, thus
+        the string search & append operation here.
+        """
+        topic = f"{topic}/rpc"
     log(f"{topic.ljust(16, ' ')} {dur_string} --> {payload}")
     publish.single(topic, payload=payload, hostname=mqtt_server)
 
@@ -233,6 +240,10 @@ def run_show(show):
                 times_shutoff_cmd_sent += 1
                 for mqtt_name in mqtt_names:
                     send_command(mqtt_name, "off", 0, 0)
+                    if "shelly" in mqtt_name:
+                        # hacky way of handling ShellyNodes
+                        anim = '{"method": "Switch.Set", "params":{"id":0,"on":false}}'
+                        send_command(mqtt_name, anim, 0, 0)
             sleep(show_loop_interval * 10)
         sleep(show_loop_interval)
 
