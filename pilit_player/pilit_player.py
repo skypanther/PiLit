@@ -92,18 +92,22 @@ def preprocess_file(show_file):
 
 
 def make_animation_command(type, animation):
+    try:
+        _ = animation["loopDelay"]
+    except KeyError:
+        animation["loopDelay"] = "200"
     if type in ["PixelNode", "PixelTree", "SpheroNode"]:
         # These are the RGB LED type nodes
         anim = animation["animation"] if animation["animation"] != "" else "off"
         color = animation["color"] if animation["color"] != "" else "black"
-        loopDelay = animation["loopDelay"] if animation["loopDelay"] != "" else "10"
+        loopDelay = animation["loopDelay"] if animation["loopDelay"] != "" else "200"
         holdTime = animation["holdTime"] if animation["holdTime"] != "" else "50"
         repeatable = animation["repeatable"] if animation["repeatable"] else True
         return f"{color}:{anim}:{loopDelay}:{holdTime}:{repeatable}"
     elif type == "MultiRelayNode":
         # this is my megatree node, basically a 16-relay controller
         anim = animation["animation"] if animation["animation"] != "" else "off"
-        loopDelay = animation["loopDelay"] if animation["loopDelay"] != "" else "10"
+        loopDelay = animation["loopDelay"] if animation["loopDelay"] != "" else "200"
         return f"{anim}:{loopDelay}"
     elif type == "AudioNode":
         # obvs, this is the audio player
@@ -116,13 +120,18 @@ def make_animation_command(type, animation):
             animation["stop_ms"] if animation["stop_ms"] else 0
         )  # 0 means to end of file
         return f"{anim}:{start_ms}:{stop_ms}"
+    elif type == "ShellyNode":
+        anim = animation["animation"] if animation["animation"] != "" else "off"
+        if anim == "on":
+            anim = '{"method": "Switch.Set", "params":{"id":0,"on":true}}'
+        else:
+            anim = '{"method": "Switch.Set", "params":{"id":0,"on":false}}'
+        return anim
     else:
         # These are the on/off type nodes - "OnOffNode", "MovinMax", "MotorinMax",
-        # "ShellyNode", and also the "Santa Drop In" node, which is on/off and
+        # and also the "Santa Drop In" node, which is on/off and
         # automatically does the alternating between Drop and In being lit.
         anim = animation["animation"] if animation["animation"] != "" else "off"
-        if type == "ShellyNode":
-            anim = '{"method": "Switch.Set", "params":{"id":0,"on":false}}'
         return f"{anim}"
 
 
