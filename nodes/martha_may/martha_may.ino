@@ -67,7 +67,12 @@ struct NetworkData {
 void turn_off() {
   log("turning off...");
   saveCurrentAnimation(turn_off_signal);
-  FastLED.showColor(CRGB::Black);
+  for (int i = 0; i < NUM_LEDS; i++) {
+    leds[i] = CRGB::Black;
+  }
+  FastLED.show();
+
+  // FastLED.showColor(CRGB::Black);
   FastLED.delay(500);
 }
 void turn_on() {

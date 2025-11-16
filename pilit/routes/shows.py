@@ -4,6 +4,7 @@ Endpoint definitions and model operations for: Shows
 The prefix "shows" will be added to all endpoints thanks to the parent
 router in __init__.py
 """
+
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -18,7 +19,7 @@ router = APIRouter()
 
 
 @router.get("/", response_model=List[Show])
-def get_shows(db: Session = Depends(get_db)) -> List[Optional[Show]]:
+def get_shows(db: Session = Depends(get_db)) -> List[Show]:
     # Retrieve all shows.
     shows = crud_show.get_shows(db)
     return shows

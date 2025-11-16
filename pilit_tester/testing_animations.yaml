@@ -1,6 +1,6 @@
 # Configuration of nodes and the animations to choose from during testing
 
-mqtt_server: northpole.local
+mqtt_server: 192.168.0.100
 mqtt_port: 1883
 nodes:
   - name: Megatree
